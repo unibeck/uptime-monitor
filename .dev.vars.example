@@ -1,0 +1,6 @@
+# Env vars used for Worker and Durable Objects; for wrangler cli env vars use .env file
+
+NEXTJS_ENV="development"
+
+# Not required
+OPSGENIE_API_KEY=""

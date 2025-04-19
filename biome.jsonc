@@ -1,0 +1,83 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "css": {
+    "linter": {
+      "enabled": true
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "semicolons": "asNeeded"
+    }
+  },
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space"
+  },
+  "organizeImports": {
+    "enabled": true
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "style": {
+        "useBlockStatements": {
+          "level": "error"
+        }
+      },
+      "a11y": {
+        "useSemanticElements": {
+          "level": "off"
+        }
+      }
+    }
+  },
+  "overrides": [
+    {
+      "include": ["templates"],
+      "formatter": {
+        "enabled": false
+      }
+    },
+    {
+      "include": ["examples"],
+      "linter": {
+        "enabled": true,
+        "rules": {
+          "recommended": true,
+          "correctness": {
+            "noUnusedImports": {
+              "level": "error"
+            },
+            "noUnusedVariables": {
+              "level": "error"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "files": {
+    "ignore": [
+      // Shadcn registry files
+      "src/registry",
+
+      // Generated files
+      "cloudflare-env-gen.d.ts",
+
+      // Drizzle related
+      "meta/*.json",
+
+      // Compiled dirs
+      "dist",
+
+      // ignore all tsconfig.json files
+      "tsconfig.json"
+    ]
+  }
+}

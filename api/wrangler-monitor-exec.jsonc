@@ -1,0 +1,39 @@
+// https://developers.cloudflare.com/workers/wrangler/configuration/
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "monitor-exec",
+  "main": "src/monitor-exec.ts",
+  // https://developers.cloudflare.com/workers/configuration/compatibility-flags/#flags-history
+  "compatibility_date": "2024-09-26",
+  "compatibility_flags": ["nodejs_compat"],
+  "minify": true,
+  "observability": {
+    "enabled": true
+  },
+  "vars": {
+    "ENVIRONMENT": "development"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "uptime-monitor-local",
+      "database_id": "uptime-monitor-local",
+      "migrations_dir": "src/db/migrations"
+    }
+  ],
+  "env": {
+    "production": {
+      "vars": {
+        "ENVIRONMENT": "production"
+      },
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "uptime-monitor-prod",
+          "database_id": "UPDATE_ME_D1_ID",
+          "migrations_dir": "src/db/migrations"
+        }
+      ]
+    }
+  }
+}
