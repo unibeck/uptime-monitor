@@ -18,7 +18,7 @@ const { createSelectSchema } = createSchemaFactory({
 
 export const websitesInsertSchema = createInsertSchema(WebsitesTable, {
   url: (schema) => schema.url(),
-  expectedStatusCode: z.number().positive().int(),
+  expectedStatusCode: z.number().positive().int().optional(),
 }).omit({
   createdAt: true,
   updatedAt: true,

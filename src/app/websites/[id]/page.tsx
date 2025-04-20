@@ -168,7 +168,6 @@ export default function WebsiteDetailPage() {
         }
         
         const responseData = (await response.json()) as z.infer<typeof uptimeChecksSelectSchema>[]
-        console.log(responseData)
         
         setUptimeData(responseData)        
         setUptimeDataError(null)

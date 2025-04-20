@@ -1,6 +1,7 @@
 "use client"
 
 import { websitesInsertDTOSchema } from "@/db/zod-schema"
+import type { websitesSelectSchema } from "@/db/zod-schema"
 import { DEFAULT_TOAST_OPTIONS } from "@/lib/toasts"
 import { Button } from "@/registry/new-york-v4/ui/button"
 import {
@@ -39,14 +40,20 @@ import { toast } from "sonner"
 import * as HttpStatusCodes from "stoker/http-status-codes"
 import type { z } from "zod"
 
+type WebsiteFormData = z.infer<typeof websitesInsertDTOSchema>
+type WebsiteData = z.infer<typeof websitesSelectSchema>
+
 interface AddWebsiteDialogProps {
   trigger?: React.ReactNode;
+  website?: WebsiteData;
+  onSuccess?: () => void;
 }
 
-export function AddWebsiteDialog({ trigger }: AddWebsiteDialogProps) {
+export function AddWebsiteDialog({ trigger, website, onSuccess }: AddWebsiteDialogProps) {
   const [isSubmitting, setIsSubmitting] = React.useState(false)
   const [open, setOpen] = React.useState(false)
   const formId = "add-website-form"
+  const isEditing = !!website;
   
   const checkIntervalOptions = [
     { label: "10 seconds", value: 10 },
@@ -64,9 +71,15 @@ export function AddWebsiteDialog({ trigger }: AddWebsiteDialogProps) {
     { label: "1 day", value: 86400 }
   ]
   
-  const form = useForm<z.infer<typeof websitesInsertDTOSchema>>({
+  const form = useForm<WebsiteFormData>({
     resolver: zodResolver(websitesInsertDTOSchema),
-    defaultValues: {
+    defaultValues: isEditing ? {
+      name: website.name ?? "",
+      url: website.url ?? "",
+      checkInterval: website.checkInterval ?? 60,
+      isRunning: website.isRunning ?? true,
+      expectedStatusCode: website.expectedStatusCode ?? undefined,
+    } : {
       name: "",
       url: "",
       checkInterval: 60,
@@ -75,27 +88,53 @@ export function AddWebsiteDialog({ trigger }: AddWebsiteDialogProps) {
     },
   })
   
-  const onSubmit = async (data: z.infer<typeof websitesInsertDTOSchema>) => {
+  React.useEffect(() => {
+    if (open) {
+      form.reset(isEditing ? {
+        name: website.name ?? "",
+        url: website.url ?? "",
+        checkInterval: website.checkInterval ?? 60,
+        isRunning: website.isRunning ?? true,
+        expectedStatusCode: website.expectedStatusCode ?? undefined,
+      } : {
+        name: "",
+        url: "",
+        checkInterval: 60,
+        isRunning: true,
+        expectedStatusCode: 200,
+      });
+    }
+  }, [open, website, isEditing, form]);
+  
+  const onSubmit = async (data: WebsiteFormData) => {
     setIsSubmitting(true)
+    const url = isEditing ? `/api/websites/${website.id}` : '/api/websites';
+    const method = isEditing ? 'PATCH' : 'POST';
+
     try {
-      const response = await fetch('/api/websites', {
-        method: 'POST',
+      const response = await fetch(url, {
+        method: method,
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
       })
 
-      if (response.status === HttpStatusCodes.CREATED) {
+      const successStatus = isEditing ? HttpStatusCodes.OK : HttpStatusCodes.CREATED;
+      const successMessage = isEditing ? "Website Updated" : "Website Added";
+      const successDescription = isEditing ? `${data.url} has been updated successfully.` : `${data.url} has been added successfully.`;
+
+      if (response.status === successStatus) {
         toast.success(
-          "Website Added", 
+          successMessage,
           {
-            description: `${data.url} has been added successfully.`,
+            description: successDescription,
             ...DEFAULT_TOAST_OPTIONS,
           }
         )
         setOpen(false)
-      } else if (response.status === HttpStatusCodes.CONFLICT) {
+        onSuccess?.();
+      } else if (response.status === HttpStatusCodes.CONFLICT && !isEditing) {
         console.log("Website already exists")
         const error: ConflictWebsiteResponse = await response.json()
         toast.info(
@@ -108,24 +147,25 @@ export function AddWebsiteDialog({ trigger }: AddWebsiteDialogProps) {
         )
         return
       } else {
+        const errorText = await response.text();
         toast.error(
           `Error response: ${response.status}`,
           {
-            description: "Unexpected response from server, please try again.",
+            description: `Failed to ${isEditing ? 'update' : 'add'} website. ${errorText || 'Unexpected response from server.'}`,
             ...DEFAULT_TOAST_OPTIONS,
             duration: 10000,
           }
         )
         return
       }
-      
+
       form.reset()
     } catch (error) {
-      console.error('Error creating website:', error)
+      console.error(`Error ${isEditing ? 'updating' : 'creating'} website:`, error)
       toast.error(
         'UNKNOWN_ERROR',
         {
-          description: "Failed to create website monitor.",
+          description: `Failed to ${isEditing ? 'update' : 'create'} website monitor.`,
           ...DEFAULT_TOAST_OPTIONS,
           duration: 10000,
         }
@@ -135,23 +175,23 @@ export function AddWebsiteDialog({ trigger }: AddWebsiteDialogProps) {
     }
   }
   
-  const defaultTrigger = (
-    <Button variant="outline" size="sm">
-      <IconPlus />
-      <span className="hidden lg:inline">Add Website</span>
-    </Button>
-  );
-  
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        {trigger ?? defaultTrigger}
+        {trigger ? trigger : isEditing ? (
+          <Button variant="ghost" size="sm">Edit</Button>
+        ) : (
+          <Button variant="outline" size="sm">
+            <IconPlus />
+            <span className="hidden lg:inline">Add Website</span>
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add Website Monitor</DialogTitle>
+          <DialogTitle>{isEditing ? 'Edit Website Monitor' : 'Add Website Monitor'}</DialogTitle>
           <DialogDescription>
-            Add a new website to monitor uptime and performance
+            {isEditing ? 'Update the details for this website monitor.' : 'Add a new website to monitor uptime and performance'}
           </DialogDescription>
         </DialogHeader>
         <div className="px-4">
@@ -251,12 +291,12 @@ export function AddWebsiteDialog({ trigger }: AddWebsiteDialogProps) {
           </Form>
         </div>
         <DialogFooter>
-          <Button variant="primary" type="submit" form={formId} disabled={isSubmitting}>
-            {isSubmitting ? "Creating..." : "Create Monitor"}
-          </Button>
           <DialogClose asChild>
-            <Button variant="outline">Cancel</Button>
+            <Button variant="ghost">Cancel</Button>
           </DialogClose>
+          <Button variant="primary" type="submit" form={formId} disabled={isSubmitting}>
+            {isSubmitting ? 'Saving...' : (isEditing ? 'Save Changes' : 'Add Website')}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

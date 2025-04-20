@@ -1,38 +1,29 @@
 "use client"
 
 import type { websitesSelectSchema } from "@/db/zod-schema"
-import type { uptimeChecksSelectSchema } from "@/db/zod-schema"
-import { msToHumanReadable } from "@/lib/formatters"
 import { DEFAULT_TOAST_OPTIONS } from "@/lib/toasts"
 import { Badge } from "@/registry/new-york-v4/ui/badge"
 import { Button } from "@/registry/new-york-v4/ui/button"
-import { Card, CardContent } from "@/registry/new-york-v4/ui/card"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/registry/new-york-v4/ui/dropdown-menu"
+import { IconActivity, IconLogs, IconMetronome, IconPencil } from "@tabler/icons-react"
+import { IconShieldCheckFilled } from "@tabler/icons-react"
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/registry/new-york-v4/ui/tooltip"
-import { IconActivity, IconAlertTriangle, IconBrandCloudflare, IconLogs, IconMetronome } from "@tabler/icons-react"
-import { IconClockHour4, IconShieldCheckFilled } from "@tabler/icons-react"
-import { formatDistance } from "date-fns"
-import {
-  Calendar,
   ExternalLink,
   MoreVertical,
   Pause,
   Play,
   RefreshCw,
 } from "lucide-react"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useState } from "react"
 import { toast } from "sonner"
 import type { z } from "zod"
+import { AddWebsiteDialog } from "./add-website-dialog"
 
 interface WebsiteDetailHeaderProps {
   website: z.infer<typeof websitesSelectSchema>
@@ -45,7 +36,7 @@ export function WebsiteDetailHeader({
 }: WebsiteDetailHeaderProps) {
   const [isLoading, setIsLoading] = useState(false)
 
-  const refreshWebsiteStatus = useCallback(async () => {
+  const refreshWebsiteData = useCallback(async () => {
     if (onStatusChange) {
       onStatusChange()
     }
@@ -64,7 +55,7 @@ export function WebsiteDetailHeader({
         ...DEFAULT_TOAST_OPTIONS,
       })
       // Refresh website status after executing check
-      await refreshWebsiteStatus()
+      await refreshWebsiteData()
     } catch (error) {
       toast.error("Failed to execute check", {
         description: `${error}`,
@@ -78,7 +69,9 @@ export function WebsiteDetailHeader({
   const pauseMonitoring = async () => {
     setIsLoading(true)
     try {
-      const response = await fetch(`/api/websites/${website.id}/pause`)
+      const response = await fetch(`/api/websites/${website.id}/pause`, {
+        method: "POST",
+      })
       if (!response.ok) {
         throw new Error("Failed to pause monitoring")
       }
@@ -87,7 +80,7 @@ export function WebsiteDetailHeader({
         ...DEFAULT_TOAST_OPTIONS,
       })
       // Refresh website status after pausing
-      await refreshWebsiteStatus()
+      await refreshWebsiteData()
     } catch (error) {
       toast.error("Failed to pause monitoring", {
         description: `${error}`,
@@ -101,7 +94,10 @@ export function WebsiteDetailHeader({
   const resumeMonitoring = async () => {
     setIsLoading(true)
     try {
-      const response = await fetch(`/api/websites/${website.id}/resume`)
+      const response = await fetch(`/api/websites/${website.id}/resume`, {
+        method: "POST",
+      })
+      console.log("response", response)
       if (!response.ok) {
         throw new Error("Failed to resume monitoring")
       }
@@ -110,7 +106,7 @@ export function WebsiteDetailHeader({
         ...DEFAULT_TOAST_OPTIONS,
       })
       // Refresh website status after resuming
-      await refreshWebsiteStatus()
+      await refreshWebsiteData()
     } catch (error) {
       toast.error("Failed to resume monitoring", {
         description: `${error}`,
@@ -144,7 +140,7 @@ export function WebsiteDetailHeader({
               {website.expectedStatusCode ? (
                 <Badge variant="secondary" className="ml-1">{website.expectedStatusCode}</Badge>
               ) : (
-                <span className="text-xs ml-1">(Default: 2xx/3xx)</span>
+                <span className="text-xs ml-1">2xx/3xx</span>
               )}
             </span>
           </div>
@@ -189,27 +185,39 @@ export function WebsiteDetailHeader({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={executeCheck}>
+              <AddWebsiteDialog 
+                website={website} 
+                onSuccess={refreshWebsiteData} 
+                trigger={
+                  <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                    <IconPencil className="mr-2 h-4 w-4" />
+                    Edit Website
+                  </DropdownMenuItem>
+                }
+              />
+              <DropdownMenuItem onClick={executeCheck} disabled={isLoading}>
                 <RefreshCw className="mr-2 h-4 w-4" />
                 Execute Check
               </DropdownMenuItem>
+              
+              <DropdownMenuSeparator />
 
               {website.isRunning && (
-                <DropdownMenuItem onClick={pauseMonitoring}>
+                <DropdownMenuItem onClick={pauseMonitoring} disabled={isLoading}>
                   <Pause className="mr-2 h-4 w-4" />
                   Pause Monitoring
                 </DropdownMenuItem>
               )}
 
               {!website.isRunning && (
-                <DropdownMenuItem onClick={resumeMonitoring}>
+                <DropdownMenuItem onClick={resumeMonitoring} disabled={isLoading}>
                   <Play className="mr-2 h-4 w-4" />
                   Resume Monitoring
                 </DropdownMenuItem>
               )}
-
+              
               {website.isRunning && (
-                <DropdownMenuItem onClick={resumeMonitoring}>
+                <DropdownMenuItem onClick={resumeMonitoring} disabled={isLoading}>
                   <Play className="mr-2 h-4 w-4" />
                   Force Resume Monitoring
                 </DropdownMenuItem>

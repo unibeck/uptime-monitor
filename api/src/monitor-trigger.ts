@@ -1,22 +1,21 @@
 import { DurableObject, WorkerEntrypoint } from "cloudflare:workers"
-import { takeFirstOrNull, useDrizzle } from "@/db"
+import { useDrizzle } from "@/db"
 import { WebsitesTable } from "@/db/schema"
-import type { websitesSelectSchema } from "@/db/zod-schema"
-import { state } from "diffable-objects"
+import { MonitorTriggerNotInitializedError, getErrorMessage } from "@/lib/errors"
+import { diffable, state } from "diffable-objects"
 import { eq } from "drizzle-orm"
 import * as HttpStatusCodes from "stoker/http-status-codes"
 import * as HttpStatusPhrases from "stoker/http-status-phrases"
-import type { z } from "zod"
-import { getWebsiteSignature } from "./utils"
 
 /**
  * The Monitor class is a Durable Object that is used to trigger checks on a website.
  */
 export class MonitorTrigger extends DurableObject<CloudflareEnv> {
-  #state = state(this.ctx, "state", {
+  @diffable
+  #state = {
     websiteId: null as string | null,
     checkInterval: null as number | null,
-  })
+  }
 
   async init(websiteId: string, checkInterval: number) {
     console.log(`Initializing Monitor Trigger DO for [${websiteId}]`)
@@ -31,9 +30,8 @@ export class MonitorTrigger extends DurableObject<CloudflareEnv> {
   private async getWebsiteId(): Promise<string> {
     const websiteId = this.#state.websiteId
     if (!websiteId) {
-      await this.delete()
-      throw new Error(
-        "Website ID is not set. This should never happen. Deleted MonitorTrigger DO",
+      throw new MonitorTriggerNotInitializedError(
+        "Website ID is not set. This should never happen. Reinitialize if this DO is expected to exist",
       )
     }
 
@@ -43,9 +41,8 @@ export class MonitorTrigger extends DurableObject<CloudflareEnv> {
   private async getCheckInterval(): Promise<number> {
     const checkInterval = this.#state.checkInterval
     if (!checkInterval) {
-      await this.delete()
-      throw new Error(
-        "Check interval is not set. This should never happen. Deleted MonitorTrigger DO",
+      throw new MonitorTriggerNotInitializedError(
+        "Check interval is not set. This should never happen. Reinitialize if this DO is expected to exist",
       )
     }
 
