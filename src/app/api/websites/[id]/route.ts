@@ -76,7 +76,7 @@ export const PATCH = createRoute
         .set(website)
         .where(eq(WebsitesTable.id, context.params.id))
         .returning()
-        .then(takeFirstOrNull)
+        .then(takeUniqueOrThrow)
     } catch (error) {
       console.error("Error updating website: ", error)
       return NextResponse.json(
@@ -93,6 +93,9 @@ export const PATCH = createRoute
         { status: HttpStatusCodes.NOT_FOUND },
       )
     }
+
+    console.log(`Updating check interval for [${updatedWebsite.id}] to [${updatedWebsite.checkInterval}]`)
+    await env.MONITOR_TRIGGER_RPC.updateCheckInterval(updatedWebsite.id, updatedWebsite.checkInterval)
 
     return NextResponse.json(updatedWebsite, { status: HttpStatusCodes.OK })
   })
