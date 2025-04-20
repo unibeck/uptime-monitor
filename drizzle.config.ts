@@ -6,7 +6,7 @@ let dbConfig: ReturnType<typeof defineConfig>
 
 if (process.env.ENVIRONMENT === "production") {
   dbConfig = defineConfig({
-    schema: "./src/db/schema.ts",
+    schema: "./src/db/**.sql.ts",
     out: "./src/db/migrations",
     dialect: "sqlite",
     driver: "d1-http",
@@ -23,7 +23,7 @@ if (process.env.ENVIRONMENT === "production") {
   }
 
   dbConfig = defineConfig({
-    schema: "./src/db/schema.ts",
+    schema: "./src/db/**.sql.ts",
     out: "./src/db/migrations",
     dialect: "sqlite",
     dbCredentials: {

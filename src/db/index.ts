@@ -1,7 +1,7 @@
 import { type DrizzleD1Database, drizzle } from "drizzle-orm/d1"
-import * as schema from "./schema"
+import { type DrizzleSchema, schema } from "./schema"
 
-export function useDrizzle(D1: D1Database): DrizzleD1Database<typeof schema> {
+export function useDrizzle(D1: D1Database): DrizzleD1Database<DrizzleSchema> {
   return drizzle(D1, { schema })
 }
 

@@ -166,7 +166,7 @@ export function SectionCards() {
               <>
                 <IconLink className="h-4 w-4" />
                 <Link
-                  href={`/websites/${data.highestResponseTimeWebsiteId}`}
+                  href={`/dashboard/websites/${data.highestResponseTimeWebsiteId}`}
                   className="hover:underline"
                   title={`View website ${data.highestResponseTimeWebsiteId}`}
                 >

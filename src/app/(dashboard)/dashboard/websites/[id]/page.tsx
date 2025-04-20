@@ -78,7 +78,7 @@ export default function WebsiteDetailPage() {
         const response = await fetch(`/api/websites/${websiteId}`)
         if (!response.ok) {
           if (response.status === 404) {
-            router.push("/")
+            router.push("/dashboard")
             return
           }
           throw new Error(`Failed to fetch website: ${response.statusText}`)
@@ -268,7 +268,7 @@ export default function WebsiteDetailPage() {
       <div className="container mx-auto py-8 px-4">
         <div className="flex items-center mb-6">
           <Button variant="ghost" size="sm" asChild className="mr-4">
-            <Link href="/">
+            <Link href="/dashboard">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Dashboard
             </Link>
@@ -286,7 +286,7 @@ export default function WebsiteDetailPage() {
       <div className="container mx-auto py-8 px-4">
         <div className="flex items-center mb-6">
           <Button variant="ghost" size="sm" asChild className="mr-4">
-            <Link href="/">
+            <Link href="/dashboard">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back to Dashboard
             </Link>
@@ -303,7 +303,7 @@ export default function WebsiteDetailPage() {
     <div className="container mx-auto py-8 px-4">
       <div className="flex items-center mb-6">
         <Button variant="ghost" size="sm" asChild className="mr-4">
-          <Link href="/">
+          <Link href="/dashboard">
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Dashboard
           </Link>
@@ -322,8 +322,8 @@ export default function WebsiteDetailPage() {
               // Update URL
               const newPath =
                 newTimeRange === "1d"
-                  ? `/websites/${websiteId}`
-                  : `/websites/${websiteId}?range=${newTimeRange}`
+                  ? `/dashboard/websites/${websiteId}`
+                  : `/dashboard/websites/${websiteId}?range=${newTimeRange}`
               router.push(newPath as Route, { scroll: false })
             }}
             className="w-full"

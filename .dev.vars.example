@@ -4,3 +4,11 @@ NEXTJS_ENV="development"
 
 # Not required
 OPSGENIE_API_KEY=""
+
+# default, change before deploying to production. Generate one here https://www.better-auth.com/docs/installation#set-environment-variables
+BETTER_AUTH_SECRET="WpNNb3QWB9dc2lOOYZLVA1ROJuTSuZle"
+
+# Set to enable Okta
+OKTA_CLIENT_ID=""
+OKTA_CLIENT_SECRET=""
+OKTA_DISCOVERY_URL=""

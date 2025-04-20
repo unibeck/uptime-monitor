@@ -402,7 +402,7 @@ export function WebsiteDetailDrawer({
         </div>
         <DrawerFooter className="flex-col gap-4">
           <Button variant="primary" asChild>
-            <Link href={`/websites/${website.id}`}>
+            <Link href={`/dashboard/websites/${website.id}`}>
               View Detailed Analytics
             </Link>
           </Button>
