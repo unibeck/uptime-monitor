@@ -42,8 +42,11 @@ export const GET = createRoute
             isNotNull(UptimeChecksTable.responseTime),
           ),
         )
-        .orderBy(UptimeChecksTable.timestamp)
+        // order by timestamp descending to get the most recent first
+        .orderBy(desc(UptimeChecksTable.timestamp))
         .limit(limit)
+        // reverse the results put it back in chronological order
+        .then((results) => results.reverse())
 
       console.log(
         `Uptime data for website [${websiteId}] with limit [${limit}]: ${results.length}`,
