@@ -1,15 +1,28 @@
+import { cookies } from "next/headers"
+
+import { AppSidebar } from "@/components/app-sidebar"
+import { SiteHeader } from "@/components/site-header"
+import {
+  SidebarInset,
+  SidebarProvider,
+} from "@/registry/new-york-v4/ui/sidebar"
+
 import type { Metadata, Viewport } from "next"
 
 import { siteConfig } from "@/app/site"
 import { ThemeProvider } from "@/components/theme-provider"
 import { fontVariables } from "@/lib/fonts"
+import { Toaster } from "@/registry/new-york-v4/ui/sonner"
 
 import "@/app/globals.css"
 import "@/app/theme.css"
 
 import { ActiveThemeProvider } from "@/components/active-theme"
+import { HeaderProvider } from "@/context/header-context"
+import { getAuth, requireAuth } from "@/lib/auth-server-utils"
 import { PROD_URL } from "@/lib/constants"
 import { cn } from "@/lib/utils"
+
 const META_THEME_COLORS = {
   light: "#ffffff",
   dark: "#09090b",
@@ -70,15 +83,20 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const cookieStore = await cookies()
   const activeThemeValue = siteConfig.defaultTheme
   // const activeThemeValue = cookieStore.get("active_theme")?.value
   const isScaled = activeThemeValue?.endsWith("-scaled")
+  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true"
+
+  const auth = await getAuth()
+  const session = await requireAuth(auth)
 
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
         <script
-          // biome-ignore lint/security/noDangerouslySetInnerHtml: This is fine
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: <explanation>
           dangerouslySetInnerHTML={{
             __html: `
               try {
@@ -106,7 +124,23 @@ export default async function RootLayout({
           enableColorScheme
         >
           <ActiveThemeProvider initialTheme={activeThemeValue}>
-            {children}
+            <HeaderProvider>
+              <SidebarProvider
+                defaultOpen={defaultOpen}
+                style={
+                  {
+                    "--sidebar-width": "calc(var(--spacing) * 72)",
+                  } as React.CSSProperties
+                }
+              >
+                <AppSidebar variant="inset" />
+                <SidebarInset>
+                  <SiteHeader />
+                  <div className="flex flex-1 flex-col">{children}</div>
+                </SidebarInset>
+              </SidebarProvider>
+            </HeaderProvider>
+            <Toaster />
           </ActiveThemeProvider>
         </ThemeProvider>
       </body>

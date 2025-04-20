@@ -2,8 +2,10 @@
 
 import {
   type Icon,
+  IconBrandGithub,
   IconBrightness,
   IconCirclePlusFilled,
+  IconMessage,
 } from "@tabler/icons-react"
 import { useTheme } from "next-themes"
 import * as React from "react"
@@ -19,17 +21,29 @@ import {
 import { Skeleton } from "@/registry/new-york-v4/ui/skeleton"
 import { Switch } from "@/registry/new-york-v4/ui/switch"
 
+const items: {
+  title: string
+  url: string
+  icon: Icon
+  external?: boolean
+}[] = [
+  {
+    title: "GitHub",
+    url: "https://github.com/unibeck/uptime-monitor",
+    icon: IconBrandGithub,
+    external: true,
+  },
+  {
+    title: "Get Help",
+    url: "https://github.com/unibeck/uptime-monitor/discussions",
+    icon: IconMessage,
+    external: true,
+  },
+]
+
 export function NavSecondary({
-  items,
   ...props
-}: {
-  items: {
-    title: string
-    url: string
-    icon: Icon
-    external?: boolean
-  }[]
-} & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
+}: React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
   const { resolvedTheme, setTheme } = useTheme()
   const [mounted, setMounted] = React.useState(false)
 

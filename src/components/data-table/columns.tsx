@@ -56,7 +56,10 @@ export const columns: AppColumnDef<z.infer<typeof websitesSelectSchema>>[] = [
     ),
     headerLabel: "Website Name",
     cell: ({ row }) => (
-      <Link href={`/websites/${row.original.id}`} className="hover:underline">
+      <Link
+        href={`/dashboard/websites/${row.original.id}`}
+        className="hover:underline"
+      >
         {row.original.name.length > 32
           ? `${row.original.name.substring(0, 32)}...`
           : row.original.name}

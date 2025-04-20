@@ -1,17 +1,9 @@
-"use client"
-
-import {
-  IconBrandGithub,
-  IconDashboard,
-  IconDatabase,
-  IconFileWord,
-  IconReport,
-  IconTimezone,
-} from "@tabler/icons-react"
+import { IconTimezone } from "@tabler/icons-react"
 import type * as React from "react"
 
 import { NavMain } from "@/components/nav-main"
 import { NavSecondary } from "@/components/nav-secondary"
+import { NavUser } from "@/components/nav-user"
 import {
   Sidebar,
   SidebarContent,
@@ -22,48 +14,9 @@ import {
   SidebarMenuItem,
 } from "@/registry/new-york-v4/ui/sidebar"
 
-const data = {
-  navMain: [
-    {
-      title: "Dashboard",
-      url: "#",
-      icon: IconDashboard,
-    },
-  ],
-  navSecondary: [
-    {
-      title: "GitHub",
-      url: "https://github.com/unibeck/uptime-monitor",
-      icon: IconBrandGithub,
-      external: true,
-    },
-    {
-      title: "Get Help",
-      url: "https://github.com/unibeck/uptime-monitor/issues",
-      icon: IconBrandGithub,
-      external: true,
-    },
-  ],
-  documents: [
-    {
-      name: "Data Library",
-      url: "#",
-      icon: IconDatabase,
-    },
-    {
-      name: "Reports",
-      url: "#",
-      icon: IconReport,
-    },
-    {
-      name: "Word Assistant",
-      url: "#",
-      icon: IconFileWord,
-    },
-  ],
-}
+interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {}
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export async function AppSidebar({ ...props }: AppSidebarProps) {
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -73,7 +26,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               asChild
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
-              <a href="/">
+              <a href="/dashboard">
                 <IconTimezone stroke={1} className="!size-5" />
                 <span className="text-base font-semibold">Uptime Monitor</span>
               </a>
@@ -82,11 +35,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain />
         {/* <NavDocuments items={data.documents} /> */}
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavSecondary className="mt-auto" />
       </SidebarContent>
-      <SidebarFooter>{/* <NavUser user={data.user} /> */}</SidebarFooter>
+      <SidebarFooter>
+        <NavUser />
+      </SidebarFooter>
     </Sidebar>
   )
 }

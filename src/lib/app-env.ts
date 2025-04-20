@@ -1,19 +1,19 @@
 import { PRE_URL, PROD_URL } from "@/lib/constants"
 
 const DEV: AppEnvMetadata = {
-  serverUrl: "http://localhost:8787",
+  appUrl: "http://localhost:3000",
 }
 
 const PRE: AppEnvMetadata = {
   ...DEV,
 
-  serverUrl: PRE_URL,
+  appUrl: PRE_URL,
 }
 
 const PROD: AppEnvMetadata = {
   ...PRE,
 
-  serverUrl: PROD_URL,
+  appUrl: PROD_URL,
 }
 
 export enum AppEnvID {
@@ -23,7 +23,7 @@ export enum AppEnvID {
 }
 
 export interface AppEnvMetadata {
-  serverUrl: string
+  appUrl: string
 }
 
 const AppEnvs: { [value in AppEnvID]: AppEnvMetadata } = {

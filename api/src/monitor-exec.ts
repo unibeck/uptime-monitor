@@ -1,7 +1,10 @@
 import { WorkerEntrypoint } from "cloudflare:workers"
 import { takeFirstOrNull, takeUniqueOrThrow, useDrizzle } from "@/db"
-import { UptimeChecksTable, WebsitesTable } from "@/db/schema"
-import type * as schema from "@/db/schema"
+import {
+  type DrizzleSchema,
+  UptimeChecksTable,
+  WebsitesTable,
+} from "@/db/schema"
 import type { websitesPatchSchema, websitesSelectSchema } from "@/db/zod-schema"
 import { createWebsiteDownAlert } from "@/lib/opsgenie"
 import { eq } from "drizzle-orm"
@@ -111,7 +114,7 @@ async function handleFailureTracking(
   status: number,
   errorMessage: string,
   website: z.infer<typeof websitesSelectSchema>,
-  db: DrizzleD1Database<typeof schema>,
+  db: DrizzleD1Database<DrizzleSchema>,
   opsgenieApiKey: string,
 ) {
   if (isUp) {

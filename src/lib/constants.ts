@@ -5,6 +5,8 @@ import { z } from "zod"
 export const PRE_URL = "UPDATE_ME_PRE_URL"
 export const PROD_URL = "UPDATE_ME_PROD_URL"
 
+export const AUTH_COOKIE_NAME = "better-auth.session_token"
+
 export const ZOD_ERROR_MESSAGES = {
   REQUIRED: "Required",
   EXPECTED_NUMBER: "Expected number, received nan",
