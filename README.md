@@ -5,7 +5,11 @@ A uptime monitoring service that is easy and cheap to run at scale. Create endpo
 TODO: expectations for cost
 
 ## Quick Deploy
+
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/unibeck/uptime-monitor)
+*this doesn't deploy everything yet, so its best to use the below method for now
+
+— OR —
 
 0) Fork the repo
 1) Copy and fill out

@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import { msToHumanReadable } from "@/lib/formatters"
 import { Badge } from "@/registry/new-york-v4/ui/badge"
@@ -10,7 +10,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/registry/new-york-v4/ui/card"
-import { IconActivityHeartbeat, IconBellCheck, IconBellExclamation, IconLink, IconLoader2, IconShieldCheckFilled, IconTarget, IconTargetOff, IconTrendingDown, IconTrendingUp } from "@tabler/icons-react"
+import {
+  IconActivityHeartbeat,
+  IconBellCheck,
+  IconBellExclamation,
+  IconLink,
+  IconLoader2,
+  IconShieldCheckFilled,
+  IconTarget,
+  IconTargetOff,
+  IconTrendingDown,
+  IconTrendingUp,
+} from "@tabler/icons-react"
 import Link from "next/link"
 import { useEffect, useState } from "react"
 interface DashboardStats {
@@ -30,26 +41,26 @@ export function SectionCards() {
     const fetchStats = async () => {
       try {
         setLoading(true)
-        const response = await fetch('/api/websites/stats')
+        const response = await fetch("/api/websites/stats")
         if (!response.ok) {
-          throw new Error('Failed to fetch dashboard statistics')
+          throw new Error("Failed to fetch dashboard statistics")
         }
         const data = await response.json()
         setStats(data as DashboardStats)
         setError(null)
       } catch (err) {
-        console.error('Error fetching stats:', err)
-        setError('Failed to load dashboard statistics')
+        console.error("Error fetching stats:", err)
+        setError("Failed to load dashboard statistics")
       } finally {
         setLoading(false)
       }
     }
 
     fetchStats()
-    
+
     // Refresh stats every minute
     const intervalId = setInterval(fetchStats, 60 * 1000)
-    
+
     return () => clearInterval(intervalId)
   }, [])
 
@@ -62,11 +73,7 @@ export function SectionCards() {
   }
 
   if (error && !stats) {
-    return (
-      <div className="p-4 text-center text-red-500">
-        {error}
-      </div>
-    )
+    return <div className="p-4 text-center text-red-500">{error}</div>
   }
 
   // Use placeholder values until data is loaded
@@ -75,7 +82,7 @@ export function SectionCards() {
     sitesWithAlerts: 0,
     highestResponseTime: 0,
     highestResponseTimeWebsiteId: null,
-    uptimePercentage: 100
+    uptimePercentage: 100,
   }
 
   return (
@@ -109,17 +116,23 @@ export function SectionCards() {
             {data.sitesWithAlerts}
           </CardTitle>
           <CardAction>
-            <Badge variant={data.sitesWithAlerts > 0 ? "destructive" : "outline"}>
-              {data.sitesWithAlerts > 0 ? <IconBellExclamation /> : <IconBellCheck />}
+            <Badge
+              variant={data.sitesWithAlerts > 0 ? "destructive" : "outline"}
+            >
+              {data.sitesWithAlerts > 0 ? (
+                <IconBellExclamation />
+              ) : (
+                <IconBellCheck />
+              )}
               {data.sitesWithAlerts > 0 ? "Action Needed" : "All Clear"}
             </Badge>
           </CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            {data.sitesWithAlerts > 0 
-              ? `${data.sitesWithAlerts} site${data.sitesWithAlerts !== 1 ? 's' : ''} with active alerts` 
-              : "No active alerts"} 
+            {data.sitesWithAlerts > 0
+              ? `${data.sitesWithAlerts} site${data.sitesWithAlerts !== 1 ? "s" : ""} with active alerts`
+              : "No active alerts"}
           </div>
           <div className="text-muted-foreground">
             Websites requiring attention
@@ -133,8 +146,16 @@ export function SectionCards() {
             {msToHumanReadable(data.highestResponseTime, true)}
           </CardTitle>
           <CardAction>
-            <Badge variant={data.highestResponseTime > 1000 ? "destructive" : "outline"}>
-              {data.highestResponseTime > 1000 ? <IconTrendingDown /> : <IconTrendingUp />}
+            <Badge
+              variant={
+                data.highestResponseTime > 1000 ? "destructive" : "outline"
+              }
+            >
+              {data.highestResponseTime > 1000 ? (
+                <IconTrendingDown />
+              ) : (
+                <IconTrendingUp />
+              )}
               {data.highestResponseTime > 1000 ? "Slow" : "Fast"}
             </Badge>
           </CardAction>
@@ -144,8 +165,8 @@ export function SectionCards() {
             {data.highestResponseTimeWebsiteId ? (
               <>
                 <IconLink className="h-4 w-4" />
-                <Link 
-                  href={`/websites/${data.highestResponseTimeWebsiteId}`} 
+                <Link
+                  href={`/websites/${data.highestResponseTimeWebsiteId}`}
                   className="hover:underline"
                   title={`View website ${data.highestResponseTimeWebsiteId}`}
                 >
@@ -168,7 +189,9 @@ export function SectionCards() {
             {data.uptimePercentage}%
           </CardTitle>
           <CardAction>
-            <Badge variant={data.uptimePercentage < 99 ? "destructive" : "outline"}>
+            <Badge
+              variant={data.uptimePercentage < 99 ? "destructive" : "outline"}
+            >
               {data.uptimePercentage < 99 ? <IconTargetOff /> : <IconTarget />}
               {data.uptimePercentage < 99 ? "Below Target" : "On Target"}
             </Badge>
@@ -178,9 +201,7 @@ export function SectionCards() {
           <div className="line-clamp-1 flex gap-2 font-medium">
             Last 24 hours
           </div>
-          <div className="text-muted-foreground">
-            Overall uptime percentage
-          </div>
+          <div className="text-muted-foreground">Overall uptime percentage</div>
         </CardFooter>
       </Card>
     </div>

@@ -91,7 +91,10 @@ const processData = (
     [key: number]: { values: number[]; count: number; sum: number }
   } = {}
   for (const point of data) {
-    const bucketStartSeconds = getTimeBucketStart(new Date(point.timestamp).getTime(), range)
+    const bucketStartSeconds = getTimeBucketStart(
+      new Date(point.timestamp).getTime(),
+      range,
+    )
     if (bucketStartSeconds * 1000 >= startTime.getTime()) {
       if (!aggregatedData[bucketStartSeconds]) {
         aggregatedData[bucketStartSeconds] = { values: [], count: 0, sum: 0 }
@@ -285,7 +288,10 @@ interface LatencyRangeChartProps {
   timeRange: TimeRange
 }
 
-const LatencyRangeChart: React.FC<LatencyRangeChartProps> = ({ data, timeRange }) => {
+const LatencyRangeChart: React.FC<LatencyRangeChartProps> = ({
+  data,
+  timeRange,
+}) => {
   const processedData = useMemo(() => {
     if (data.length === 0) {
       return []
@@ -381,7 +387,7 @@ const LatencyRangeChart: React.FC<LatencyRangeChartProps> = ({ data, timeRange }
             value: "Latency",
             angle: -90,
             position: "insideLeft",
-            style: { textAnchor: 'middle' },
+            style: { textAnchor: "middle" },
             offset: -8,
           }}
           domain={yDomain}

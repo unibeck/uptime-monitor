@@ -12,9 +12,9 @@ import type { z } from "zod"
 
 /**
  * GET /api/websites/[id]/uptime
- * 
+ *
  * Get the latest uptime check for a website
- * 
+ *
  * @params {string} id - Website ID
  * @returns {Promise<NextResponse>} JSON response with uptime percentage and period
  * @throws {NextResponse} 404 Not Found if no uptime checks found for the website
@@ -36,12 +36,11 @@ export const GET = createRoute
         .limit(1)
         .then(takeUniqueOrThrow)
 
-      return NextResponse.json(
-        result,
-        { status: HttpStatusCodes.OK },
-      )
+      return NextResponse.json(result, { status: HttpStatusCodes.OK })
     } catch (error) {
-      console.error(`Error getting latest uptime check for website [${websiteId}]: ${error}`)
+      console.error(
+        `Error getting latest uptime check for website [${websiteId}]: ${error}`,
+      )
       return NextResponse.json(
         { error: "Failed to get latest uptime check" },
         { status: HttpStatusCodes.INTERNAL_SERVER_ERROR },

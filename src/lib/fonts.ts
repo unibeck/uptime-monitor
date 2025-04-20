@@ -45,5 +45,5 @@ export const fontVariables = cn(
   fontInstrument.variable,
   fontNotoMono.variable,
   fontMullish.variable,
-  fontInter.variable
+  fontInter.variable,
 )

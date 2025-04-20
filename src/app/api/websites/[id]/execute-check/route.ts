@@ -9,9 +9,9 @@ import * as HttpStatusCodes from "stoker/http-status-codes"
 
 /**
  * GET /api/websites/[id]/execute-check
- * 
+ *
  * Manually executes an uptime check for a specific website.
- * 
+ *
  * @params {string} id - Website ID
  * @returns {Promise<NextResponse>} JSON response confirming the check execution
  */

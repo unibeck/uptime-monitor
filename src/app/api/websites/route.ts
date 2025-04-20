@@ -18,9 +18,9 @@ import { z } from "zod"
 
 /**
  * GET /api/websites
- * 
+ *
  * Retrieves a paginated list of websites with ordering options.
- * 
+ *
  * @query {number} pageSize - Number of items per page
  * @query {number} page - Page number (zero-based)
  * @query {string} orderBy - Column to order by
@@ -44,32 +44,49 @@ export const GET = createRoute
     const { env } = getCloudflareContext()
     const db = useDrizzle(env.DB)
 
-    const { 
-      pageSize, 
-      page, 
+    const {
+      pageSize,
+      page,
       orderBy: orderByParam,
       order: orderParam,
-      search, 
-      isRunning, 
-      checkIntervalMin, 
-      checkIntervalMax 
+      search,
+      isRunning,
+      checkIntervalMin,
+      checkIntervalMax,
     } = context.query
 
     // Set default sorting if not provided
     const orderBy = orderByParam ?? "consecutiveFailures"
     const order = orderParam ?? "desc"
-    
-    console.log(pageSize, page, orderBy, order, search, isRunning, checkIntervalMin, checkIntervalMax)
+
+    console.log(
+      pageSize,
+      page,
+      orderBy,
+      order,
+      search,
+      isRunning,
+      checkIntervalMin,
+      checkIntervalMax,
+    )
 
     const orderByCol = getColumn(orderBy)
     const orderDir = getOrderDirection(order as "asc" | "desc")
 
     // Create the where conditions first so we can reuse them for both queries
     const whereConditions = and(
-      search ? sql`(${like(WebsitesTable.name, `%${search}%`)} OR ${like(WebsitesTable.url, `%${search}%`)})` : sql`1=1`,
-      isRunning !== undefined ? eq(WebsitesTable.isRunning, isRunning === 'true') : sql`1=1`,
-      checkIntervalMin !== undefined ? sql`${WebsitesTable.checkInterval} >= ${checkIntervalMin}` : sql`1=1`,
-      checkIntervalMax !== undefined ? sql`${WebsitesTable.checkInterval} <= ${checkIntervalMax}` : sql`1=1`
+      search
+        ? sql`(${like(WebsitesTable.name, `%${search}%`)} OR ${like(WebsitesTable.url, `%${search}%`)})`
+        : sql`1=1`,
+      isRunning !== undefined
+        ? eq(WebsitesTable.isRunning, isRunning === "true")
+        : sql`1=1`,
+      checkIntervalMin !== undefined
+        ? sql`${WebsitesTable.checkInterval} >= ${checkIntervalMin}`
+        : sql`1=1`,
+      checkIntervalMax !== undefined
+        ? sql`${WebsitesTable.checkInterval} <= ${checkIntervalMax}`
+        : sql`1=1`,
     )
 
     // Get paginated websites
@@ -91,15 +108,15 @@ export const GET = createRoute
     // Return websites and total count
     return NextResponse.json({
       data: websites,
-      totalCount
+      totalCount,
     })
   })
 
 /**
  * POST /api/websites
- * 
+ *
  * Creates a new website entry. Checks for URL conflicts before creating.
- * 
+ *
  * @body {websitesInsertDTOSchema} - Website data to insert
  * @returns {Promise<NextResponse>} JSON response with created website or conflict error
  * @throws {NextResponse} 409 Conflict if a similar URL already exists
@@ -132,11 +149,13 @@ export const POST = createRoute
       )
       return NextResponse.json(
         {
-          message: `A monitor with a similar URL already exists. ${JSON.stringify({
-            provided: website.url,
-            searched: normalizedUrl,
-            found: matchingWebsite.url,
-          })}`,
+          message: `A monitor with a similar URL already exists. ${JSON.stringify(
+            {
+              provided: website.url,
+              searched: normalizedUrl,
+              found: matchingWebsite.url,
+            },
+          )}`,
           matchingWebsite,
         } as const satisfies ConflictWebsiteResponse,
         {

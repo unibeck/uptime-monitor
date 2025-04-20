@@ -6,9 +6,9 @@ import * as HttpStatusCodes from "stoker/http-status-codes"
 
 /**
  * POST /api/websites/[id]/pause
- * 
+ *
  * Pauses monitoring for a specific website.
- * 
+ *
  * @params {string} id - Website ID
  * @returns {Promise<NextResponse>} JSON response confirming the monitoring has been paused
  */

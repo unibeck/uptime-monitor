@@ -32,17 +32,20 @@ export function Pagination({ table }: PaginationProps) {
   const setPagination = useDataTableStore((state) => state.setPagination)
   const fetchWebsites = useDataTableStore((state) => state.fetchWebsites)
   const totalWebsites = useDataTableStore((state) => state.totalWebsites)
-  
+
   // Calculate page count locally to ensure it's consistent
   const pageCount = Math.max(1, Math.ceil(totalWebsites / pagination.pageSize))
-  
+
   // Function to handle page changes directly with the store
-  const changePage = React.useCallback((newPageIndex: number) => {
-    const newPagination = { ...pagination, pageIndex: newPageIndex }
-    setPagination(newPagination)
-    // Trigger the table's pagination change which will fetch data
-    table.setPageIndex(newPageIndex)
-  }, [pagination, setPagination, table])
+  const changePage = React.useCallback(
+    (newPageIndex: number) => {
+      const newPagination = { ...pagination, pageIndex: newPageIndex }
+      setPagination(newPagination)
+      // Trigger the table's pagination change which will fetch data
+      table.setPageIndex(newPageIndex)
+    },
+    [pagination, setPagination, table],
+  )
 
   return (
     <div className="flex items-center justify-between px-4">
@@ -81,8 +84,7 @@ export function Pagination({ table }: PaginationProps) {
           </Select>
         </div>
         <div className="flex w-fit items-center justify-center text-sm font-medium">
-          Page {pagination.pageIndex + 1} of{" "}
-          {pageCount}
+          Page {pagination.pageIndex + 1} of {pageCount}
         </div>
         <div className="ml-auto flex items-center gap-2 lg:ml-0">
           <Button
@@ -108,7 +110,9 @@ export function Pagination({ table }: PaginationProps) {
             variant="outline"
             className="size-8"
             size="icon"
-            onClick={() => changePage(Math.min(pageCount - 1, pagination.pageIndex + 1))}
+            onClick={() =>
+              changePage(Math.min(pageCount - 1, pagination.pageIndex + 1))
+            }
             disabled={pagination.pageIndex >= pageCount - 1}
           >
             <span className="sr-only">Go to next page</span>
@@ -128,4 +132,4 @@ export function Pagination({ table }: PaginationProps) {
       </div>
     </div>
   )
-} 
+}

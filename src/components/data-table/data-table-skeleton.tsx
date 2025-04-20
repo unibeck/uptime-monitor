@@ -29,7 +29,7 @@ export function DataTableSkeleton({
           <TableHeader className="bg-muted sticky top-0 z-10">
             <TableRow>
               {Array.from({ length: columnCount }).map((_, index) => (
-                <TableHead key={`header-${index}`}>
+                <TableHead key={`header-${index + 0}`}>
                   <Skeleton className="h-6 w-full max-w-[100px]" />
                 </TableHead>
               ))}
@@ -38,9 +38,9 @@ export function DataTableSkeleton({
         )}
         <TableBody>
           {Array.from({ length: rowCount }).map((_, rowIndex) => (
-            <TableRow key={`row-${rowIndex}`}>
+            <TableRow key={`row-${rowIndex + 0}`}>
               {Array.from({ length: columnCount }).map((_, cellIndex) => (
-                <TableCell key={`cell-${rowIndex}-${cellIndex}`}>
+                <TableCell key={`cell-${rowIndex + 0}-${cellIndex + 0}`}>
                   {cellIndex === 0 || cellIndex === 1 ? (
                     <Skeleton className="h-5 w-5" />
                   ) : cellIndex === 2 ? (
@@ -60,4 +60,4 @@ export function DataTableSkeleton({
       </Table>
     </div>
   )
-} 
+}

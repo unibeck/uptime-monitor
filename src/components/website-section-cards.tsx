@@ -1,9 +1,20 @@
-"use client";
+"use client"
 
-import { IconActivityHeartbeat, IconAlertTriangle, IconBellCheck, IconBellExclamation, IconLoader2, IconShieldCheckFilled, IconTarget, IconTargetOff, IconTrendingDown, IconTrendingUp } from "@tabler/icons-react"
+import {
+  IconActivityHeartbeat,
+  IconAlertTriangle,
+  IconBellCheck,
+  IconBellExclamation,
+  IconLoader2,
+  IconShieldCheckFilled,
+  IconTarget,
+  IconTargetOff,
+  IconTrendingDown,
+  IconTrendingUp,
+} from "@tabler/icons-react"
 
-import type { websitesSelectSchema } from "@/db/zod-schema";
-import { msToHumanReadable } from "@/lib/formatters";
+import type { websitesSelectSchema } from "@/db/zod-schema"
+import { msToHumanReadable } from "@/lib/formatters"
 import { Badge } from "@/registry/new-york-v4/ui/badge"
 import {
   Card,
@@ -13,17 +24,23 @@ import {
   CardHeader,
   CardTitle,
 } from "@/registry/new-york-v4/ui/card"
-import type { z } from "zod";
+import type { z } from "zod"
 
 interface WebsiteSectionCardsProps {
-    website: z.infer<typeof websitesSelectSchema>;
-    avgResponseTime: number;
-    uptimePercentage: number;
-    loading?: boolean;
-    error?: string | null;
+  website: z.infer<typeof websitesSelectSchema>
+  avgResponseTime: number
+  uptimePercentage: number
+  loading?: boolean
+  error?: string | null
 }
 
-export function WebsiteSectionCards({ website, avgResponseTime, uptimePercentage, loading = false, error = null }: WebsiteSectionCardsProps) {
+export function WebsiteSectionCards({
+  website,
+  avgResponseTime,
+  uptimePercentage,
+  loading = false,
+  error = null,
+}: WebsiteSectionCardsProps) {
   if (loading && !website) {
     return (
       <div className="flex justify-center items-center p-8">
@@ -33,11 +50,7 @@ export function WebsiteSectionCards({ website, avgResponseTime, uptimePercentage
   }
 
   if (error && !website) {
-    return (
-      <div className="p-4 text-center text-red-500">
-        {error}
-      </div>
-    )
+    return <div className="p-4 text-center text-red-500">{error}</div>
   }
 
   return (
@@ -49,8 +62,16 @@ export function WebsiteSectionCards({ website, avgResponseTime, uptimePercentage
             {website.consecutiveFailures}
           </CardTitle>
           <CardAction>
-            <Badge variant={website.consecutiveFailures > 0 ? "destructive" : "outline"}>
-              {website.consecutiveFailures > 0 ? <IconAlertTriangle /> : <IconShieldCheckFilled />}
+            <Badge
+              variant={
+                website.consecutiveFailures > 0 ? "destructive" : "outline"
+              }
+            >
+              {website.consecutiveFailures > 0 ? (
+                <IconAlertTriangle />
+              ) : (
+                <IconShieldCheckFilled />
+              )}
               {website.consecutiveFailures > 0 ? "Failing" : "Healthy"}
             </Badge>
           </CardAction>
@@ -68,11 +89,15 @@ export function WebsiteSectionCards({ website, avgResponseTime, uptimePercentage
         <CardHeader>
           <CardDescription>Alert Status</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            {website.activeAlert ? 'Active' : 'Inactive'}
+            {website.activeAlert ? "Active" : "Inactive"}
           </CardTitle>
           <CardAction>
             <Badge variant={website.activeAlert ? "destructive" : "outline"}>
-              {website.activeAlert ? <IconBellExclamation /> : <IconBellCheck />}
+              {website.activeAlert ? (
+                <IconBellExclamation />
+              ) : (
+                <IconBellCheck />
+              )}
               {website.activeAlert ? "Action Needed" : "All Clear"}
             </Badge>
           </CardAction>
@@ -94,7 +119,11 @@ export function WebsiteSectionCards({ website, avgResponseTime, uptimePercentage
           </CardTitle>
           <CardAction>
             <Badge variant={avgResponseTime > 500 ? "destructive" : "outline"}>
-              {avgResponseTime > 500 ? <IconTrendingDown /> : <IconTrendingUp />}
+              {avgResponseTime > 500 ? (
+                <IconTrendingDown />
+              ) : (
+                <IconTrendingUp />
+              )}
               {avgResponseTime > 500 ? "Slow" : "Fast"}
             </Badge>
           </CardAction>
@@ -132,4 +161,4 @@ export function WebsiteSectionCards({ website, avgResponseTime, uptimePercentage
       </Card>
     </div>
   )
-} 
+}

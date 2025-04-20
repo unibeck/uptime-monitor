@@ -11,9 +11,9 @@ import * as HttpStatusCodes from "stoker/http-status-codes"
 
 /**
  * POST /api/websites/[id]/resume
- * 
+ *
  * Resumes monitoring for a specific website.
- * 
+ *
  * @params {string} id - Website ID
  * @returns {Promise<NextResponse>} JSON response confirming the monitoring has been resumed
  */
@@ -39,7 +39,9 @@ export const POST = createRoute
 
       // RPC returns a wrapped, stringified error, so we need to check for the error name
       if (errorMessage.includes(MonitorTriggerNotInitializedError.NAME)) {
-        console.log(`DO [${website.id}] not initialized. Initializing automatically...`)
+        console.log(
+          `DO [${website.id}] not initialized. Initializing automatically...`,
+        )
         await env.MONITOR_TRIGGER_RPC.init(website.id, website.checkInterval)
       } else {
         throw error

@@ -12,9 +12,9 @@ import { z } from "zod"
 
 /**
  * GET /api/websites/count
- * 
+ *
  * Retrieves the total count of websites in the database, subject to optional search and filter parameters.
- * 
+ *
  * @query {string} search - Optional search term to filter websites
  * @query {string} isRunning - Optional filter by running status
  * @query {number} checkIntervalMin - Optional filter by minimum check interval
@@ -33,19 +33,28 @@ export const GET = createRoute
   .handler(async (request, context) => {
     const { env } = getCloudflareContext()
     const db = useDrizzle(env.DB)
-    
-    const { search, isRunning, checkIntervalMin, checkIntervalMax } = context.query
+
+    const { search, isRunning, checkIntervalMin, checkIntervalMax } =
+      context.query
 
     const { count: totalCount } = await db
       .select({ count: count() })
       .from(WebsitesTable)
       .where(
         and(
-          search ? sql`(${like(WebsitesTable.name, `%${search}%`)} OR ${like(WebsitesTable.url, `%${search}%`)})` : sql`1=1`,
-          isRunning !== undefined ? eq(WebsitesTable.isRunning, isRunning === 'true') : sql`1=1`,
-          checkIntervalMin !== undefined ? sql`${WebsitesTable.checkInterval} >= ${checkIntervalMin}` : sql`1=1`,
-          checkIntervalMax !== undefined ? sql`${WebsitesTable.checkInterval} <= ${checkIntervalMax}` : sql`1=1`
-        )
+          search
+            ? sql`(${like(WebsitesTable.name, `%${search}%`)} OR ${like(WebsitesTable.url, `%${search}%`)})`
+            : sql`1=1`,
+          isRunning !== undefined
+            ? eq(WebsitesTable.isRunning, isRunning === "true")
+            : sql`1=1`,
+          checkIntervalMin !== undefined
+            ? sql`${WebsitesTable.checkInterval} >= ${checkIntervalMin}`
+            : sql`1=1`,
+          checkIntervalMax !== undefined
+            ? sql`${WebsitesTable.checkInterval} <= ${checkIntervalMax}`
+            : sql`1=1`,
+        ),
       )
       .then(takeUniqueOrThrow)
 

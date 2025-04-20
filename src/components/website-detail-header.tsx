@@ -11,7 +11,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/registry/new-york-v4/ui/dropdown-menu"
-import { IconActivity, IconLogs, IconMetronome, IconPencil } from "@tabler/icons-react"
+import {
+  IconActivity,
+  IconLogs,
+  IconMetronome,
+  IconPencil,
+} from "@tabler/icons-react"
 import { IconShieldCheckFilled } from "@tabler/icons-react"
 import {
   ExternalLink,
@@ -136,9 +141,11 @@ export function WebsiteDetailHeader({
           <div className="mt-2 text-sm text-muted-foreground flex items-center gap-1.5">
             <IconShieldCheckFilled className="h-4 w-4" />
             <span>
-              Expected Status: 
+              Expected Status:
               {website.expectedStatusCode ? (
-                <Badge variant="secondary" className="ml-1">{website.expectedStatusCode}</Badge>
+                <Badge variant="secondary" className="ml-1">
+                  {website.expectedStatusCode}
+                </Badge>
               ) : (
                 <span className="text-xs ml-1">2xx/3xx</span>
               )}
@@ -155,8 +162,8 @@ export function WebsiteDetailHeader({
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem asChild>
-                <a 
-                  href={`https://dash.cloudflare.com/UPDATE_ME_ABC`}
+                <a
+                  href="https://dash.cloudflare.com/UPDATE_ME_ABC"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -166,7 +173,7 @@ export function WebsiteDetailHeader({
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <a
-                  href={`https://dash.cloudflare.com/UPDATE_ME_ABC`}
+                  href="https://dash.cloudflare.com/UPDATE_ME_ABC"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -185,9 +192,9 @@ export function WebsiteDetailHeader({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <AddWebsiteDialog 
-                website={website} 
-                onSuccess={refreshWebsiteData} 
+              <AddWebsiteDialog
+                website={website}
+                onSuccess={refreshWebsiteData}
                 trigger={
                   <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                     <IconPencil className="mr-2 h-4 w-4" />
@@ -199,25 +206,34 @@ export function WebsiteDetailHeader({
                 <RefreshCw className="mr-2 h-4 w-4" />
                 Execute Check
               </DropdownMenuItem>
-              
+
               <DropdownMenuSeparator />
 
               {website.isRunning && (
-                <DropdownMenuItem onClick={pauseMonitoring} disabled={isLoading}>
+                <DropdownMenuItem
+                  onClick={pauseMonitoring}
+                  disabled={isLoading}
+                >
                   <Pause className="mr-2 h-4 w-4" />
                   Pause Monitoring
                 </DropdownMenuItem>
               )}
 
               {!website.isRunning && (
-                <DropdownMenuItem onClick={resumeMonitoring} disabled={isLoading}>
+                <DropdownMenuItem
+                  onClick={resumeMonitoring}
+                  disabled={isLoading}
+                >
                   <Play className="mr-2 h-4 w-4" />
                   Resume Monitoring
                 </DropdownMenuItem>
               )}
-              
+
               {website.isRunning && (
-                <DropdownMenuItem onClick={resumeMonitoring} disabled={isLoading}>
+                <DropdownMenuItem
+                  onClick={resumeMonitoring}
+                  disabled={isLoading}
+                >
                   <Play className="mr-2 h-4 w-4" />
                   Force Resume Monitoring
                 </DropdownMenuItem>

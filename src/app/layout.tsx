@@ -7,7 +7,6 @@ import {
   SidebarProvider,
 } from "@/registry/new-york-v4/ui/sidebar"
 
-
 import type { Metadata, Viewport } from "next"
 
 import { siteConfig } from "@/app/site"
@@ -20,8 +19,8 @@ import "@/app/theme.css"
 
 import { ActiveThemeProvider } from "@/components/active-theme"
 import { HeaderProvider } from "@/context/header-context"
-import { cn } from "@/lib/utils"
 import { PROD_URL } from "@/lib/constants"
+import { cn } from "@/lib/utils"
 const META_THEME_COLORS = {
   light: "#ffffff",
   dark: "#09090b",
@@ -34,13 +33,7 @@ export const metadata: Metadata = {
   },
   metadataBase: new URL(`https://${PROD_URL}`),
   description: siteConfig.description,
-  keywords: [
-    "Monitoring",
-    "Uptime",
-    "Latency",
-    "Status code",
-    "OpsGenie",
-  ],
+  keywords: ["Monitoring", "Uptime", "Latency", "Status code", "OpsGenie"],
   authors: [
     {
       name: "Jonathan Beckmann",
@@ -98,6 +91,7 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <script
+          // biome-ignore lint/security/noDangerouslySetInnerHtml: This is fine
           dangerouslySetInnerHTML={{
             __html: `
               try {
@@ -114,7 +108,7 @@ export default async function RootLayout({
           "bg-background overscroll-none font-sans antialiased",
           activeThemeValue ? `theme-${activeThemeValue}` : "",
           isScaled ? "theme-scaled" : "",
-          fontVariables
+          fontVariables,
         )}
       >
         <ThemeProvider
@@ -148,4 +142,3 @@ export default async function RootLayout({
     </html>
   )
 }
-

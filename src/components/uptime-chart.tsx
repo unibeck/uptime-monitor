@@ -105,7 +105,10 @@ const processUptimeData = (
 
   // Aggregate checks into time buckets
   for (const check of data) {
-    const bucketStartSeconds = getTimeBucketStart(new Date(check.timestamp).getTime(), range)
+    const bucketStartSeconds = getTimeBucketStart(
+      new Date(check.timestamp).getTime(),
+      range,
+    )
     // Only include data within the selected time range
     if (bucketStartSeconds * 1000 >= startTime.getTime()) {
       if (!aggregatedData[bucketStartSeconds]) {
@@ -166,7 +169,7 @@ const processUptimeData = (
             count2xx++
           } else if (check.status < 400) {
             count3xx++
-          } else if ( check.status < 500) {
+          } else if (check.status < 500) {
             count4xx++
           } else if (check.status < 600) {
             count5xx++
@@ -237,27 +240,50 @@ const CustomUptimeTooltip: React.FC<CustomUptimeTooltipProps> = ({
     const date = new Date(label * 1000)
     let formattedTime = ""
     switch (range) {
-        case "1h": formattedTime = format(date, "HH:mm"); break;
-        case "1d": formattedTime = format(date, "MMM d, HH:mm"); break;
-        case "7d": formattedTime = format(date, "MMM d, HH:mm"); break;
-        default: formattedTime = format(date, "PPpp");
+      case "1h":
+        formattedTime = format(date, "HH:mm")
+        break
+      case "1d":
+        formattedTime = format(date, "MMM d, HH:mm")
+        break
+      case "7d":
+        formattedTime = format(date, "MMM d, HH:mm")
+        break
+      default:
+        formattedTime = format(date, "PPpp")
     }
 
-    const totalChecks = dataPoint.countTotalChecksInBucket;
+    const totalChecks = dataPoint.countTotalChecksInBucket
     // TODO: Calculate 'No Data' based on expected checks if needed
 
     return (
-      <div
-        className="custom-tooltip border border-accent bg-background p-3 shadow-md"
-      >
+      <div className="custom-tooltip border border-accent bg-background p-3 shadow-md">
         <p className="label font-semibold">{`${formattedTime}`}</p>
         <div className="intro mt-1 space-y-0.5 text-sm text-muted-foreground">
-           {dataPoint.count2xx > 0 && <p style={{ color: "#22c55e" }}>2xx Success: {dataPoint.count2xx}</p>}
-           {dataPoint.count3xx > 0 && <p style={{ color: "#facc15" }}>3xx Redirect: {dataPoint.count3xx}</p>}
-           {dataPoint.count4xx > 0 && <p style={{ color: "#f97316" }}>4xx Client Error: {dataPoint.count4xx}</p>}
-           {dataPoint.count5xx > 0 && <p style={{ color: "#ef4444" }}>5xx Server Error: {dataPoint.count5xx}</p>}
-           {dataPoint.countNoData > 0 && <p style={{ color: "#999" }}>No Data: {dataPoint.countNoData}</p>}
-           <p className="mt-1 border-t pt-1">Total Checks: {totalChecks}</p>
+          {dataPoint.count2xx > 0 && (
+            <p style={{ color: "#22c55e" }}>
+              2xx Success: {dataPoint.count2xx}
+            </p>
+          )}
+          {dataPoint.count3xx > 0 && (
+            <p style={{ color: "#facc15" }}>
+              3xx Redirect: {dataPoint.count3xx}
+            </p>
+          )}
+          {dataPoint.count4xx > 0 && (
+            <p style={{ color: "#f97316" }}>
+              4xx Client Error: {dataPoint.count4xx}
+            </p>
+          )}
+          {dataPoint.count5xx > 0 && (
+            <p style={{ color: "#ef4444" }}>
+              5xx Server Error: {dataPoint.count5xx}
+            </p>
+          )}
+          {dataPoint.countNoData > 0 && (
+            <p style={{ color: "#999" }}>No Data: {dataPoint.countNoData}</p>
+          )}
+          <p className="mt-1 border-t pt-1">Total Checks: {totalChecks}</p>
         </div>
       </div>
     )
@@ -279,7 +305,6 @@ export const UptimeChart: React.FC<UptimeChartProps> = ({
   isLoading = false,
   error = null,
 }) => {
-
   const processedData = useMemo(() => {
     if (!data || data.length === 0) {
       return []
@@ -292,13 +317,21 @@ export const UptimeChart: React.FC<UptimeChartProps> = ({
     if (processedData.length > 0) {
       let startTime: number
       const endTime = Math.floor(Date.now() / 1000)
-      const lastBucketTime = processedData[processedData.length - 1]?.timeBucket ?? endTime
+      const lastBucketTime =
+        processedData[processedData.length - 1]?.timeBucket ?? endTime
 
       switch (timeRange) {
-        case "1h": startTime = getUnixTime(subHours(new Date(), 1)); break;
-        case "1d": startTime = getUnixTime(subDays(new Date(), 1)); break;
-        case "7d": startTime = getUnixTime(subWeeks(new Date(), 1)); break;
-        default: startTime = processedData[0]?.timeBucket ?? endTime - 3600;
+        case "1h":
+          startTime = getUnixTime(subHours(new Date(), 1))
+          break
+        case "1d":
+          startTime = getUnixTime(subDays(new Date(), 1))
+          break
+        case "7d":
+          startTime = getUnixTime(subWeeks(new Date(), 1))
+          break
+        default:
+          startTime = processedData[0]?.timeBucket ?? endTime - 3600
       }
       // Ensure the domain covers the full range, even if data is sparse at the end
       return [startTime, Math.max(endTime, lastBucketTime)]
@@ -306,41 +339,46 @@ export const UptimeChart: React.FC<UptimeChartProps> = ({
     return ["auto", "auto"] // Fallback if no data
   }, [processedData, timeRange])
 
-
   const yDomain: [number | "auto", number | "auto"] = useMemo(() => {
-      if (processedData.length === 0 && !isLoading) { 
-        return [0, 1]
-      }
+    if (processedData.length === 0 && !isLoading) {
+      return [0, 1]
+    }
 
-      let maxCount = 0;
-      for (const p of processedData) {
-          const totalInBucket = p.count2xx + p.count3xx + p.count4xx + p.count5xx + p.countNoData;
-          maxCount = Math.max(maxCount, totalInBucket);
-      }
+    let maxCount = 0
+    for (const p of processedData) {
+      const totalInBucket =
+        p.count2xx + p.count3xx + p.count4xx + p.count5xx + p.countNoData
+      maxCount = Math.max(maxCount, totalInBucket)
+    }
 
-      return [0, Math.max(maxCount, 1)]
-  }, [processedData, isLoading]);
-
+    return [0, Math.max(maxCount, 1)]
+  }, [processedData, isLoading])
 
   if (isLoading) {
     return (
-        <div className="flex items-center justify-center h-full text-muted-foreground">
-            Loading chart data...
-        </div>
+      <div className="flex items-center justify-center h-full text-muted-foreground">
+        Loading chart data...
+      </div>
     )
   }
 
   if (error) {
-    return <div className="flex items-center justify-center h-full text-red-600">Error loading chart data: {error}</div>
+    return (
+      <div className="flex items-center justify-center h-full text-red-600">
+        Error loading chart data: {error}
+      </div>
+    )
   }
 
   if (processedData.length === 0 && !isLoading) {
-      return (
-        <div className="flex items-center justify-center h-full relative">
-            <PolkaDots />
-            <div className="relative text-muted-foreground">No uptime data available for the selected period.</div>
+    return (
+      <div className="flex items-center justify-center h-full relative">
+        <PolkaDots />
+        <div className="relative text-muted-foreground">
+          No uptime data available for the selected period.
         </div>
-      )
+      </div>
+    )
   }
 
   return (
@@ -365,32 +403,66 @@ export const UptimeChart: React.FC<UptimeChartProps> = ({
           tickLine={false}
         />
         <YAxis
-           allowDecimals={false}
-           domain={yDomain}
-           axisLine={false}
-           tickLine={false}
-           width={30}
-           label={{ 
-            value: '# of Checks', 
-            angle: -90, 
-            position: 'insideLeft', 
-            style: { textAnchor: 'middle' },
+          allowDecimals={false}
+          domain={yDomain}
+          axisLine={false}
+          tickLine={false}
+          width={30}
+          label={{
+            value: "# of Checks",
+            angle: -90,
+            position: "insideLeft",
+            style: { textAnchor: "middle" },
             offset: -8,
           }}
         />
         <Tooltip
-            content={<CustomUptimeTooltip range={timeRange} />}
-            cursor={{ fill: "hsl(var(--muted))", fillOpacity: 0.3 }}
+          content={<CustomUptimeTooltip range={timeRange} />}
+          cursor={{ fill: "hsl(var(--muted))", fillOpacity: 0.3 }}
         />
-        <Legend wrapperStyle={{ paddingTop: '10px' }}/>
+        <Legend wrapperStyle={{ paddingTop: "10px" }} />
 
         {/* Stacked Bars */}
-        <Bar dataKey="count2xx" stackId="a" name="2xx" fill="#22c55e" radius={[2, 2, 0, 0]} isAnimationActive={false}/>
-        <Bar dataKey="count3xx" stackId="a" name="3xx" fill="#facc15" radius={[0, 0, 0, 0]} isAnimationActive={false}/>
-        <Bar dataKey="count4xx" stackId="a" name="4xx" fill="#f97316" radius={[0, 0, 0, 0]} isAnimationActive={false}/>
-        <Bar dataKey="count5xx" stackId="a" name="5xx" fill="#ef4444" radius={[0, 0, 0, 0]} isAnimationActive={false}/>
-        <Bar dataKey="countNoData" stackId="a" name="No Data" fill="#ccc" radius={[0, 0, 2, 2]} isAnimationActive={false}/>
-
+        <Bar
+          dataKey="count2xx"
+          stackId="a"
+          name="2xx"
+          fill="#22c55e"
+          radius={[2, 2, 0, 0]}
+          isAnimationActive={false}
+        />
+        <Bar
+          dataKey="count3xx"
+          stackId="a"
+          name="3xx"
+          fill="#facc15"
+          radius={[0, 0, 0, 0]}
+          isAnimationActive={false}
+        />
+        <Bar
+          dataKey="count4xx"
+          stackId="a"
+          name="4xx"
+          fill="#f97316"
+          radius={[0, 0, 0, 0]}
+          isAnimationActive={false}
+        />
+        <Bar
+          dataKey="count5xx"
+          stackId="a"
+          name="5xx"
+          fill="#ef4444"
+          radius={[0, 0, 0, 0]}
+          isAnimationActive={false}
+        />
+        <Bar
+          dataKey="countNoData"
+          stackId="a"
+          name="No Data"
+          fill="#ccc"
+          radius={[0, 0, 2, 2]}
+          isAnimationActive={false}
+        />
       </BarChart>
     </ResponsiveContainer>
   )

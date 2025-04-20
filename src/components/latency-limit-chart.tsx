@@ -1,11 +1,24 @@
 "use client"
 
 import { Badge } from "@/registry/new-york-v4/ui/badge"
-import { type ChartConfig, ChartContainer, ChartTooltip } from "@/registry/new-york-v4/ui/chart"
+import {
+  type ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+} from "@/registry/new-york-v4/ui/chart"
 import { ChartTooltipContent } from "@/registry/new-york-v4/ui/chart"
 import { Skeleton } from "@/registry/new-york-v4/ui/skeleton"
 import { useEffect, useId, useMemo, useRef, useState } from "react"
-import { CartesianGrid, Line, LineChart, Rectangle, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts"
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  Rectangle,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts"
 import { BarRectangleItem } from "recharts/types/cartesian/Bar"
 
 interface LatencyLimitChartProps {
@@ -53,24 +66,25 @@ export function LatencyLimitChart({
       setIsLoading(true)
       try {
         const response = await fetch(
-          `/api/websites/${websiteId}/uptime/limit?limit=${limit}`
+          `/api/websites/${websiteId}/uptime/limit?limit=${limit}`,
         )
         if (!response.ok) {
-          console.error(
-            `Failed to fetch latency data: ${response.statusText}`
-          )
+          console.error(`Failed to fetch latency data: ${response.statusText}`)
           setData([])
           return
         }
-        const responseData = await response.json() as { timestamp: string; responseTime: number }[]
-        
+        const responseData = (await response.json()) as {
+          timestamp: string
+          responseTime: number
+        }[]
+
         // Format data with gradient colors based on response time
-        const formattedData = responseData.map(point => ({
+        const formattedData = responseData.map((point) => ({
           timestamp: point.timestamp,
           responseTime: point.responseTime,
-          gradientColor: getColorForResponseTime(point.responseTime)
+          gradientColor: getColorForResponseTime(point.responseTime),
         }))
-        
+
         setData(formattedData)
       } catch (error) {
         console.error("Error fetching latency data:", error)
@@ -86,24 +100,27 @@ export function LatencyLimitChart({
   // Calculate min/max response times for gradient calculation
   const { minResponseTime, maxResponseTime } = useMemo(() => {
     if (data.length === 0) {
-      return { minResponseTime: 0, maxResponseTime: 0 };
+      return { minResponseTime: 0, maxResponseTime: 0 }
     }
-    const responseTimes = data.map(d => d.responseTime);
-    const minVal = Math.min(...responseTimes);
-    const maxVal = Math.max(...responseTimes);
+    const responseTimes = data.map((d) => d.responseTime)
+    const minVal = Math.min(...responseTimes)
+    const maxVal = Math.max(...responseTimes)
     // Add a small buffer if min and max are the same to avoid division by zero
     return {
       minResponseTime: minVal,
       maxResponseTime: minVal === maxVal ? maxVal + 1 : maxVal,
-    };
-  }, [data]);
+    }
+  }, [data])
 
   // Generate gradient stops based on response time values and thresholds (Smooth)
   const gradientStops = useMemo(() => {
-    const range = maxResponseTime - minResponseTime;
+    const range = maxResponseTime - minResponseTime
     if (range <= 0) {
-      const color = getColorForResponseTime(minResponseTime);
-      return [{ offset: "0%", color }, { offset: "100%", color }];
+      const color = getColorForResponseTime(minResponseTime)
+      return [
+        { offset: "0%", color },
+        { offset: "100%", color },
+      ]
     }
 
     // Define thresholds and their corresponding colors
@@ -116,44 +133,50 @@ export function LatencyLimitChart({
       // Add a final threshold slightly above the max possible if needed,
       // or rely on the maxResponseTime stop.
       // Example: { value: 5000, color: getColorForResponseTime(5000) }
-    ];
+    ]
 
-    const stops = [];
+    const stops = []
     // Add start stop (color for minResponseTime)
-    stops.push({ offset: 0, color: getColorForResponseTime(minResponseTime) });
+    stops.push({ offset: 0, color: getColorForResponseTime(minResponseTime) })
 
     // Add stops for each threshold within the data range
     for (const t of thresholds) {
       if (t.value >= minResponseTime && t.value <= maxResponseTime) {
-        const offsetPercent = ((t.value - minResponseTime) / range) * 100;
-        stops.push({ offset: offsetPercent, color: t.color });
+        const offsetPercent = ((t.value - minResponseTime) / range) * 100
+        stops.push({ offset: offsetPercent, color: t.color })
       }
     }
 
     // Add end stop (color for maxResponseTime)
-    stops.push({ offset: 100, color: getColorForResponseTime(maxResponseTime) });
+    stops.push({ offset: 100, color: getColorForResponseTime(maxResponseTime) })
 
     // Sort, clamp, format, and remove duplicates
-    return stops
-      .sort((a, b) => a.offset - b.offset)
-      .map(stop => ({
-        offset: `${Math.max(0, Math.min(100, stop.offset))}%`, // Clamp offset
-        color: stop.color,
-      }))
-      // Remove consecutive stops with the same offset OR same color
-      // (allowing same color at different offsets for solid bands if needed,
-      // but removing redundant stops at the exact same location)
-      .filter((stop, index, self) =>
-          index === 0 ||
-          stop.offset !== self[index - 1].offset ||
-          stop.color !== self[index - 1].color
-      )
-      // Remove consecutive stops with the same color to ensure smooth transition
-      .filter((stop, index, self) =>
-          index === 0 || index === self.length -1 || stop.color !== self[index - 1].color || stop.color !== self[index + 1].color
-      );
-
-  }, [minResponseTime, maxResponseTime]);
+    return (
+      stops
+        .sort((a, b) => a.offset - b.offset)
+        .map((stop) => ({
+          offset: `${Math.max(0, Math.min(100, stop.offset))}%`, // Clamp offset
+          color: stop.color,
+        }))
+        // Remove consecutive stops with the same offset OR same color
+        // (allowing same color at different offsets for solid bands if needed,
+        // but removing redundant stops at the exact same location)
+        .filter(
+          (stop, index, self) =>
+            index === 0 ||
+            stop.offset !== self[index - 1].offset ||
+            stop.color !== self[index - 1].color,
+        )
+        // Remove consecutive stops with the same color to ensure smooth transition
+        .filter(
+          (stop, index, self) =>
+            index === 0 ||
+            index === self.length - 1 ||
+            stop.color !== self[index - 1].color ||
+            stop.color !== self[index + 1].color,
+        )
+    )
+  }, [minResponseTime, maxResponseTime])
 
   // Show placeholder when loading
   if (isLoading) {
@@ -195,52 +218,72 @@ export function LatencyLimitChart({
           data={data}
           margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
         >
-        <defs>
-          {/* Vertical gradient for stroke color (Inverted) */}
-          {/* y1=100% (bottom), y2=0% (top) */}
-          <linearGradient id="colorResponseTime" x1="0%" y1="100%" x2="0%" y2="0%">
-            {gradientStops.map((stop, i) => (
-              <stop
-                key={`stroke-${i}-${stop.offset}`}
-                offset={stop.offset}
-                stopColor={stop.color}
-                stopOpacity={1}
-              />
-            ))}
-          </linearGradient>
-        </defs>
+          <defs>
+            {/* Vertical gradient for stroke color (Inverted) */}
+            {/* y1=100% (bottom), y2=0% (top) */}
+            <linearGradient
+              id="colorResponseTime"
+              x1="0%"
+              y1="100%"
+              x2="0%"
+              y2="0%"
+            >
+              {gradientStops.map((stop, i) => (
+                <stop
+                  key={`stroke-${i}-${stop.offset}`}
+                  offset={stop.offset}
+                  stopColor={stop.color}
+                  stopOpacity={1}
+                />
+              ))}
+            </linearGradient>
+          </defs>
 
-        <ChartTooltip
-          cursor={false}
-          content={
-            <ChartTooltipContent
-              hideLabel
-              className="bg-accent min-w-auto"
-              labelClassName=""
-              formatter={(value, name) => {
-                if (name === "responseTime" && typeof value === "number") {
-                  if (value >= 1000) {
-                    const seconds = value / 1000;
-                    return <p className="text-xs"><span className="font-semibold">{seconds.toFixed(2)}</span> s</p>
+          <ChartTooltip
+            cursor={false}
+            content={
+              <ChartTooltipContent
+                hideLabel
+                className="bg-accent min-w-auto"
+                labelClassName=""
+                formatter={(value, name) => {
+                  if (name === "responseTime" && typeof value === "number") {
+                    if (value >= 1000) {
+                      const seconds = value / 1000
+                      return (
+                        <p className="text-xs">
+                          <span className="font-semibold">
+                            {seconds.toFixed(2)}
+                          </span>{" "}
+                          s
+                        </p>
+                      )
+                    }
+                    return (
+                      <p className="text-xs">
+                        <span className="font-semibold">
+                          {value.toFixed(0)}
+                        </span>{" "}
+                        ms
+                      </p>
+                    )
                   }
-                  return <p className="text-xs"><span className="font-semibold">{value.toFixed(0)}</span> ms</p>
-                }
-                
-                return value
-              }}
-            />
-          }
-        />
 
-        <Line
-          type="bump"
-          dataKey="responseTime"
-          stroke="url(#colorResponseTime)"
-          strokeWidth={height < 100 ? 2 : 3}
-          dot={false}
-          animationDuration={0}
-          isAnimationActive={false}
-        />
+                  return value
+                }}
+              />
+            }
+          />
+
+          <Line
+            type="bump"
+            dataKey="responseTime"
+            stroke="url(#colorResponseTime)"
+            strokeWidth={height < 100 ? 2 : 3}
+            dot={false}
+            animationDuration={0}
+            isAnimationActive={false}
+          />
         </LineChart>
       </ChartContainer>
       {/* </ResponsiveContainer> */}

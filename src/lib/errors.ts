@@ -33,7 +33,9 @@ export function logErrorStack(error: unknown) {
 export class MonitorTriggerNotInitializedError extends Error {
   static readonly NAME = "MonitorTriggerNotInitializedError"
 
-  constructor(message = "MonitorTrigger Durable Object accessed before initialization.") {
+  constructor(
+    message = "MonitorTrigger Durable Object accessed before initialization.",
+  ) {
     super(message)
     this.name = MonitorTriggerNotInitializedError.NAME
   }

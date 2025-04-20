@@ -15,9 +15,9 @@ const querySchema = z.object({
 
 /**
  * GET /api/websites/[id]/uptime/limit
- * 
+ *
  * Retrieves uptime limit data for a specific website.
- * 
+ *
  * @params {string} id - Website ID
  * @query {number} limit - Maximum number of data points to return (default: 30)
  * @returns {Promise<NextResponse>} JSON response with uptime limit data in chronological order
@@ -45,7 +45,9 @@ export const GET = createRoute
         .orderBy(UptimeChecksTable.timestamp)
         .limit(limit)
 
-      console.log(`Uptime data for website [${websiteId}] with limit [${limit}]: ${results.length}`)
+      console.log(
+        `Uptime data for website [${websiteId}] with limit [${limit}]: ${results.length}`,
+      )
       return NextResponse.json(results, { status: HttpStatusCodes.OK })
     } catch (error) {
       console.error("Error fetching latency data: ", error)
@@ -54,4 +56,4 @@ export const GET = createRoute
         { status: HttpStatusCodes.INTERNAL_SERVER_ERROR },
       )
     }
-  }) 
+  })

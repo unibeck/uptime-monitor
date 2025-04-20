@@ -9,9 +9,9 @@ import * as HttpStatusCodes from "stoker/http-status-codes"
 
 /**
  * GET /api/websites/[id]/checks/history
- * 
+ *
  * Retrieves the history of uptime checks for a specific website within a given time period.
- * 
+ *
  * @params {string} id - Website ID
  * @query {number} days - Number of days to look back
  * @returns {Promise<NextResponse>} JSON response with uptime check history

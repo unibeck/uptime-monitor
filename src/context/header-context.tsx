@@ -1,7 +1,7 @@
-'use client'
+"use client"
 
-import type React from 'react'
-import { type ReactNode, createContext, useContext, useState } from 'react'
+import type React from "react"
+import { type ReactNode, createContext, useContext, useState } from "react"
 
 interface HeaderContextProps {
   headerContent: React.ReactNode
@@ -10,12 +10,11 @@ interface HeaderContextProps {
 
 const HeaderContext = createContext<HeaderContextProps | undefined>(undefined)
 
-export const defaultHeaderContent: React.ReactNode = (
-  <div />
-)
+export const defaultHeaderContent: React.ReactNode = <div />
 
 export function HeaderProvider({ children }: { children: ReactNode }) {
-  const [headerContent, setHeaderContent] = useState<React.ReactNode>(defaultHeaderContent)
+  const [headerContent, setHeaderContent] =
+    useState<React.ReactNode>(defaultHeaderContent)
 
   return (
     <HeaderContext.Provider value={{ headerContent, setHeaderContent }}>
@@ -30,4 +29,4 @@ export function useHeaderContext() {
     throw new Error("useHeaderContext must be used within a HeaderProvider")
   }
   return context
-} 
+}

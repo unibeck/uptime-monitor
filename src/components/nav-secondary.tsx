@@ -1,6 +1,10 @@
 "use client"
 
-import { type Icon, IconBrightness, IconCirclePlusFilled } from "@tabler/icons-react"
+import {
+  type Icon,
+  IconBrightness,
+  IconCirclePlusFilled,
+} from "@tabler/icons-react"
 import { useTheme } from "next-themes"
 import * as React from "react"
 
@@ -37,17 +41,19 @@ export function NavSecondary({
     <SidebarGroup {...props}>
       <SidebarGroupContent>
         <SidebarMenu className="my-4">
-          <AddWebsiteDialog trigger={
-            <SidebarMenuItem className="flex items-center gap-2">
-              <SidebarMenuButton
-                variant="primary"
-                tooltip="Create a new website monitor to track its uptime and get notified when it's down."
-              >
-                <IconCirclePlusFilled />
-                <span>Add Website Monitor</span>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          } />
+          <AddWebsiteDialog
+            trigger={
+              <SidebarMenuItem className="flex items-center gap-2">
+                <SidebarMenuButton
+                  variant="primary"
+                  tooltip="Create a new website monitor to track its uptime and get notified when it's down."
+                >
+                  <IconCirclePlusFilled />
+                  <span>Add Website Monitor</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            }
+          />
         </SidebarMenu>
 
         <SidebarMenu>
@@ -56,7 +62,9 @@ export function NavSecondary({
               <SidebarMenuButton asChild>
                 <a
                   href={item.url}
-                  {...(item.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                  {...(item.external
+                    ? { target: "_blank", rel: "noopener noreferrer" }
+                    : {})}
                 >
                   <item.icon />
                   <span>{item.title}</span>

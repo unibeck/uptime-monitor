@@ -12,9 +12,9 @@ import type { z } from "zod"
 
 /**
  * GET /api/websites/[id]
- * 
+ *
  * Retrieves a specific website by ID.
- * 
+ *
  * @params {string} id - Website ID
  * @returns {Promise<NextResponse>} JSON response with website data
  * @throws {NextResponse} 404 Not Found if website doesn't exist
@@ -52,9 +52,9 @@ export const GET = createRoute
 
 /**
  * PATCH /api/websites/[id]
- * 
+ *
  * Updates a specific website by ID with partial data.
- * 
+ *
  * @params {string} id - Website ID
  * @body {websitesPatchSchema} - Partial website data to update
  * @returns {Promise<NextResponse>} JSON response with updated website
@@ -94,17 +94,22 @@ export const PATCH = createRoute
       )
     }
 
-    console.log(`Updating check interval for [${updatedWebsite.id}] to [${updatedWebsite.checkInterval}]`)
-    await env.MONITOR_TRIGGER_RPC.updateCheckInterval(updatedWebsite.id, updatedWebsite.checkInterval)
+    console.log(
+      `Updating check interval for [${updatedWebsite.id}] to [${updatedWebsite.checkInterval}]`,
+    )
+    await env.MONITOR_TRIGGER_RPC.updateCheckInterval(
+      updatedWebsite.id,
+      updatedWebsite.checkInterval,
+    )
 
     return NextResponse.json(updatedWebsite, { status: HttpStatusCodes.OK })
   })
 
 /**
  * DELETE /api/websites/[id]
- * 
+ *
  * Deletes a specific website by ID and its associated monitor.
- * 
+ *
  * @params {string} id - Website ID
  * @returns {Promise<NextResponse>} Empty response with 204 No Content status
  * @throws {NextResponse} 500 Internal Server Error on database errors

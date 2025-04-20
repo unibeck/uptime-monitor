@@ -11,9 +11,9 @@ import * as HttpStatusCodes from "stoker/http-status-codes"
 
 /**
  * GET /api/websites/[id]/checks
- * 
+ *
  * Retrieves uptime checks for a specific website within a given time range.
- * 
+ *
  * @params {string} id - Website ID
  * @query {TimeRange} timeRange - Time range to filter results
  * @returns {Promise<NextResponse>} JSON response with uptime checks

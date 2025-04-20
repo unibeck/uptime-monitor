@@ -11,7 +11,12 @@ import {
 } from "@/registry/new-york-v4/ui/dropdown-menu"
 import { Input } from "@/registry/new-york-v4/ui/input"
 import { useDataTableStore } from "@/store/data-table-store"
-import { IconChevronDown, IconLayoutColumns, IconSearch, IconX } from "@tabler/icons-react"
+import {
+  IconChevronDown,
+  IconLayoutColumns,
+  IconSearch,
+  IconX,
+} from "@tabler/icons-react"
 import type { Table } from "@tanstack/react-table"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import type * as React from "react"
@@ -29,27 +34,27 @@ export function Toolbar({ table }: ToolbarProps) {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  
+
   // Get state and actions from the store
   const searchValue = useDataTableStore((state) => state.searchValue)
   const setSearchValue = useDataTableStore((state) => state.setSearchValue)
   const setPagination = useDataTableStore((state) => state.setPagination)
   const fetchWebsites = useDataTableStore((state) => state.fetchWebsites)
-  
+
   // Debounce search updates to avoid too many requests
   const handleSearch = useDebouncedCallback((term: string) => {
     // Update the store with the new search value
     setSearchValue(term)
-    
+
     // Reset to first page when searching
     setPagination({
       pageIndex: 0,
       pageSize: table.getState().pagination.pageSize,
     })
-    
+
     // Update URL search params
     updateUrlSearchParams(term)
-    
+
     // Fetch data with new search term
     fetchWebsites()
   }, 500)
@@ -57,17 +62,17 @@ export function Toolbar({ table }: ToolbarProps) {
   // Update URL search params without triggering navigation
   const updateUrlSearchParams = (term: string) => {
     const newParams = new URLSearchParams(searchParams.toString())
-    
+
     if (term) {
-      newParams.set('search', term)
+      newParams.set("search", term)
     } else {
-      newParams.delete('search')
+      newParams.delete("search")
     }
-    
+
     // Construct the URL, omitting '?' if no parameters
     const queryString = newParams.toString()
-    const newUrl = queryString ? `${pathname}?${queryString}` : pathname;
-        
+    const newUrl = queryString ? `${pathname}?${queryString}` : pathname
+
     // @ts-ignore - Ignoring type error as pathname comes from usePathname and we know it's is a valid typed route
     router.push(newUrl, { scroll: false })
   }
@@ -78,7 +83,7 @@ export function Toolbar({ table }: ToolbarProps) {
     setSearchValue(value)
     handleSearch(value)
   }
-  
+
   // Clear search
   const clearSearch = () => {
     setSearchValue("")
@@ -121,10 +126,15 @@ export function Toolbar({ table }: ToolbarProps) {
               .filter(
                 (column) =>
                   typeof column.accessorFn !== "undefined" &&
-                  column.getCanHide()
+                  column.getCanHide(),
               )
               .map((column) => {
-                const headerLabel = (column.columnDef as AppColumnDef<z.infer<typeof websitesSelectSchema>>).headerLabel ?? column.id
+                const headerLabel =
+                  (
+                    column.columnDef as AppColumnDef<
+                      z.infer<typeof websitesSelectSchema>
+                    >
+                  ).headerLabel ?? column.id
                 return (
                   <DropdownMenuCheckboxItem
                     key={column.id}
@@ -144,4 +154,4 @@ export function Toolbar({ table }: ToolbarProps) {
       </div>
     </div>
   )
-} 
+}

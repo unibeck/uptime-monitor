@@ -107,8 +107,7 @@ export async function createWebsiteDownAlert(
       url: websiteUrl,
       status: status?.toString() || "N/A",
       error: error || "",
-      monitorRepo:
-        "https://github.com/unibeck/uptime-monitor",
+      monitorRepo: "https://github.com/unibeck/uptime-monitor",
       // cloudflareWorkerDashboard:
       //   "https://dash.cloudflare.com/UPDATE_ME_ABC",
       // cloudflareMonitorDODashboard:

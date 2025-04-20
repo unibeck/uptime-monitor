@@ -44,17 +44,21 @@ type WebsiteFormData = z.infer<typeof websitesInsertDTOSchema>
 type WebsiteData = z.infer<typeof websitesSelectSchema>
 
 interface AddWebsiteDialogProps {
-  trigger?: React.ReactNode;
-  website?: WebsiteData;
-  onSuccess?: () => void;
+  trigger?: React.ReactNode
+  website?: WebsiteData
+  onSuccess?: () => void
 }
 
-export function AddWebsiteDialog({ trigger, website, onSuccess }: AddWebsiteDialogProps) {
+export function AddWebsiteDialog({
+  trigger,
+  website,
+  onSuccess,
+}: AddWebsiteDialogProps) {
   const [isSubmitting, setIsSubmitting] = React.useState(false)
   const [open, setOpen] = React.useState(false)
   const formId = "add-website-form"
-  const isEditing = !!website;
-  
+  const isEditing = !!website
+
   const checkIntervalOptions = [
     { label: "10 seconds", value: 10 },
     { label: "30 seconds", value: 30 },
@@ -68,118 +72,123 @@ export function AddWebsiteDialog({ trigger, website, onSuccess }: AddWebsiteDial
     { label: "3 hours", value: 10800 },
     { label: "6 hours", value: 21600 },
     { label: "12 hours", value: 43200 },
-    { label: "1 day", value: 86400 }
+    { label: "1 day", value: 86400 },
   ]
-  
+
   const form = useForm<WebsiteFormData>({
     resolver: zodResolver(websitesInsertDTOSchema),
-    defaultValues: isEditing ? {
-      name: website.name ?? "",
-      url: website.url ?? "",
-      checkInterval: website.checkInterval ?? 60,
-      isRunning: website.isRunning ?? true,
-      expectedStatusCode: website.expectedStatusCode ?? undefined,
-    } : {
-      name: "",
-      url: "",
-      checkInterval: 60,
-      isRunning: true,
-      expectedStatusCode: 200,
-    },
+    defaultValues: isEditing
+      ? {
+          name: website.name ?? "",
+          url: website.url ?? "",
+          checkInterval: website.checkInterval ?? 60,
+          isRunning: website.isRunning ?? true,
+          expectedStatusCode: website.expectedStatusCode ?? undefined,
+        }
+      : {
+          name: "",
+          url: "",
+          checkInterval: 60,
+          isRunning: true,
+          expectedStatusCode: 200,
+        },
   })
-  
+
   React.useEffect(() => {
     if (open) {
-      form.reset(isEditing ? {
-        name: website.name ?? "",
-        url: website.url ?? "",
-        checkInterval: website.checkInterval ?? 60,
-        isRunning: website.isRunning ?? true,
-        expectedStatusCode: website.expectedStatusCode ?? undefined,
-      } : {
-        name: "",
-        url: "",
-        checkInterval: 60,
-        isRunning: true,
-        expectedStatusCode: 200,
-      });
+      form.reset(
+        isEditing
+          ? {
+              name: website.name ?? "",
+              url: website.url ?? "",
+              checkInterval: website.checkInterval ?? 60,
+              isRunning: website.isRunning ?? true,
+              expectedStatusCode: website.expectedStatusCode ?? undefined,
+            }
+          : {
+              name: "",
+              url: "",
+              checkInterval: 60,
+              isRunning: true,
+              expectedStatusCode: 200,
+            },
+      )
     }
-  }, [open, website, isEditing, form]);
-  
+  }, [open, website, isEditing, form])
+
   const onSubmit = async (data: WebsiteFormData) => {
     setIsSubmitting(true)
-    const url = isEditing ? `/api/websites/${website.id}` : '/api/websites';
-    const method = isEditing ? 'PATCH' : 'POST';
+    const url = isEditing ? `/api/websites/${website.id}` : "/api/websites"
+    const method = isEditing ? "PATCH" : "POST"
 
     try {
       const response = await fetch(url, {
         method: method,
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       })
 
-      const successStatus = isEditing ? HttpStatusCodes.OK : HttpStatusCodes.CREATED;
-      const successMessage = isEditing ? "Website Updated" : "Website Added";
-      const successDescription = isEditing ? `${data.url} has been updated successfully.` : `${data.url} has been added successfully.`;
+      const successStatus = isEditing
+        ? HttpStatusCodes.OK
+        : HttpStatusCodes.CREATED
+      const successMessage = isEditing ? "Website Updated" : "Website Added"
+      const successDescription = isEditing
+        ? `${data.url} has been updated successfully.`
+        : `${data.url} has been added successfully.`
 
       if (response.status === successStatus) {
-        toast.success(
-          successMessage,
-          {
-            description: successDescription,
-            ...DEFAULT_TOAST_OPTIONS,
-          }
-        )
+        toast.success(successMessage, {
+          description: successDescription,
+          ...DEFAULT_TOAST_OPTIONS,
+        })
         setOpen(false)
-        onSuccess?.();
+        onSuccess?.()
       } else if (response.status === HttpStatusCodes.CONFLICT && !isEditing) {
         console.log("Website already exists")
         const error: ConflictWebsiteResponse = await response.json()
-        toast.info(
-          "Similar website already exists",
-          {
-            description: error.message,
-            ...DEFAULT_TOAST_OPTIONS,
-            duration: 10000,
-          }
-        )
+        toast.info("Similar website already exists", {
+          description: error.message,
+          ...DEFAULT_TOAST_OPTIONS,
+          duration: 10000,
+        })
         return
       } else {
-        const errorText = await response.text();
-        toast.error(
-          `Error response: ${response.status}`,
-          {
-            description: `Failed to ${isEditing ? 'update' : 'add'} website. ${errorText || 'Unexpected response from server.'}`,
-            ...DEFAULT_TOAST_OPTIONS,
-            duration: 10000,
-          }
-        )
+        const errorText = await response.text()
+        toast.error(`Error response: ${response.status}`, {
+          description: `Failed to ${isEditing ? "update" : "add"} website. ${errorText || "Unexpected response from server."}`,
+          ...DEFAULT_TOAST_OPTIONS,
+          duration: 10000,
+        })
         return
       }
 
       form.reset()
     } catch (error) {
-      console.error(`Error ${isEditing ? 'updating' : 'creating'} website:`, error)
-      toast.error(
-        'UNKNOWN_ERROR',
-        {
-          description: `Failed to ${isEditing ? 'update' : 'create'} website monitor.`,
-          ...DEFAULT_TOAST_OPTIONS,
-          duration: 10000,
-        }
+      console.error(
+        `Error ${isEditing ? "updating" : "creating"} website:`,
+        error,
       )
+      toast.error("UNKNOWN_ERROR", {
+        description: `Failed to ${isEditing ? "update" : "create"} website monitor.`,
+        ...DEFAULT_TOAST_OPTIONS,
+        duration: 10000,
+      })
     } finally {
       setIsSubmitting(false)
     }
   }
-  
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        {trigger ? trigger : isEditing ? (
-          <Button variant="ghost" size="sm">Edit</Button>
+        {trigger ? (
+          trigger
+        ) : isEditing ? (
+          <Button variant="ghost" size="sm">
+            Edit
+          </Button>
         ) : (
           <Button variant="outline" size="sm">
             <IconPlus />
@@ -189,14 +198,22 @@ export function AddWebsiteDialog({ trigger, website, onSuccess }: AddWebsiteDial
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>{isEditing ? 'Edit Website Monitor' : 'Add Website Monitor'}</DialogTitle>
+          <DialogTitle>
+            {isEditing ? "Edit Website Monitor" : "Add Website Monitor"}
+          </DialogTitle>
           <DialogDescription>
-            {isEditing ? 'Update the details for this website monitor.' : 'Add a new website to monitor uptime and performance'}
+            {isEditing
+              ? "Update the details for this website monitor."
+              : "Add a new website to monitor uptime and performance"}
           </DialogDescription>
         </DialogHeader>
         <div className="px-4">
           <Form {...form}>
-            <form id={formId} onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form
+              id={formId}
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-6"
+            >
               <FormField
                 control={form.control}
                 name="name"
@@ -213,7 +230,7 @@ export function AddWebsiteDialog({ trigger, website, onSuccess }: AddWebsiteDial
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="url"
@@ -221,7 +238,10 @@ export function AddWebsiteDialog({ trigger, website, onSuccess }: AddWebsiteDial
                   <FormItem>
                     <FormLabel>URL</FormLabel>
                     <FormControl>
-                      <Input placeholder="https://x.com/SolBeckman_" {...field} />
+                      <Input
+                        placeholder="https://x.com/SolBeckman_"
+                        {...field}
+                      />
                     </FormControl>
                     <FormDescription>
                       The full URL to monitor (including https://)
@@ -230,7 +250,7 @@ export function AddWebsiteDialog({ trigger, website, onSuccess }: AddWebsiteDial
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="checkInterval"
@@ -238,7 +258,9 @@ export function AddWebsiteDialog({ trigger, website, onSuccess }: AddWebsiteDial
                   <FormItem>
                     <FormLabel>Check Interval</FormLabel>
                     <Select
-                      onValueChange={(value) => field.onChange(Number.parseInt(value, 10))}
+                      onValueChange={(value) =>
+                        field.onChange(Number.parseInt(value, 10))
+                      }
                       defaultValue={field.value.toString()}
                     >
                       <FormControl>
@@ -248,8 +270,8 @@ export function AddWebsiteDialog({ trigger, website, onSuccess }: AddWebsiteDial
                       </FormControl>
                       <SelectContent>
                         {checkIntervalOptions.map((option) => (
-                          <SelectItem 
-                            key={option.value} 
+                          <SelectItem
+                            key={option.value}
                             value={option.value.toString()}
                           >
                             {option.label}
@@ -264,7 +286,7 @@ export function AddWebsiteDialog({ trigger, website, onSuccess }: AddWebsiteDial
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="expectedStatusCode"
@@ -272,16 +294,23 @@ export function AddWebsiteDialog({ trigger, website, onSuccess }: AddWebsiteDial
                   <FormItem>
                     <FormLabel>Expected Status Code</FormLabel>
                     <FormControl>
-                      <Input 
-                        type="number" 
-                        placeholder="e.g., 200" 
+                      <Input
+                        type="number"
+                        placeholder="e.g., 200"
                         {...field}
-                        onChange={event => field.onChange(event.target.value === '' ? null : Number(event.target.value))}
-                        value={field.value ?? ''}
-                       />
+                        onChange={(event) =>
+                          field.onChange(
+                            event.target.value === ""
+                              ? null
+                              : Number(event.target.value),
+                          )
+                        }
+                        value={field.value ?? ""}
+                      />
                     </FormControl>
                     <FormDescription>
-                      The specific HTTP status code expected (e.g., 200). Leave empty to accept any 2xx/3xx code.
+                      The specific HTTP status code expected (e.g., 200). Leave
+                      empty to accept any 2xx/3xx code.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -294,11 +323,20 @@ export function AddWebsiteDialog({ trigger, website, onSuccess }: AddWebsiteDial
           <DialogClose asChild>
             <Button variant="ghost">Cancel</Button>
           </DialogClose>
-          <Button variant="primary" type="submit" form={formId} disabled={isSubmitting}>
-            {isSubmitting ? 'Saving...' : (isEditing ? 'Save Changes' : 'Add Website')}
+          <Button
+            variant="primary"
+            type="submit"
+            form={formId}
+            disabled={isSubmitting}
+          >
+            {isSubmitting
+              ? "Saving..."
+              : isEditing
+                ? "Save Changes"
+                : "Add Website"}
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   )
-} 
+}

@@ -6,7 +6,10 @@ import { secsToHumanReadable } from "@/lib/formatters"
 import { Badge } from "@/registry/new-york-v4/ui/badge"
 import { Button } from "@/registry/new-york-v4/ui/button"
 import { Checkbox } from "@/registry/new-york-v4/ui/checkbox"
-import { IconBellExclamation, IconLayoutSidebarRightExpand } from "@tabler/icons-react"
+import {
+  IconBellExclamation,
+  IconLayoutSidebarRightExpand,
+} from "@tabler/icons-react"
 import type { ColumnDef } from "@tanstack/react-table"
 import Link from "next/link"
 import * as React from "react"
@@ -54,9 +57,9 @@ export const columns: AppColumnDef<z.infer<typeof websitesSelectSchema>>[] = [
     headerLabel: "Website Name",
     cell: ({ row }) => (
       <Link href={`/websites/${row.original.id}`} className="hover:underline">
-        {row.original.name.length > 32 
-        ? `${row.original.name.substring(0, 32)}...` 
-        : row.original.name}
+        {row.original.name.length > 32
+          ? `${row.original.name.substring(0, 32)}...`
+          : row.original.name}
       </Link>
     ),
     enableHiding: false,
@@ -70,13 +73,13 @@ export const columns: AppColumnDef<z.infer<typeof websitesSelectSchema>>[] = [
     cell: ({ row }) => {
       return (
         <div className="w-[300px]">
-          <LatencyLimitChart 
-            websiteId={row.original.id} 
+          <LatencyLimitChart
+            websiteId={row.original.id}
             limit={30}
             height={40}
           />
         </div>
-      );
+      )
     },
   },
   {
@@ -99,21 +102,22 @@ export const columns: AppColumnDef<z.infer<typeof websitesSelectSchema>>[] = [
     headerLabel: "Consecutive Failures",
     cell: ({ row }) => {
       const failures = row.getValue("consecutiveFailures") as number | null
-      
+
       // Center the content
       return (
         <div className="text-center">
           {failures === 1 ? (
-            <Badge variant="secondary" className="!bg-yellow-400 dark:!bg-yellow-700">
+            <Badge
+              variant="secondary"
+              className="!bg-yellow-400 dark:!bg-yellow-700"
+            >
               {failures}
             </Badge>
           ) : failures !== null && failures >= 2 ? (
-            <Badge variant="destructive">
-              {failures}
-            </Badge>
+            <Badge variant="destructive">{failures}</Badge>
           ) : (
             // Display 0 or — normally
-            <span>{failures ?? '—'}</span> 
+            <span>{failures ?? "—"}</span>
           )}
         </div>
       )
@@ -131,8 +135,8 @@ export const columns: AppColumnDef<z.infer<typeof websitesSelectSchema>>[] = [
 
       if (isRunning) {
         return (
-          <Badge 
-            variant="secondary" 
+          <Badge
+            variant="secondary"
             className="!bg-green-400 dark:!bg-green-700"
           >
             Running
@@ -140,11 +144,7 @@ export const columns: AppColumnDef<z.infer<typeof websitesSelectSchema>>[] = [
         )
       }
 
-      return (
-        <Badge variant="destructive">
-          Paused
-        </Badge>
-      )
+      return <Badge variant="destructive">Paused</Badge>
     },
   },
   {
@@ -158,12 +158,9 @@ export const columns: AppColumnDef<z.infer<typeof websitesSelectSchema>>[] = [
       return (
         <div className="flex items-center justify-center">
           {hasAlert ? (
-            <IconBellExclamation className="text-destructive" stroke={1.5}/>
+            <IconBellExclamation className="text-destructive" stroke={1.5} />
           ) : (
-            <Badge 
-              variant="outline"
-              className="px-2 py-1"
-            >
+            <Badge variant="outline" className="px-2 py-1">
               —
             </Badge>
           )}
@@ -180,11 +177,11 @@ export const columns: AppColumnDef<z.infer<typeof websitesSelectSchema>>[] = [
     cell: ({ row }) => {
       const value = row.getValue("createdAt")
       // Check if the value is a valid string or number before creating a Date
-      if (typeof value === 'string' || typeof value === 'number') {
-        const date = new Date(value);
+      if (typeof value === "string" || typeof value === "number") {
+        const date = new Date(value)
         // Check if the date is valid after parsing
         if (!Number.isNaN(date.getTime())) {
-           return <span>{date.toLocaleDateString()}</span>
+          return <span>{date.toLocaleDateString()}</span>
         }
       }
       return <span>N/A</span> // Fallback for invalid or null dates
@@ -200,11 +197,11 @@ export const columns: AppColumnDef<z.infer<typeof websitesSelectSchema>>[] = [
     cell: ({ row }) => {
       const value = row.getValue("updatedAt")
       // Check if the value is a valid string or number before creating a Date
-      if (typeof value === 'string' || typeof value === 'number') {
-        const date = new Date(value);
+      if (typeof value === "string" || typeof value === "number") {
+        const date = new Date(value)
         // Check if the date is valid after parsing
         if (!Number.isNaN(date.getTime())) {
-           return <span>{date.toLocaleDateString()}</span>
+          return <span>{date.toLocaleDateString()}</span>
         }
       }
       return <span>N/A</span> // Fallback for invalid or null dates
@@ -214,8 +211,8 @@ export const columns: AppColumnDef<z.infer<typeof websitesSelectSchema>>[] = [
   {
     id: "open-drawer",
     cell: ({ row }) => (
-      <WebsiteDetailDrawer 
-        website={row.original} 
+      <WebsiteDetailDrawer
+        website={row.original}
         trigger={
           <Button
             variant="ghost"

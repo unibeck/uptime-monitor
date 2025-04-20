@@ -1,4 +1,4 @@
-'use client' // Required because we are using a hook (useContext)
+"use client" // Required because we are using a hook (useContext)
 
 import { ModeToggle } from "@/components/mode-toggle"
 import { ThemeSelector } from "@/components/theme-selector"
@@ -19,9 +19,7 @@ export function SiteHeader() {
           className="mx-2 data-[orientation=vertical]:h-4"
         />
         <h1 className="text-base font-medium">Website Monitors</h1>
-        <div className="ml-auto flex items-center gap-2">
-          {headerContent}
-        </div>
+        <div className="ml-auto flex items-center gap-2">{headerContent}</div>
       </div>
     </header>
   )

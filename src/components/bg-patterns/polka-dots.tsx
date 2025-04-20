@@ -1,9 +1,9 @@
-import React from "react";
+import React from "react"
 
 interface PolkaDotsProps {
-  className?: string;
-  color?: string;
-  dotColor?: string;
+  className?: string
+  color?: string
+  dotColor?: string
 }
 
 export function PolkaDots({
@@ -15,5 +15,5 @@ export function PolkaDots({
     <div
       className={`absolute inset-0 bg-[radial-gradient(${dotColor}_1px,${color}_2px)] bg-[size:16px_16px] ${className}`}
     />
-  );
+  )
 }

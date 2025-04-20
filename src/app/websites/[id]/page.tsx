@@ -4,23 +4,35 @@ import LatencyRangeChart from "@/components/latency-range-chart"
 import { UptimeChart } from "@/components/uptime-chart"
 import { WebsiteDetailHeader } from "@/components/website-detail-header"
 import { WebsiteSectionCards } from "@/components/website-section-cards"
-import { defaultHeaderContent, useHeaderContext } from "@/context/header-context"
-import type { uptimeChecksSelectSchema, websitesSelectSchema } from "@/db/zod-schema"
+import {
+  defaultHeaderContent,
+  useHeaderContext,
+} from "@/context/header-context"
+import type {
+  uptimeChecksSelectSchema,
+  websitesSelectSchema,
+} from "@/db/zod-schema"
 import { msToHumanReadable, secsToHumanReadable } from "@/lib/formatters"
 import { Badge } from "@/registry/new-york-v4/ui/badge"
 import { Button } from "@/registry/new-york-v4/ui/button"
 import { Card, CardContent } from "@/registry/new-york-v4/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/registry/new-york-v4/ui/tabs"
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/registry/new-york-v4/ui/tabs"
 import { TooltipContent } from "@/registry/new-york-v4/ui/tooltip"
-import { TooltipProvider, TooltipTrigger } from "@/registry/new-york-v4/ui/tooltip"
+import {
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/registry/new-york-v4/ui/tooltip"
 import { Tooltip } from "@/registry/new-york-v4/ui/tooltip"
-import type {
-  TimeRange,
-} from "@/types/website"
+import type { TimeRange } from "@/types/website"
 import { IconPointFilled } from "@tabler/icons-react"
 import { formatDistance } from "date-fns"
 import { ArrowLeft } from "lucide-react"
-import type { Route } from 'next'; // Import Route type
+import type { Route } from "next" // Import Route type
 import Link from "next/link"
 import { useParams, useRouter, useSearchParams } from "next/navigation"
 import React, { useEffect, useState } from "react"
@@ -43,11 +55,16 @@ export default function WebsiteDetailPage() {
   // Initialize timeRange from URL or default to '1d'
   const [timeRange, setTimeRange] = useState<TimeRange>(() => {
     const rangeParam = searchParams.get("range")
-    return (rangeParam === "1h" || rangeParam === "1d" || rangeParam === "7d") ? rangeParam : "1d"
+    return rangeParam === "1h" || rangeParam === "1d" || rangeParam === "7d"
+      ? rangeParam
+      : "1d"
   })
 
-  const [uptimeData, setUptimeData] = useState<z.infer<typeof uptimeChecksSelectSchema>[]>([])
-  const [latestUptimeCheck, setLatestUptimeCheck] = useState<LatestUptimeCheck | null>(null) // New state for latest check
+  const [uptimeData, setUptimeData] = useState<
+    z.infer<typeof uptimeChecksSelectSchema>[]
+  >([])
+  const [latestUptimeCheck, setLatestUptimeCheck] =
+    useState<LatestUptimeCheck | null>(null) // New state for latest check
 
   const [uptimePercentage, setUptimePercentage] = useState<number | null>(null)
   const [avgLatency, setAvgLatency] = useState<number | null>(null)
@@ -101,23 +118,28 @@ export default function WebsiteDetailPage() {
                     </span> */}
                   </TooltipTrigger>
                   <TooltipContent>
+                    <p>Latest check:</p>
                     <p>
-                      Latest check:
+                      {new Date(latestUptimeCheck.timestamp).toLocaleString(
+                        undefined,
+                        {
+                          year: "numeric",
+                          month: "numeric",
+                          day: "numeric",
+                          hour: "numeric",
+                          minute: "numeric",
+                          second: "numeric",
+                          timeZoneName: "short",
+                        },
+                      )}
                     </p>
-                    <p>{new Date(latestUptimeCheck.timestamp).toLocaleString(undefined, { 
-                      year: 'numeric', 
-                      month: 'numeric', 
-                      day: 'numeric', 
-                      hour: 'numeric', 
-                      minute: 'numeric', 
-                      second: 'numeric', 
-                      timeZoneName: 'short'
-                    })}</p>
+                    <p>Status: {latestUptimeCheck.status}</p>
                     <p>
-                      Status: {latestUptimeCheck.status}
-                    </p>
-                    <p>
-                      Latency: {msToHumanReadable(latestUptimeCheck.responseTime ?? 0, true)}
+                      Latency:{" "}
+                      {msToHumanReadable(
+                        latestUptimeCheck.responseTime ?? 0,
+                        true,
+                      )}
                     </p>
                   </TooltipContent>
                 </Tooltip>
@@ -136,8 +158,10 @@ export default function WebsiteDetailPage() {
             </div>
           </div>
         ) : (
-          <Badge variant="warning" className="animate-pulse">Paused</Badge>
-        )
+          <Badge variant="warning" className="animate-pulse">
+            Paused
+          </Badge>
+        ),
       )
     }
   }, [website, latestUptimeCheck, setHeaderContent])
@@ -166,16 +190,18 @@ export default function WebsiteDetailPage() {
           setUptimeDataError(`Failed to load data: ${response.statusText}`)
           return
         }
-        
-        const responseData = (await response.json()) as z.infer<typeof uptimeChecksSelectSchema>[]
-        
-        setUptimeData(responseData)        
+
+        const responseData = (await response.json()) as z.infer<
+          typeof uptimeChecksSelectSchema
+        >[]
+
+        setUptimeData(responseData)
         setUptimeDataError(null)
       } catch (error) {
         console.error("Error fetching combined uptime/latency data:", error)
         // Reset states on error
         setUptimeData([])
-        setUptimeDataError('An error occurred while loading website data.')
+        setUptimeDataError("An error occurred while loading website data.")
       } finally {
         setIsUptimeDataLoading(false)
       }
@@ -186,7 +212,9 @@ export default function WebsiteDetailPage() {
 
   useEffect(() => {
     if (uptimeData.length > 0) {
-      const uptimePercentage = uptimeData.filter(check => check.isUp).length / uptimeData.length * 100
+      const uptimePercentage =
+        (uptimeData.filter((check) => check.isUp).length / uptimeData.length) *
+        100
       setUptimePercentage(uptimePercentage)
     } else {
       setUptimePercentage(null)
@@ -195,7 +223,9 @@ export default function WebsiteDetailPage() {
 
   useEffect(() => {
     if (uptimeData.length > 0) {
-      const avgLatency = uptimeData.reduce((sum, check) => sum + (check.responseTime ?? 0), 0) / uptimeData.length
+      const avgLatency =
+        uptimeData.reduce((sum, check) => sum + (check.responseTime ?? 0), 0) /
+        uptimeData.length
       setAvgLatency(avgLatency)
     } else {
       setAvgLatency(null)
@@ -213,8 +243,11 @@ export default function WebsiteDetailPage() {
       try {
         const response = await fetch(`/api/websites/${websiteId}/uptime`)
         if (!response.ok) {
-          if (response.status !== 404) { // Don't error if no check exists yet
-             console.error(`Failed to fetch latest uptime check: ${response.statusText}`)
+          if (response.status !== 404) {
+            // Don't error if no check exists yet
+            console.error(
+              `Failed to fetch latest uptime check: ${response.statusText}`,
+            )
           }
           setLatestUptimeCheck(null)
           return
@@ -279,9 +312,7 @@ export default function WebsiteDetailPage() {
 
       <div className="@container/main flex flex-1 flex-col gap-2">
         <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6 px-4 lg:px-6">
-          <WebsiteDetailHeader
-            website={website}
-          />
+          <WebsiteDetailHeader website={website} />
 
           <Tabs
             value={timeRange} // Use value instead of defaultValue
@@ -289,9 +320,10 @@ export default function WebsiteDetailPage() {
               const newTimeRange = value as TimeRange
               setTimeRange(newTimeRange)
               // Update URL
-              const newPath = newTimeRange === "1d" 
-                ? `/websites/${websiteId}` 
-                : `/websites/${websiteId}?range=${newTimeRange}`
+              const newPath =
+                newTimeRange === "1d"
+                  ? `/websites/${websiteId}`
+                  : `/websites/${websiteId}?range=${newTimeRange}`
               router.push(newPath as Route, { scroll: false })
             }}
             className="w-full"
@@ -305,7 +337,7 @@ export default function WebsiteDetailPage() {
             </div>
           </Tabs>
 
-          <WebsiteSectionCards 
+          <WebsiteSectionCards
             website={website}
             avgResponseTime={avgLatency ?? 0}
             uptimePercentage={uptimePercentage ?? 0}
@@ -328,10 +360,7 @@ export default function WebsiteDetailPage() {
             <Card>
               <CardContent className="pt-6">
                 <div className="h-[400px]">
-                  <LatencyRangeChart
-                    data={uptimeData}
-                    timeRange={timeRange}
-                  />
+                  <LatencyRangeChart data={uptimeData} timeRange={timeRange} />
                 </div>
               </CardContent>
             </Card>

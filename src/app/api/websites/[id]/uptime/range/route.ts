@@ -16,9 +16,9 @@ const querySchema = z.object({
 
 /**
  * GET /api/websites/[id]/uptime/range
- * 
+ *
  * Retrieves uptime data for a specific website within a given time range.
- * 
+ *
  * @params {string} id - Website ID
  * @query {string} range - Time range ('1h', '1d', '7d', default: '1h')
  * @returns {Promise<NextResponse>} JSON response with uptime data
@@ -54,12 +54,14 @@ export const GET = createRoute
         .where(
           and(
             eq(UptimeChecksTable.websiteId, websiteId),
-            gt(UptimeChecksTable.timestamp, startTime)
+            gt(UptimeChecksTable.timestamp, startTime),
           ),
         )
         .orderBy(UptimeChecksTable.timestamp)
 
-      console.log(`Uptime checks in range [${range}] for website [${websiteId}]: ${results.length}`)
+      console.log(
+        `Uptime checks in range [${range}] for website [${websiteId}]: ${results.length}`,
+      )
       return NextResponse.json(results, { status: HttpStatusCodes.OK })
     } catch (error) {
       console.error("Error fetching uptime data: ", error)
@@ -68,4 +70,4 @@ export const GET = createRoute
         { status: HttpStatusCodes.INTERNAL_SERVER_ERROR },
       )
     }
-  }) 
+  })

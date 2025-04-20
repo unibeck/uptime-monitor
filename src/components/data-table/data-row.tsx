@@ -24,4 +24,4 @@ export function DataRow({ row }: DataRowProps) {
       ))}
     </TableRow>
   )
-} 
+}
