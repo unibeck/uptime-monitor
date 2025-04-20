@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "89bd5dd5-b62a-4af8-95b7-34466eb3bc1f",
+  "id": "a66060fd-4336-404f-ac0c-f40a25b0788e",
   "prevId": "573ccb91-a6a4-4b8c-bcc1-d63b015e58fe",
   "tables": {
     "uptimeChecks": {
@@ -42,6 +42,13 @@
           "notNull": false,
           "autoincrement": false
         },
+        "isUp": {
+          "name": "isUp",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
         "isExpectedStatus": {
           "name": "isExpectedStatus",
           "type": "integer",
@@ -56,12 +63,8 @@
           "name": "uptimeChecks_websiteId_websites_id_fk",
           "tableFrom": "uptimeChecks",
           "tableTo": "websites",
-          "columnsFrom": [
-            "websiteId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["websiteId"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
