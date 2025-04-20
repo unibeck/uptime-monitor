@@ -33,7 +33,7 @@ export default class MonitorExec extends WorkerEntrypoint<CloudflareEnv> {
       .then(takeUniqueOrThrow)
 
     console.log(`Performing check for ${website.name} (${website.url})`)
-    let isUp = false
+    let isExpectedStatus = false
     let responseTime = 0
     let status = 0
     let errorMessage = ""
@@ -52,16 +52,16 @@ export default class MonitorExec extends WorkerEntrypoint<CloudflareEnv> {
       responseTime = Date.now() - startTime
       status = response.status
       // Use expectedStatusCode if provided, otherwise default to 2xx/3xx
-      isUp =
+      isExpectedStatus =
         website.expectedStatusCode != null
           ? response.status === website.expectedStatusCode
           : response.status >= 200 && response.status < 400
       console.log(
-        `Check complete - Status: ${status}, Response Time: ${responseTime}ms, Up: ${isUp}`,
+        `Check complete - Status: ${status}, Response Time: ${responseTime}ms, Up: ${isExpectedStatus}`,
       )
     } catch (error) {
       responseTime = Date.now() - startTime
-      isUp = false
+      isExpectedStatus = false
       errorMessage = error instanceof Error ? error.message : String(error)
       console.error("Error performing check:", errorMessage)
     }
@@ -73,14 +73,14 @@ export default class MonitorExec extends WorkerEntrypoint<CloudflareEnv> {
         timestamp: new Date(),
         status,
         responseTime,
-        isUp,
+        isExpectedStatus,
       })
     } catch (error) {
       console.error("Error storing check result: ", error)
     }
 
     await handleFailureTracking(
-      isUp,
+      isExpectedStatus,
       status,
       errorMessage,
       website,
@@ -107,14 +107,14 @@ export default class MonitorExec extends WorkerEntrypoint<CloudflareEnv> {
 }
 
 async function handleFailureTracking(
-  isUp: boolean,
+  isExpectedStatus: boolean,
   status: number,
   errorMessage: string,
   website: z.infer<typeof websitesSelectSchema>,
   db: DrizzleD1Database<typeof schema>,
   opsgenieApiKey: string,
 ) {
-  if (isUp) {
+  if (isExpectedStatus) {
     // Reset consecutive failures if the check passes
     if (website.consecutiveFailures > 0) {
       await db

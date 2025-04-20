@@ -64,13 +64,13 @@ export const GET = createRoute.handler(async (request, context) => {
     // Get overall uptime percentage in the last 24 hours
     const checksResult = await db
       .select({
-        isUp: UptimeChecksTable.isUp,
+        isExpectedStatus: UptimeChecksTable.isExpectedStatus,
       })
       .from(UptimeChecksTable)
       .where(gt(UptimeChecksTable.timestamp, oneDayAgo))
 
     const totalChecks = checksResult.length
-    const successfulChecks = checksResult.filter((check) => check.isUp).length
+    const successfulChecks = checksResult.filter((check) => check.isExpectedStatus).length
 
     const uptimePercentage =
       totalChecks > 0 ? (successfulChecks / totalChecks) * 100 : 100

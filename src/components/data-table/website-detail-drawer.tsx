@@ -209,16 +209,16 @@ export function WebsiteDetailDrawer({
                     <div className="flex items-center gap-1">
                       <Badge
                         variant={
-                          latestUptimeCheck.isUp ? "outline" : "destructive"
+                          latestUptimeCheck.isExpectedStatus ? "outline" : "destructive"
                         }
                         className="w-fit text-xs px-1.5 py-0.5"
                       >
-                        {latestUptimeCheck.isUp ? (
+                        {latestUptimeCheck.isExpectedStatus ? (
                           <IconRosetteDiscountCheckFilled className="h-3 w-3 mr-1" />
                         ) : (
                           <IconAlertTriangle className="h-3 w-3 mr-1 text-red-500" />
                         )}
-                        {latestUptimeCheck.isUp ? "OK" : "Down"}
+                        {latestUptimeCheck.isExpectedStatus ? "OK" : "Down"}
                       </Badge>
                     </div>
                   </div>

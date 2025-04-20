@@ -36,5 +36,5 @@ export const UptimeChecksTable = sqliteTable("uptimeChecks", {
 
   // TODO: make this isExpectedStatus since the website expectedStatusCode can be a not healthy value,
   // and therefore isUp is no longer accurate
-  isUp: integer("isUp", { mode: "boolean" }).notNull(),
+  isExpectedStatus: integer("isExpectedStatus", { mode: "boolean" }).notNull(),
 })

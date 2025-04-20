@@ -213,7 +213,7 @@ export default function WebsiteDetailPage() {
   useEffect(() => {
     if (uptimeData.length > 0) {
       const uptimePercentage =
-        (uptimeData.filter((check) => check.isUp).length / uptimeData.length) *
+        (uptimeData.filter((check) => check.isExpectedStatus).length / uptimeData.length) *
         100
       setUptimePercentage(uptimePercentage)
     } else {
