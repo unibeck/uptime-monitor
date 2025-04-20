@@ -1,4 +1,4 @@
-import { getAuth, requireAuth } from "@/lib/auth-server-utils"
+import { getAuth, requireAuth } from "@/lib/auth-utils"
 import Dashboard from "./dashboard"
 
 export default async function Page() {

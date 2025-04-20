@@ -19,7 +19,7 @@ import "@/app/theme.css"
 
 import { ActiveThemeProvider } from "@/components/active-theme"
 import { HeaderProvider } from "@/context/header-context"
-import { getAuth, requireAuth } from "@/lib/auth-server-utils"
+import { getAuth, requireAuth } from "@/lib/auth-utils"
 import { PROD_URL } from "@/lib/constants"
 import { cn } from "@/lib/utils"
 

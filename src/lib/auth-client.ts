@@ -22,6 +22,3 @@ export const authClient = createAuthClient({
   //   },
   // },
 })
-
-// TODO: remove this to force the prefix authClient.*. This will make it explicit when using client functions on the client side
-export const { signIn, signOut, useSession } = authClient

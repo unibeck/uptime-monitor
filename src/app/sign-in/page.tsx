@@ -1,5 +1,5 @@
 import { LoginForm } from "@/components/login-form"
-import { getAuth, getSession } from "@/lib/auth-server-utils"
+import { getAuth, getSession } from "@/lib/auth-utils"
 import { getCloudflareContext } from "@opennextjs/cloudflare"
 import { redirect } from "next/navigation"
 

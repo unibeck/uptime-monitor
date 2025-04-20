@@ -3,11 +3,9 @@
 import {
   IconDotsVertical,
   IconLogout,
-  IconUserCircle,
 } from "@tabler/icons-react"
 
 import { authClient } from "@/lib/auth-client"
-import { onSignOutSuccess } from "@/lib/auth-server-utils"
 import type { Session } from "@/lib/auth-types"
 import {
   Avatar,
