@@ -103,7 +103,7 @@ const seedDatabase = async () => {
           return {
             websiteId: website.id,
             timestamp,
-            isUp: isSuccess,
+            isExpectedStatus: isSuccess,
             status: isSuccess ? 200 : 504,
             responseTime,
           }
