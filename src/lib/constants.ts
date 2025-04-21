@@ -2,8 +2,8 @@ import * as HttpStatusPhrases from "stoker/http-status-phrases"
 import { createMessageObjectSchema } from "stoker/openapi/schemas"
 import { z } from "zod"
 
-export const PRE_URL = "UPDATE_ME_PRE_URL"
-export const PROD_URL = "UPDATE_ME_PROD_URL"
+export const PRE_FQDN = "UPDATE_ME_PRE_FQDN"
+export const PROD_FQDN = "UPDATE_ME_PROD_FQDN"
 
 export const ZOD_ERROR_MESSAGES = {
   REQUIRED: "Required",

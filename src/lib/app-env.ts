@@ -1,4 +1,4 @@
-import { PRE_URL, PROD_URL } from "@/lib/constants"
+import { PRE_URL, PROD_FQDN } from "@/lib/constants"
 
 const DEV: AppEnvMetadata = {
   serverUrl: "http://localhost:8787",
@@ -13,7 +13,7 @@ const PRE: AppEnvMetadata = {
 const PROD: AppEnvMetadata = {
   ...PRE,
 
-  serverUrl: PROD_URL,
+  serverUrl: PROD_FQDN,
 }
 
 export enum AppEnvID {
