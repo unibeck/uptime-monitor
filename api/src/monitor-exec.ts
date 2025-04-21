@@ -57,7 +57,7 @@ export default class MonitorExec extends WorkerEntrypoint<CloudflareEnv> {
           ? response.status === website.expectedStatusCode
           : response.status >= 200 && response.status < 400
       console.log(
-        `Check complete - Status: ${status}, Response Time: ${responseTime}ms, Up: ${isExpectedStatus}`,
+        `Check complete - Status: ${status}, Response Time: ${responseTime}ms, ExpectedStatus: ${isExpectedStatus}`,
       )
     } catch (error) {
       responseTime = Date.now() - startTime
