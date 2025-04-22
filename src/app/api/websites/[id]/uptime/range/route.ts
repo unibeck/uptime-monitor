@@ -7,7 +7,7 @@ import { getCloudflareContext } from "@opennextjs/cloudflare"
 import { subDays, subHours, subWeeks } from "date-fns"
 import { and, eq, gt, isNotNull } from "drizzle-orm"
 import { NextResponse } from "next/server"
-import * as HttpStatusCodes from "stoker/http-status-codes"
+import { INTERNAL_SERVER_ERROR, OK } from "stoker/http-status-codes"
 import { z } from "zod"
 
 const querySchema = z.object({
@@ -62,12 +62,12 @@ export const GET = createRoute
       console.log(
         `Uptime checks in range [${range}] for website [${websiteId}]: ${results.length}`,
       )
-      return NextResponse.json(results, { status: HttpStatusCodes.OK })
+      return NextResponse.json(results, { status: OK })
     } catch (error) {
       console.error("Error fetching uptime data: ", error)
       return NextResponse.json(
         { error: "Failed to fetch uptime data" },
-        { status: HttpStatusCodes.INTERNAL_SERVER_ERROR },
+        { status: INTERNAL_SERVER_ERROR },
       )
     }
   })

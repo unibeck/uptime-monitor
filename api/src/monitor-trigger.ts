@@ -7,8 +7,8 @@ import {
 } from "@/lib/errors"
 import { diffable, state } from "diffable-objects"
 import { eq } from "drizzle-orm"
-import * as HttpStatusCodes from "stoker/http-status-codes"
-import * as HttpStatusPhrases from "stoker/http-status-phrases"
+import { OK } from "stoker/http-status-codes"
+import { OK as OK_PHRASE } from "stoker/http-status-phrases"
 
 /**
  * The Monitor class is a Durable Object that is used to trigger checks on a website.
@@ -138,8 +138,8 @@ export default class MonitorTriggerRPC extends WorkerEntrypoint<CloudflareEnv> {
   async fetch(request: Request) {
     //Use service or RPC binding to work with the Monitor Durable Object
     return new Response(
-      `${HttpStatusPhrases.OK}\nMonitorTriggerRPC: Use service or RPC binding to work with the Monitor Durable Object`,
-      { status: HttpStatusCodes.OK },
+      `${OK_PHRASE}\nMonitorTriggerRPC: Use service or RPC binding to work with the Monitor Durable Object`,
+      { status: OK },
     )
   }
 

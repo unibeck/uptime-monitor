@@ -209,7 +209,9 @@ export function WebsiteDetailDrawer({
                     <div className="flex items-center gap-1">
                       <Badge
                         variant={
-                          latestUptimeCheck.isExpectedStatus ? "outline" : "destructive"
+                          latestUptimeCheck.isExpectedStatus
+                            ? "outline"
+                            : "destructive"
                         }
                         className="w-fit text-xs px-1.5 py-0.5"
                       >

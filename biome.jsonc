@@ -28,6 +28,9 @@
       "style": {
         "useBlockStatements": {
           "level": "error"
+        },
+        "noNamespaceImport": {
+          "level": "error"
         }
       },
       "a11y": {

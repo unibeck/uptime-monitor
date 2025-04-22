@@ -7,7 +7,7 @@ import { idStringParamsSchema } from "@/lib/route-schemas"
 import { getCloudflareContext } from "@opennextjs/cloudflare"
 import { eq } from "drizzle-orm"
 import { NextResponse } from "next/server"
-import * as HttpStatusCodes from "stoker/http-status-codes"
+import { OK } from "stoker/http-status-codes"
 
 /**
  * POST /api/websites/[id]/resume
@@ -48,8 +48,5 @@ export const POST = createRoute
       }
     }
 
-    return NextResponse.json(
-      { message: "Resumed Monitor DO" },
-      { status: HttpStatusCodes.OK },
-    )
+    return NextResponse.json({ message: "Resumed Monitor DO" }, { status: OK })
   })

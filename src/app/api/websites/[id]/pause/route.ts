@@ -2,7 +2,7 @@ import { createRoute } from "@/lib/api-utils"
 import { idStringParamsSchema } from "@/lib/route-schemas"
 import { getCloudflareContext } from "@opennextjs/cloudflare"
 import { NextResponse } from "next/server"
-import * as HttpStatusCodes from "stoker/http-status-codes"
+import { OK } from "stoker/http-status-codes"
 
 /**
  * POST /api/websites/[id]/pause
@@ -18,8 +18,5 @@ export const POST = createRoute
     const { env } = getCloudflareContext()
     await env.MONITOR_TRIGGER_RPC.pauseDo(context.params.id)
 
-    return NextResponse.json(
-      { message: "Paused Monitor DO" },
-      { status: HttpStatusCodes.OK },
-    )
+    return NextResponse.json({ message: "Paused Monitor DO" }, { status: OK })
   })

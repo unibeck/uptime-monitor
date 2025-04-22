@@ -6,16 +6,16 @@ import type { websitesPatchSchema, websitesSelectSchema } from "@/db/zod-schema"
 import { createWebsiteDownAlert } from "@/lib/opsgenie"
 import { eq } from "drizzle-orm"
 import type { DrizzleD1Database } from "drizzle-orm/d1"
-import * as HttpStatusCodes from "stoker/http-status-codes"
-import * as HttpStatusPhrases from "stoker/http-status-phrases"
+import { OK } from "stoker/http-status-codes"
+import { OK as OK_PHRASE } from "stoker/http-status-phrases"
 import type { z } from "zod"
 
 export default class MonitorExec extends WorkerEntrypoint<CloudflareEnv> {
   async fetch(request: Request) {
     //Use service or RPC binding to work with the Monitor Durable Object
     return new Response(
-      `${HttpStatusPhrases.OK}\nMonitorExec: Use service or RPC binding to work with the Monitor Durable Object`,
-      { status: HttpStatusCodes.OK },
+      `${OK_PHRASE}\nMonitorExec: Use service or RPC binding to work with the Monitor Durable Object`,
+      { status: OK },
     )
   }
 

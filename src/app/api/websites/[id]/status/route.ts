@@ -5,7 +5,7 @@ import { idStringParamsSchema } from "@/lib/route-schemas"
 import { getCloudflareContext } from "@opennextjs/cloudflare"
 import { eq } from "drizzle-orm"
 import { NextResponse } from "next/server"
-import * as HttpStatusCodes from "stoker/http-status-codes"
+import { OK } from "stoker/http-status-codes"
 
 /**
  * GET /api/websites/[id]/status
@@ -26,8 +26,5 @@ export const GET = createRoute
       .where(eq(WebsitesTable.id, context.params.id))
       .then(takeUniqueOrThrow)
 
-    return NextResponse.json(
-      { status: website.isRunning },
-      { status: HttpStatusCodes.OK },
-    )
+    return NextResponse.json({ status: website.isRunning }, { status: OK })
   })

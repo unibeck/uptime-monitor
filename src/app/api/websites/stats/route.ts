@@ -3,10 +3,9 @@ import { takeFirstOrNull } from "@/db"
 import { UptimeChecksTable, WebsitesTable } from "@/db/schema"
 import { createRoute } from "@/lib/api-utils"
 import { getCloudflareContext } from "@opennextjs/cloudflare"
-import { and, avg, count, desc, eq, gt, isNotNull, max, sql } from "drizzle-orm"
+import { and, count, desc, eq, gt, isNotNull } from "drizzle-orm"
 import { NextResponse } from "next/server"
-import * as HttpStatusCodes from "stoker/http-status-codes"
-import { z } from "zod"
+import { INTERNAL_SERVER_ERROR, OK } from "stoker/http-status-codes"
 
 // Cache duration in seconds
 export const revalidate = 120
@@ -70,7 +69,9 @@ export const GET = createRoute.handler(async (request, context) => {
       .where(gt(UptimeChecksTable.timestamp, oneDayAgo))
 
     const totalChecks = checksResult.length
-    const successfulChecks = checksResult.filter((check) => check.isExpectedStatus).length
+    const successfulChecks = checksResult.filter(
+      (check) => check.isExpectedStatus,
+    ).length
 
     const uptimePercentage =
       totalChecks > 0 ? (successfulChecks / totalChecks) * 100 : 100
@@ -85,14 +86,14 @@ export const GET = createRoute.handler(async (request, context) => {
         uptimePercentage: Math.round(uptimePercentage * 100) / 100,
       },
       {
-        status: HttpStatusCodes.OK,
+        status: OK,
       },
     )
   } catch (error) {
     console.error("Error fetching dashboard statistics: ", error)
     return NextResponse.json(
       { error: "Failed to fetch dashboard statistics" },
-      { status: HttpStatusCodes.INTERNAL_SERVER_ERROR },
+      { status: INTERNAL_SERVER_ERROR },
     )
   }
 })

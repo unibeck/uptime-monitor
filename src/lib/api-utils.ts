@@ -1,7 +1,6 @@
 import { createZodRoute } from "next-zod-route"
-import * as HttpStatusCodes from "stoker/http-status-codes"
-import * as HttpStatusPhrases from "stoker/http-status-phrases"
 
+import { INTERNAL_SERVER_ERROR } from "stoker/http-status-codes"
 import { logError, logErrorStack } from "./errors"
 
 export const createRoute = createZodRoute({
@@ -17,10 +16,10 @@ export const createRoute = createZodRoute({
     // Default error response
     return new Response(
       JSON.stringify({
-        message: HttpStatusPhrases.INTERNAL_SERVER_ERROR,
+        message: INTERNAL_SERVER_ERROR,
         error: errorMessage,
       }),
-      { status: HttpStatusCodes.INTERNAL_SERVER_ERROR },
+      { status: INTERNAL_SERVER_ERROR },
     )
   },
 })

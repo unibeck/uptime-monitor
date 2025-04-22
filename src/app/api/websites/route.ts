@@ -13,7 +13,7 @@ import { asc, desc } from "drizzle-orm"
 import { and, count, eq, like, sql } from "drizzle-orm"
 import type { SQLiteColumn } from "drizzle-orm/sqlite-core"
 import { NextResponse } from "next/server"
-import * as HttpStatusCodes from "stoker/http-status-codes"
+import { CONFLICT } from "stoker/http-status-codes"
 import { z } from "zod"
 
 /**
@@ -159,7 +159,7 @@ export const POST = createRoute
           matchingWebsite,
         } as const satisfies ConflictWebsiteResponse,
         {
-          status: HttpStatusCodes.CONFLICT,
+          status: CONFLICT,
         },
       )
     }
