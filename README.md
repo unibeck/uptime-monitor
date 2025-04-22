@@ -15,8 +15,8 @@ TODO: expectations for cost
     - run `pnpm db:create:prod`
     - search for `UPDATE_ME_D1_ID` and replace with the id
     - run migrations with `pnpm db:migrate:prod`
-3) Update production URL
-    - search for `UPDATE_ME_PROD_URL` and replace with your unique production URL
+3) Update production fully qualified domain name
+    - search for `UPDATE_ME_PROD_FQDN` and replace with your production FQDN (e.g. `uptime-monitor.example.com`)
 4) Deploy the app and api with `pnpm run deploy`
 
 Optional:

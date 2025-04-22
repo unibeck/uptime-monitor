@@ -1,9 +1,9 @@
-import { PROD_URL } from "@/lib/constants"
+import { PROD_FQDN } from "@/lib/constants"
 
 export const siteConfig = {
   name: "Uptime Monitor",
-  url: `https://${PROD_URL}`,
-  ogImage: `https://${PROD_URL}/og.jpg`,
+  url: `https://${PROD_FQDN}`,
+  ogImage: `https://${PROD_FQDN}/og.jpg`,
   description:
     "A uptime monitoring service that is easy and cheap to run at scale. Create endpoint checks for uptime, latency, and status code. Supports OpsGenie, for alerts when there are two or more consecutive failures.",
   links: {

@@ -49,7 +49,7 @@
     "production": {
       "routes": [
         {
-          "pattern": "UPDATE_ME_PROD_URL",
+          "pattern": "UPDATE_ME_PROD_FQDN",
           "custom_domain": true
         }
       ],

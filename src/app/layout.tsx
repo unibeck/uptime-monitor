@@ -19,7 +19,7 @@ import "@/app/theme.css"
 
 import { ActiveThemeProvider } from "@/components/active-theme"
 import { HeaderProvider } from "@/context/header-context"
-import { PROD_URL } from "@/lib/constants"
+import { PROD_FQDN } from "@/lib/constants"
 import { cn } from "@/lib/utils"
 const META_THEME_COLORS = {
   light: "#ffffff",
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     default: siteConfig.name,
     template: `%s - ${siteConfig.name}`,
   },
-  metadataBase: new URL(`https://${PROD_URL}`),
+  metadataBase: new URL(`https://${PROD_FQDN}`),
   description: siteConfig.description,
   keywords: ["Monitoring", "Uptime", "Latency", "Status code", "OpsGenie"],
   authors: [
@@ -44,13 +44,13 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: `https://${PROD_URL}`,
+    url: `https://${PROD_FQDN}`,
     title: siteConfig.name,
     description: siteConfig.description,
     siteName: siteConfig.name,
     images: [
       {
-        url: `https://${PROD_URL}/opengraph-image.png`,
+        url: `https://${PROD_FQDN}/opengraph-image.png`,
         width: 1200,
         height: 630,
         alt: siteConfig.name,
@@ -61,7 +61,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: siteConfig.name,
     description: siteConfig.description,
-    images: [`${PROD_URL}/opengraph-image.png`],
+    images: [`${PROD_FQDN}/opengraph-image.png`],
     creator: "@SolBeckman_",
   },
   icons: {
@@ -69,7 +69,7 @@ export const metadata: Metadata = {
     shortcut: "/favicon-16x16.png",
     apple: "/apple-touch-icon.png",
   },
-  manifest: `${PROD_URL}/site.webmanifest`,
+  manifest: `${PROD_FQDN}/site.webmanifest`,
 }
 
 export const viewport: Viewport = {
