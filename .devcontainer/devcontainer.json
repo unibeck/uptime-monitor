@@ -1,0 +1,33 @@
+{
+  "image":"mcr.microsoft.com/devcontainers/typescript-node:22",
+  "postStartCommand": "scripts/bootstrap.sh",
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/common-utils:2": {},
+    "ghcr.io/eitsupi/devcontainer-features/jq-likes:2": {},
+    "ghcr.io/dhoeric/features/act:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "redhat.vscode-yaml",
+        "GitHub.vscode-pull-request-github",
+        "GitHub.copilot",
+        "formulahendry.auto-close-tag",
+        "formulahendry.auto-rename-tag",
+        "biomejs.biome",
+        "cloudflare.cloudflare-workers-bindings-extension",
+        "streetsidesoftware.code-spell-checker",
+        "mikestead.dotenv",
+        "usernamehw.errorlens",
+        "cyberBabushkin.filesize-hover-explorer",
+        "mhutchie.git-graph",
+        "github.vscode-github-actions",
+        "GitHub.github-vscode-theme",
+        "k--kato.intellij-idea-keybindings",
+        "YoavBls.pretty-ts-errors",
+        "bradlc.vscode-tailwindcss"
+      ]
+    }
+  }
+}
