@@ -4,30 +4,20 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/*": ["./registry/**/*"],
   },
-  images: {
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "avatars.githubusercontent.com",
-      },
-      {
-        protocol: "https",
-        hostname: "images.unsplash.com",
-      },
-    ],
-  },
   experimental: {
-    parallelServerBuildTraces: true,
-    parallelServerCompiles: true,
-    serverSourceMaps: true,
+    // parallelServerBuildTraces: true,
+    // parallelServerCompiles: true,
+    // serverSourceMaps: true,
     typedRoutes: true,
-
-    // Breaks data table select
     reactCompiler: true,
   },
 }
 
-export default nextConfig
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+  enabled: process.env.ANALYZE === 'true',
+})
+
+export default withBundleAnalyzer(nextConfig)
 
 // added by create cloudflare to enable calling `getCloudflareContext()` in `next dev`
 import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare"

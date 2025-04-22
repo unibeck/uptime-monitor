@@ -617,10 +617,6 @@
       "type": "registry:block",
       "description": "A dashboard with sidebar, charts and data table.",
       "dependencies": [
-        "@dnd-kit/core",
-        "@dnd-kit/modifiers",
-        "@dnd-kit/sortable",
-        "@dnd-kit/utilities",
         "@tanstack/react-table",
         "zod",
         "@tabler/icons-react"

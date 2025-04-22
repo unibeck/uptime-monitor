@@ -1,12 +1,8 @@
-"use client" // Required because we are using a hook (useContext)
+"use client"
 
-import { ModeToggle } from "@/components/mode-toggle"
-import { ThemeSelector } from "@/components/theme-selector"
 import { useHeaderContext } from "@/context/header-context"
-import { Badge } from "@/registry/new-york-v4/ui/badge"
 import { Separator } from "@/registry/new-york-v4/ui/separator"
 import { SidebarTrigger } from "@/registry/new-york-v4/ui/sidebar"
-import { IconPointFilled } from "@tabler/icons-react"
 
 export function SiteHeader() {
   const { headerContent } = useHeaderContext()

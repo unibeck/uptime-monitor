@@ -29,8 +29,6 @@ import {
 } from "@/registry/new-york-v4/ui/tooltip"
 import { Tooltip } from "@/registry/new-york-v4/ui/tooltip"
 import type { TimeRange } from "@/types/website"
-import { IconPointFilled } from "@tabler/icons-react"
-import { formatDistance } from "date-fns"
 import { ArrowLeft } from "lucide-react"
 import type { Route } from "next" // Import Route type
 import Link from "next/link"
@@ -152,9 +150,9 @@ export default function WebsiteDetailPage() {
               </p>
             )}
 
-            <div className="relative">
-              <IconPointFilled className="absolute text-green-500 animate-ping" />
-              <IconPointFilled className="relative z-10 mr-1 text-green-500" />
+            <div className="relative flex size-3">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-500 opacity-75" />
+              <span className="relative inline-flex size-3 rounded-full bg-green-500" />
             </div>
           </div>
         ) : (
