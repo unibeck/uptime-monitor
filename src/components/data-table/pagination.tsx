@@ -30,7 +30,7 @@ export function Pagination({ table }: PaginationProps) {
 
   const pagination = useDataTableStore((state) => state.pagination)
   const setPagination = useDataTableStore((state) => state.setPagination)
-  const fetchWebsites = useDataTableStore((state) => state.fetchWebsites)
+  const _fetchWebsites = useDataTableStore((state) => state.fetchWebsites)
   const totalWebsites = useDataTableStore((state) => state.totalWebsites)
 
   // Calculate page count locally to ensure it's consistent

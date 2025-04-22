@@ -1,11 +1,8 @@
 import { DurableObject, WorkerEntrypoint } from "cloudflare:workers"
 import { useDrizzle } from "@/db"
 import { WebsitesTable } from "@/db/schema"
-import {
-  MonitorTriggerNotInitializedError,
-  getErrorMessage,
-} from "@/lib/errors"
-import { diffable, state } from "diffable-objects"
+import { MonitorTriggerNotInitializedError } from "@/lib/errors"
+import { diffable } from "diffable-objects"
 import { eq } from "drizzle-orm"
 import { OK } from "stoker/http-status-codes"
 import { OK as OK_PHRASE } from "stoker/http-status-phrases"
@@ -135,7 +132,7 @@ export class MonitorTrigger extends DurableObject<CloudflareEnv> {
 
 // Need service as RPC bindings do not work locally
 export default class MonitorTriggerRPC extends WorkerEntrypoint<CloudflareEnv> {
-  async fetch(request: Request) {
+  async fetch(_request: Request) {
     //Use service or RPC binding to work with the Monitor Durable Object
     return new Response(
       `${OK_PHRASE}\nMonitorTriggerRPC: Use service or RPC binding to work with the Monitor Durable Object`,

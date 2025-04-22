@@ -22,7 +22,7 @@ import { INTERNAL_SERVER_ERROR, OK } from "stoker/http-status-codes"
 export const GET = createRoute
   .params(idStringParamsSchema)
   .query(timeRangeQuerySchema)
-  .handler(async (request, context) => {
+  .handler(async (_request, context) => {
     const { env } = getCloudflareContext()
     const db = useDrizzle(env.DB)
     const { timeRange } = context.query

@@ -1,12 +1,8 @@
-import { takeFirstOrNull, takeUniqueOrThrow, useDrizzle } from "@/db"
+import { takeUniqueOrThrow, useDrizzle } from "@/db"
 import { WebsitesTable } from "@/db/schema"
-import { websitesInsertDTOSchema } from "@/db/zod-schema"
 import { createRoute } from "@/lib/api-utils"
-import { PRE_ID, createId } from "@/lib/ids"
 import { getCloudflareContext } from "@opennextjs/cloudflare"
 import { and, count, eq, like, sql } from "drizzle-orm"
-import { asc, desc } from "drizzle-orm"
-import type { SQLiteColumn } from "drizzle-orm/sqlite-core"
 import { NextResponse } from "next/server"
 import { z } from "zod"
 
@@ -30,7 +26,7 @@ const querySchema = z.object({
 
 export const GET = createRoute
   .query(querySchema)
-  .handler(async (request, context) => {
+  .handler(async (_request, context) => {
     const { env } = getCloudflareContext()
     const db = useDrizzle(env.DB)
 

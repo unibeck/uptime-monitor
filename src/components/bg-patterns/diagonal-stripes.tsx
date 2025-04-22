@@ -1,5 +1,3 @@
-import React from "react"
-
 interface DiagonalStripesProps {
   className?: string
   color?: string

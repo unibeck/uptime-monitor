@@ -24,14 +24,10 @@ import { TooltipTrigger } from "@/registry/new-york-v4/ui/tooltip"
 import { TooltipProvider } from "@/registry/new-york-v4/ui/tooltip"
 import {
   IconAlertTriangle,
-  IconClockHour4,
-  IconHeart,
-  IconHeartFilled,
   IconLoader2,
   IconPlayerPauseFilled,
   IconPlayerPlayFilled,
   IconRosetteDiscountCheckFilled,
-  IconShieldCheckFilled,
   IconTrash,
 } from "@tabler/icons-react"
 import { formatDistance } from "date-fns"

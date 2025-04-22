@@ -1,6 +1,4 @@
 "use client"
-
-import type { websitesSelectSchema } from "@/db/zod-schema"
 import {
   Table,
   TableBody,
@@ -29,8 +27,6 @@ import {
 import { flexRender } from "@tanstack/react-table"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import React from "react"
-import { toast } from "sonner"
-import type { z } from "zod"
 import { columns } from "./columns"
 import { DataRow } from "./data-row"
 import { DataTableLoadingOverlay } from "./data-table-loading-overlay"

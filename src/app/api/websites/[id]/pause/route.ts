@@ -14,7 +14,7 @@ import { OK } from "stoker/http-status-codes"
  */
 export const POST = createRoute
   .params(idStringParamsSchema)
-  .handler(async (request, context) => {
+  .handler(async (_request, context) => {
     const { env } = getCloudflareContext()
     await env.MONITOR_TRIGGER_RPC.pauseDo(context.params.id)
 

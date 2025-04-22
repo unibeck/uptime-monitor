@@ -1,7 +1,7 @@
 import { WorkerEntrypoint } from "cloudflare:workers"
 import { takeFirstOrNull, takeUniqueOrThrow, useDrizzle } from "@/db"
 import { UptimeChecksTable, WebsitesTable } from "@/db/schema"
-import type * as schema from "@/db/schema"
+import type { schema } from "@/db/schema"
 import type { websitesPatchSchema, websitesSelectSchema } from "@/db/zod-schema"
 import { createWebsiteDownAlert } from "@/lib/opsgenie"
 import { eq } from "drizzle-orm"
@@ -11,7 +11,7 @@ import { OK as OK_PHRASE } from "stoker/http-status-phrases"
 import type { z } from "zod"
 
 export default class MonitorExec extends WorkerEntrypoint<CloudflareEnv> {
-  async fetch(request: Request) {
+  async fetch(_request: Request) {
     //Use service or RPC binding to work with the Monitor Durable Object
     return new Response(
       `${OK_PHRASE}\nMonitorExec: Use service or RPC binding to work with the Monitor Durable Object`,

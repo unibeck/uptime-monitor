@@ -1,4 +1,4 @@
-import { takeFirstOrNull, takeUniqueOrThrow, useDrizzle } from "@/db"
+import { takeUniqueOrThrow, useDrizzle } from "@/db"
 import { WebsitesTable } from "@/db/schema"
 import { websitesPatchSchema, type websitesSelectSchema } from "@/db/zod-schema"
 import { createRoute } from "@/lib/api-utils"
@@ -22,7 +22,7 @@ import type { z } from "zod"
  */
 export const GET = createRoute
   .params(idStringParamsSchema)
-  .handler(async (request, context) => {
+  .handler(async (_request, context) => {
     const { env } = getCloudflareContext()
     const db = useDrizzle(env.DB)
 
@@ -63,7 +63,7 @@ export const GET = createRoute
 export const PATCH = createRoute
   .params(idStringParamsSchema)
   .body(websitesPatchSchema)
-  .handler(async (request, context) => {
+  .handler(async (_request, context) => {
     const { env } = getCloudflareContext()
     const db = useDrizzle(env.DB)
 
@@ -115,7 +115,7 @@ export const PATCH = createRoute
  */
 export const DELETE = createRoute
   .params(idStringParamsSchema)
-  .handler(async (request, context) => {
+  .handler(async (_request, context) => {
     const { env } = getCloudflareContext()
     const db = useDrizzle(env.DB)
 

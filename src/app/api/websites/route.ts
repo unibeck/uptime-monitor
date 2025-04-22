@@ -1,4 +1,4 @@
-import { takeFirstOrNull, takeUniqueOrThrow, useDrizzle } from "@/db"
+import { takeUniqueOrThrow, useDrizzle } from "@/db"
 import { WebsitesTable } from "@/db/schema"
 import {
   websitesInsertDTOSchema,
@@ -40,7 +40,7 @@ const extendedQuerySchema = paginationQuerySchema().extend({
 
 export const GET = createRoute
   .query(extendedQuerySchema)
-  .handler(async (request, context) => {
+  .handler(async (_request, context) => {
     const { env } = getCloudflareContext()
     const db = useDrizzle(env.DB)
 
@@ -123,7 +123,7 @@ export const GET = createRoute
  */
 export const POST = createRoute
   .body(websitesInsertDTOSchema)
-  .handler(async (request, context) => {
+  .handler(async (_request, context) => {
     const website: z.infer<typeof websitesInsertDTOSchema> = context.body
 
     const { env } = getCloudflareContext()

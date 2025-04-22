@@ -16,7 +16,6 @@ import {
   IconBellExclamation,
   IconLink,
   IconLoader2,
-  IconShieldCheckFilled,
   IconTarget,
   IconTargetOff,
   IconTrendingDown,

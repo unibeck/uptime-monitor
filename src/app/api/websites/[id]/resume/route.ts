@@ -19,7 +19,7 @@ import { OK } from "stoker/http-status-codes"
  */
 export const POST = createRoute
   .params(idStringParamsSchema)
-  .handler(async (request, context) => {
+  .handler(async (_request, context) => {
     const { env } = getCloudflareContext()
     const db = useDrizzle(env.DB)
     const website = await db

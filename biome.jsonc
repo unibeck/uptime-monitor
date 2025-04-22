@@ -33,6 +33,14 @@
           "level": "error"
         }
       },
+      "correctness": {
+        "noUnusedImports": {
+          "level": "error"
+        },
+        "noUnusedVariables": {
+          "level": "error"
+        }
+      },
       "a11y": {
         "useSemanticElements": {
           "level": "off"
@@ -40,31 +48,6 @@
       }
     }
   },
-  "overrides": [
-    {
-      "include": ["templates"],
-      "formatter": {
-        "enabled": false
-      }
-    },
-    {
-      "include": ["examples"],
-      "linter": {
-        "enabled": true,
-        "rules": {
-          "recommended": true,
-          "correctness": {
-            "noUnusedImports": {
-              "level": "error"
-            },
-            "noUnusedVariables": {
-              "level": "error"
-            }
-          }
-        }
-      }
-    }
-  ],
   "files": {
     "ignore": [
       // Shadcn registry files

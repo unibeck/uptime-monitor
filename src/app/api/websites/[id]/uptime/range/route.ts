@@ -5,7 +5,7 @@ import { createRoute } from "@/lib/api-utils"
 import { idStringParamsSchema } from "@/lib/route-schemas"
 import { getCloudflareContext } from "@opennextjs/cloudflare"
 import { subDays, subHours, subWeeks } from "date-fns"
-import { and, eq, gt, isNotNull } from "drizzle-orm"
+import { and, eq, gt } from "drizzle-orm"
 import { NextResponse } from "next/server"
 import { INTERNAL_SERVER_ERROR, OK } from "stoker/http-status-codes"
 import { z } from "zod"
@@ -27,7 +27,7 @@ const querySchema = z.object({
 export const GET = createRoute
   .params(idStringParamsSchema)
   .query(querySchema)
-  .handler(async (request, context) => {
+  .handler(async (_request, context) => {
     const { env } = getCloudflareContext()
     const db = useDrizzle(env.DB)
     const { id: websiteId } = context.params

@@ -1,5 +1,5 @@
-import { takeFirstOrNull, useDrizzle } from "@/db"
-import { UptimeChecksTable, WebsitesTable } from "@/db/schema"
+import { useDrizzle } from "@/db"
+import { UptimeChecksTable } from "@/db/schema"
 import { createRoute } from "@/lib/api-utils"
 import { daysQuerySchema, idStringParamsSchema } from "@/lib/route-schemas"
 import { getCloudflareContext } from "@opennextjs/cloudflare"
@@ -20,7 +20,7 @@ import { INTERNAL_SERVER_ERROR, OK } from "stoker/http-status-codes"
 export const GET = createRoute
   .params(idStringParamsSchema)
   .query(daysQuerySchema())
-  .handler(async (request, context) => {
+  .handler(async (_request, context) => {
     const { env } = getCloudflareContext()
     const db = useDrizzle(env.DB)
 

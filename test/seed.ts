@@ -4,13 +4,10 @@ import { createId } from "@/lib/ids"
 import { PRE_ID } from "@/lib/ids"
 import { createClient } from "@libsql/client"
 import { drizzle } from "drizzle-orm/libsql"
-import { reset, seed } from "drizzle-seed"
+import { reset } from "drizzle-seed"
 import type { z } from "zod"
 import { schema } from "../src/db/schema"
-import type {
-  uptimeChecksInsertSchema,
-  websitesInsertSchema,
-} from "../src/db/zod-schema"
+import type { uptimeChecksInsertSchema } from "../src/db/zod-schema"
 
 // List of 23 predefined URLs for websites
 const websiteUrls = [

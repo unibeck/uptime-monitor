@@ -18,7 +18,7 @@ export const revalidate = 120
  * @returns {Promise<NextResponse>} JSON response with aggregate statistics
  * @throws {NextResponse} 500 Internal Server Error on database errors
  */
-export const GET = createRoute.handler(async (request, context) => {
+export const GET = createRoute.handler(async (_request, _context) => {
   const { env } = getCloudflareContext()
   const db = useDrizzle(env.DB)
 

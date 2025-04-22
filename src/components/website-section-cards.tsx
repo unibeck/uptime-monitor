@@ -1,7 +1,6 @@
 "use client"
 
 import {
-  IconActivityHeartbeat,
   IconAlertTriangle,
   IconBellCheck,
   IconBellExclamation,

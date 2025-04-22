@@ -26,7 +26,7 @@ const querySchema = z.object({
 export const GET = createRoute
   .params(idStringParamsSchema)
   .query(querySchema)
-  .handler(async (request, context) => {
+  .handler(async (_request, context) => {
     const { env } = getCloudflareContext()
     const db = useDrizzle(env.DB)
     const { id: websiteId } = context.params

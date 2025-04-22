@@ -15,8 +15,6 @@ import {
 import {
   type ChartConfig,
   ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
 } from "@/registry/new-york-v4/ui/chart"
 import {
   Select,

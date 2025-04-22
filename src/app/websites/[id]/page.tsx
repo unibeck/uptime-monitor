@@ -16,12 +16,7 @@ import { msToHumanReadable, secsToHumanReadable } from "@/lib/formatters"
 import { Badge } from "@/registry/new-york-v4/ui/badge"
 import { Button } from "@/registry/new-york-v4/ui/button"
 import { Card, CardContent } from "@/registry/new-york-v4/ui/card"
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/registry/new-york-v4/ui/tabs"
+import { Tabs, TabsList, TabsTrigger } from "@/registry/new-york-v4/ui/tabs"
 import { TooltipContent } from "@/registry/new-york-v4/ui/tooltip"
 import {
   TooltipProvider,
@@ -33,7 +28,7 @@ import { ArrowLeft } from "lucide-react"
 import type { Route } from "next" // Import Route type
 import Link from "next/link"
 import { useParams, useRouter, useSearchParams } from "next/navigation"
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import type { z } from "zod"
 
 // Define the type for a single uptime check

@@ -8,18 +8,8 @@ import {
 } from "@/registry/new-york-v4/ui/chart"
 import { ChartTooltipContent } from "@/registry/new-york-v4/ui/chart"
 import { Skeleton } from "@/registry/new-york-v4/ui/skeleton"
-import { useEffect, useId, useMemo, useRef, useState } from "react"
-import {
-  CartesianGrid,
-  Line,
-  LineChart,
-  Rectangle,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts"
-import { BarRectangleItem } from "recharts/types/cartesian/Bar"
+import { useEffect, useMemo, useState } from "react"
+import { Line, LineChart } from "recharts"
 
 interface LatencyLimitChartProps {
   websiteId: string
