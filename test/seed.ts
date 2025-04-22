@@ -6,8 +6,7 @@ import { createClient } from "@libsql/client"
 import { drizzle } from "drizzle-orm/libsql"
 import { reset, seed } from "drizzle-seed"
 import type { z } from "zod"
-import * as schema from "../src/db/schema"
-import { UptimeChecksTable } from "../src/db/schema"
+import { schema } from "../src/db/schema"
 import type {
   uptimeChecksInsertSchema,
   websitesInsertSchema,
@@ -113,7 +112,7 @@ const seedDatabase = async () => {
       const chunkSize = 100
       for (let i = 0; i < uptimeChecks.length; i += chunkSize) {
         const chunk = uptimeChecks.slice(i, i + chunkSize)
-        await db.insert(UptimeChecksTable).values(chunk)
+        await db.insert(schema.UptimeChecksTable).values(chunk)
       }
     }
 

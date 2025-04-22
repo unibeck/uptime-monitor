@@ -35,3 +35,5 @@ export const UptimeChecksTable = sqliteTable("uptimeChecks", {
   responseTime: integer("responseTime"),
   isExpectedStatus: integer("isExpectedStatus", { mode: "boolean" }).notNull(),
 })
+
+export const schema = { WebsitesTable, UptimeChecksTable }
