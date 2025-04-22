@@ -25,11 +25,27 @@ export const WebsitesTable = sqliteTable("websites", {
   ...timestamps,
 })
 
+export const endpointMonitorsTable = sqliteTable("endpointMonitors", {
+  id: text("id").primaryKey(),
+  url: text("url").notNull(),
+  name: text("name").notNull(),
+  checkInterval: integer("checkInterval").notNull(),
+  isRunning: integer("isRunning", { mode: "boolean" }).notNull().default(true),
+  expectedStatusCode: integer("expectedStatusCode"),
+  consecutiveFailures: integer("consecutiveFailures").notNull().default(0),
+  activeAlert: integer("activeAlert", { mode: "boolean" })
+    .notNull()
+    .default(false),
+
+  ...timestamps,
+})
+
+
 export const UptimeChecksTable = sqliteTable("uptimeChecks", {
   id: integer("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
-  websiteId: text("websiteId")
+  endpointMonitorId: text("endpointMonitorId")
     .notNull()
-    .references(() => WebsitesTable.id, { onDelete: "cascade" }),
+    .references(() => endpointMonitorsTable.id, { onDelete: "cascade" }),
   timestamp: integer("timestamp", { mode: "timestamp" }).notNull(),
   status: integer("status"),
   responseTime: integer("responseTime"),

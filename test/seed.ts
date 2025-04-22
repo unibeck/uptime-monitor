@@ -72,7 +72,7 @@ const seedDatabase = async () => {
           checkIntervals[Math.floor(Math.random() * checkIntervals.length)],
       }
     })
-    await db.insert(schema.WebsitesTable).values(seedWebsites)
+    await db.insert(schema.endpointMonitorsTable).values(seedWebsites)
 
     console.log("Seeding uptime checks...")
     // Create historical uptime checks for each website
@@ -101,7 +101,7 @@ const seedDatabase = async () => {
             : 15000
 
           return {
-            websiteId: website.id,
+            endpointMonitorId: website.id,
             timestamp,
             isExpectedStatus: isSuccess,
             status: isSuccess ? 200 : 504,
