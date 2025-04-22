@@ -7,4 +7,4 @@ cp .env.example .env
 pnpm i
 
 # Run migrations
-pnpm db:setup
+yes | pnpm db:setup
