@@ -28,7 +28,7 @@ import {
 } from "@tanstack/react-table"
 import { flexRender } from "@tanstack/react-table"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import * as React from "react"
+import React from "react"
 import { toast } from "sonner"
 import type { z } from "zod"
 import { columns } from "./columns"

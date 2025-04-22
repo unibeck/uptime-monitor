@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/registry/new-york-v4/ui/table"
-import * as React from "react"
+import React from "react"
 
 interface DataTableSkeletonProps {
   columnCount?: number

@@ -1,7 +1,7 @@
 "use client"
 
 import { IconLoader2 } from "@tabler/icons-react"
-import * as React from "react"
+import React from "react"
 
 export function DataTableLoadingOverlay() {
   return (

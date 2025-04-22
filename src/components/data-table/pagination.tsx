@@ -18,7 +18,7 @@ import {
   IconChevronsRight,
 } from "@tabler/icons-react"
 import type { Table } from "@tanstack/react-table"
-import * as React from "react"
+import React from "react"
 import type { z } from "zod"
 
 interface PaginationProps {

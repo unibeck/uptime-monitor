@@ -12,7 +12,7 @@ import {
 } from "@tabler/icons-react"
 import type { ColumnDef } from "@tanstack/react-table"
 import Link from "next/link"
-import * as React from "react"
+import React from "react"
 import type { z } from "zod"
 import { DataTableColumnHeader } from "./column-header"
 import { WebsiteDetailDrawer } from "./website-detail-drawer"
