@@ -318,7 +318,7 @@ export function DataTable() {
 
   return (
     <Tabs
-      defaultValue="endpoint monitors"
+      defaultValue="endpointMonitors"
       className="w-full flex-col justify-start gap-6"
     >
       <Toolbar table={table} totalEndpointMonitors={totalEndpointMonitors} />
