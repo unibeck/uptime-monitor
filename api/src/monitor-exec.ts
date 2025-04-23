@@ -1,15 +1,15 @@
 import { WorkerEntrypoint } from "cloudflare:workers"
 import { takeFirstOrNull, takeUniqueOrThrow, useDrizzle } from "@/db"
-import { UptimeChecksTable, endpointMonitorsTable } from "@/db/schema"
+import { EndpointMonitorsTable, UptimeChecksTable } from "@/db/schema"
 import type * as schema from "@/db/schema"
 import type { endpointMonitorsPatchSchema, endpointMonitorsSelectSchema } from "@/db/zod-schema"
+import { endpointSignature } from "@/lib/formatters"
 import { createEndpointMonitorDownAlert } from "@/lib/opsgenie"
 import { eq } from "drizzle-orm"
 import type { DrizzleD1Database } from "drizzle-orm/d1"
 import * as HttpStatusCodes from "stoker/http-status-codes"
 import * as HttpStatusPhrases from "stoker/http-status-phrases"
 import type { z } from "zod"
-import { endpointSignature } from "@/lib/formatters"
 
 export default class MonitorExec extends WorkerEntrypoint<CloudflareEnv> {
   async fetch(request: Request) {
@@ -29,8 +29,8 @@ export default class MonitorExec extends WorkerEntrypoint<CloudflareEnv> {
     const db = useDrizzle(this.env.DB)
     const endpointMonitor = await db
       .select()
-      .from(endpointMonitorsTable)
-      .where(eq(endpointMonitorsTable.id, endpointMonitorId))
+      .from(EndpointMonitorsTable)
+      .where(eq(EndpointMonitorsTable.id, endpointMonitorId))
       .then(takeUniqueOrThrow)
 
     console.log(`${endpointSignature(endpointMonitor)}: performing check...`)
@@ -96,8 +96,8 @@ export default class MonitorExec extends WorkerEntrypoint<CloudflareEnv> {
 
     const endpointMonitor = await db
       .select()
-      .from(endpointMonitorsTable)
-      .where(eq(endpointMonitorsTable.id, endpointMonitorId))
+      .from(EndpointMonitorsTable)
+      .where(eq(EndpointMonitorsTable.id, endpointMonitorId))
       .then(takeFirstOrNull)
     if (!endpointMonitor) {
       throw new Error(`EndpointMonitor [${endpointMonitorId}] does not exist`)
@@ -119,9 +119,9 @@ async function handleFailureTracking(
     // Reset consecutive failures if the check passes
     if (endpointMonitor.consecutiveFailures > 0) {
       await db
-        .update(endpointMonitorsTable)
+        .update(EndpointMonitorsTable)
         .set({ consecutiveFailures: 0 })
-        .where(eq(endpointMonitorsTable.id, endpointMonitor.id))
+        .where(eq(EndpointMonitorsTable.id, endpointMonitor.id))
     }
   } else {
     const consecutiveFailures = endpointMonitor.consecutiveFailures + 1
@@ -140,9 +140,9 @@ async function handleFailureTracking(
     }
 
     await db
-      .update(endpointMonitorsTable)
+      .update(EndpointMonitorsTable)
       .set(endpointMonitorPatch)
-      .where(eq(endpointMonitorsTable.id, endpointMonitor.id))
+      .where(eq(EndpointMonitorsTable.id, endpointMonitor.id))
   }
 }
 

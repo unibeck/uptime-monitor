@@ -1,5 +1,5 @@
 import { takeUniqueOrThrow, useDrizzle } from "@/db"
-import { endpointMonitorsTable } from "@/db/schema"
+import { EndpointMonitorsTable } from "@/db/schema"
 import { createRoute } from "@/lib/api-utils"
 import { getErrorMessage } from "@/lib/errors"
 import { MonitorTriggerNotInitializedError } from "@/lib/errors"
@@ -24,8 +24,8 @@ export const POST = createRoute
     const db = useDrizzle(env.DB)
     const endpointMonitor = await db
       .select()
-      .from(endpointMonitorsTable)
-      .where(eq(endpointMonitorsTable.id, context.params.id))
+      .from(EndpointMonitorsTable)
+      .where(eq(EndpointMonitorsTable.id, context.params.id))
       .then(takeUniqueOrThrow)
 
     try {

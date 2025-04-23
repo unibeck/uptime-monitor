@@ -1,5 +1,5 @@
 import { takeFirstOrNull, takeUniqueOrThrow, useDrizzle } from "@/db"
-import { endpointMonitorsTable } from "@/db/schema"
+import { EndpointMonitorsTable } from "@/db/schema"
 import { endpointMonitorsInsertDTOSchema } from "@/db/zod-schema"
 import { createRoute } from "@/lib/api-utils"
 import { PRE_ID, createId } from "@/lib/ids"
@@ -39,20 +39,20 @@ export const GET = createRoute
 
     const { count: totalCount } = await db
       .select({ count: count() })
-      .from(endpointMonitorsTable)
+      .from(EndpointMonitorsTable)
       .where(
         and(
           search
-            ? sql`(${like(endpointMonitorsTable.name, `%${search}%`)} OR ${like(endpointMonitorsTable.url, `%${search}%`)})`
+            ? sql`(${like(EndpointMonitorsTable.name, `%${search}%`)} OR ${like(EndpointMonitorsTable.url, `%${search}%`)})`
             : sql`1=1`,
           isRunning !== undefined
-            ? eq(endpointMonitorsTable.isRunning, isRunning === "true")
+            ? eq(EndpointMonitorsTable.isRunning, isRunning === "true")
             : sql`1=1`,
           checkIntervalMin !== undefined
-            ? sql`${endpointMonitorsTable.checkInterval} >= ${checkIntervalMin}`
+            ? sql`${EndpointMonitorsTable.checkInterval} >= ${checkIntervalMin}`
             : sql`1=1`,
           checkIntervalMax !== undefined
-            ? sql`${endpointMonitorsTable.checkInterval} <= ${checkIntervalMax}`
+            ? sql`${EndpointMonitorsTable.checkInterval} <= ${checkIntervalMax}`
             : sql`1=1`,
         ),
       )

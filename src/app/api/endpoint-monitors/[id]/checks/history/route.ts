@@ -1,5 +1,5 @@
 import { takeFirstOrNull, useDrizzle } from "@/db"
-import { UptimeChecksTable, endpointMonitorsTable } from "@/db/schema"
+import { EndpointMonitorsTable, UptimeChecksTable } from "@/db/schema"
 import { createRoute } from "@/lib/api-utils"
 import { daysQuerySchema, idStringParamsSchema } from "@/lib/route-schemas"
 import { getCloudflareContext } from "@opennextjs/cloudflare"

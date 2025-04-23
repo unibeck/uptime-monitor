@@ -1,5 +1,5 @@
 import { takeFirstOrNull, takeUniqueOrThrow, useDrizzle } from "@/db"
-import { endpointMonitorsTable } from "@/db/schema"
+import { EndpointMonitorsTable } from "@/db/schema"
 import { endpointMonitorsPatchSchema, type endpointMonitorsSelectSchema } from "@/db/zod-schema"
 import { createRoute } from "@/lib/api-utils"
 import { idStringParamsSchema } from "@/lib/route-schemas"
@@ -28,8 +28,8 @@ export const GET = createRoute
 
     let endpointMonitor: z.infer<typeof endpointMonitorsSelectSchema> | undefined
     try {
-      endpointMonitor = await db.query.endpointMonitorsTable.findFirst({
-        where: eq(endpointMonitorsTable.id, context.params.id),
+      endpointMonitor = await db.query.EndpointMonitorsTable.findFirst({
+        where: eq(EndpointMonitorsTable.id, context.params.id),
       })
     } catch (error) {
       console.error("Error fetching endpointMonitor: ", error)
@@ -72,9 +72,9 @@ export const PATCH = createRoute
     let updatedWebsite: z.infer<typeof endpointMonitorsSelectSchema> | undefined | null
     try {
       updatedWebsite = await db
-        .update(endpointMonitorsTable)
+        .update(EndpointMonitorsTable)
         .set(endpointMonitor)
-        .where(eq(endpointMonitorsTable.id, context.params.id))
+        .where(eq(EndpointMonitorsTable.id, context.params.id))
         .returning()
         .then(takeUniqueOrThrow)
     } catch (error) {
@@ -122,8 +122,8 @@ export const DELETE = createRoute
 
     try {
       await db
-        .delete(endpointMonitorsTable)
-        .where(eq(endpointMonitorsTable.id, context.params.id))
+        .delete(EndpointMonitorsTable)
+        .where(eq(EndpointMonitorsTable.id, context.params.id))
 
       await env.MONITOR_TRIGGER_RPC.deleteDo(context.params.id)
     } catch (error) {

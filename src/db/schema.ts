@@ -11,7 +11,7 @@ const timestamps = {
 }
 
 
-export const endpointMonitorsTable = sqliteTable("endpointMonitors", {
+export const EndpointMonitorsTable = sqliteTable("endpointMonitors", {
   id: text("id").primaryKey(),
   url: text("url").notNull(),
   name: text("name").notNull(),
@@ -31,7 +31,7 @@ export const UptimeChecksTable = sqliteTable("uptimeChecks", {
   id: integer("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
   endpointMonitorId: text("endpointMonitorId")
     .notNull()
-    .references(() => endpointMonitorsTable.id, { onDelete: "cascade" }),
+    .references(() => EndpointMonitorsTable.id, { onDelete: "cascade" }),
   timestamp: integer("timestamp", { mode: "timestamp" }).notNull(),
   status: integer("status"),
   responseTime: integer("responseTime"),

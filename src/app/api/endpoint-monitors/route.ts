@@ -1,5 +1,5 @@
 import { takeFirstOrNull, takeUniqueOrThrow, useDrizzle } from "@/db"
-import { endpointMonitorsTable } from "@/db/schema"
+import { EndpointMonitorsTable } from "@/db/schema"
 import {
   endpointMonitorsInsertDTOSchema,
   type endpointMonitorsSelectSchema,
@@ -76,32 +76,32 @@ export const GET = createRoute
     // Create the where conditions first so we can reuse them for both queries
     const whereConditions = and(
       search
-        ? sql`(${like(endpointMonitorsTable.name, `%${search}%`)} OR ${like(endpointMonitorsTable.url, `%${search}%`)})`
+        ? sql`(${like(EndpointMonitorsTable.name, `%${search}%`)} OR ${like(EndpointMonitorsTable.url, `%${search}%`)})`
         : sql`1=1`,
       isRunning !== undefined
-        ? eq(endpointMonitorsTable.isRunning, isRunning === "true")
+        ? eq(EndpointMonitorsTable.isRunning, isRunning === "true")
         : sql`1=1`,
       checkIntervalMin !== undefined
-        ? sql`${endpointMonitorsTable.checkInterval} >= ${checkIntervalMin}`
+        ? sql`${EndpointMonitorsTable.checkInterval} >= ${checkIntervalMin}`
         : sql`1=1`,
       checkIntervalMax !== undefined
-        ? sql`${endpointMonitorsTable.checkInterval} <= ${checkIntervalMax}`
+        ? sql`${EndpointMonitorsTable.checkInterval} <= ${checkIntervalMax}`
         : sql`1=1`,
     )
 
     // Get paginated endpointMonitors
     const endpointMonitors = await db
       .select()
-      .from(endpointMonitorsTable)
+      .from(EndpointMonitorsTable)
       .where(whereConditions)
-      .orderBy(orderDir(orderByCol), asc(endpointMonitorsTable.id))
+      .orderBy(orderDir(orderByCol), asc(EndpointMonitorsTable.id))
       .limit(pageSize)
       .offset(page * pageSize)
 
     // Get total count with the same filters
     const { count: totalCount } = await db
       .select({ count: count() })
-      .from(endpointMonitorsTable)
+      .from(EndpointMonitorsTable)
       .where(whereConditions)
       .then(takeUniqueOrThrow)
 
@@ -133,7 +133,7 @@ export const POST = createRoute
     const normalizedUrl = endpointMonitor.url.replace(/(^\w+:|^)\/\//, "")
     const existingEndpointMonitors: z.infer<typeof endpointMonitorsSelectSchema>[] = await db
       .select()
-      .from(endpointMonitorsTable)
+      .from(EndpointMonitorsTable)
       .where(sql.raw(`instr(url, '${normalizedUrl}') > 0`))
 
     const matchingWebsite = existingEndpointMonitors.find((endpointMonitor) => {
@@ -166,7 +166,7 @@ export const POST = createRoute
 
     // TODO: Use a transaction to ensure atomicity between inserting and scheduling
     const newWebsite = await db
-      .insert(endpointMonitorsTable)
+      .insert(EndpointMonitorsTable)
       .values({
         ...endpointMonitor,
         id: createId(PRE_ID.endpointMonitor),
@@ -185,5 +185,5 @@ function getOrderDirection(direction: "asc" | "desc") {
 }
 
 function getColumn(columnName: string): SQLiteColumn {
-  return endpointMonitorsTable[columnName as keyof typeof endpointMonitorsTable] as SQLiteColumn
+  return EndpointMonitorsTable[columnName as keyof typeof EndpointMonitorsTable] as SQLiteColumn
 }

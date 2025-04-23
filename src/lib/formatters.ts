@@ -1,4 +1,4 @@
-import { endpointMonitorsSelectSchema } from "@/db/zod-schema"
+import type{ endpointMonitorsSelectSchema } from "@/db/zod-schema"
 import type { z } from "zod"
 
 export function msToHumanReadable(

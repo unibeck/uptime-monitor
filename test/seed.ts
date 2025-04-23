@@ -9,8 +9,8 @@ import type { z } from "zod"
 import * as schema from "../src/db/schema"
 import { UptimeChecksTable } from "../src/db/schema"
 import type {
-  uptimeChecksInsertSchema,
   endpointMonitorsInsertSchema,
+  uptimeChecksInsertSchema,
 } from "../src/db/zod-schema"
 
 // List of 23 predefined URLs for endpointMonitors
@@ -72,7 +72,7 @@ const seedDatabase = async () => {
           checkIntervals[Math.floor(Math.random() * checkIntervals.length)],
       }
     })
-    await db.insert(schema.endpointMonitorsTable).values(seedEndpointMonitors)
+    await db.insert(schema.EndpointMonitorsTable).values(seedEndpointMonitors)
 
     console.log("Seeding uptime checks...")
     // Create historical uptime checks for each endpointMonitor

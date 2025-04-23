@@ -1,6 +1,6 @@
 import { takeUniqueOrThrow, useDrizzle } from "@/db"
 import { takeFirstOrNull } from "@/db"
-import { UptimeChecksTable, endpointMonitorsTable } from "@/db/schema"
+import { EndpointMonitorsTable, UptimeChecksTable } from "@/db/schema"
 import { createRoute } from "@/lib/api-utils"
 import { getCloudflareContext } from "@opennextjs/cloudflare"
 import { and, avg, count, desc, eq, gt, isNotNull, max, sql } from "drizzle-orm"
@@ -29,7 +29,7 @@ export const GET = createRoute.handler(async (request, context) => {
       .select({
         totalEndpointMonitors: count(),
       })
-      .from(endpointMonitorsTable)
+      .from(EndpointMonitorsTable)
       .then(takeUniqueOrThrow)
 
     // Get count of endpointMonitors with active alerts
@@ -37,8 +37,8 @@ export const GET = createRoute.handler(async (request, context) => {
       .select({
         sitesWithAlerts: count(),
       })
-      .from(endpointMonitorsTable)
-      .where(eq(endpointMonitorsTable.activeAlert, true))
+      .from(EndpointMonitorsTable)
+      .where(eq(EndpointMonitorsTable.activeAlert, true))
       .then(takeUniqueOrThrow)
 
     // Get highest response time and associated endpointMonitor ID in the last 24 hours

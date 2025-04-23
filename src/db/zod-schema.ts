@@ -1,4 +1,4 @@
-import { UptimeChecksTable, endpointMonitorsTable } from "@/db/schema"
+import { EndpointMonitorsTable, UptimeChecksTable } from "@/db/schema"
 import { createSchemaFactory } from "drizzle-zod"
 import { z } from "zod"
 
@@ -16,7 +16,7 @@ const { createSelectSchema } = createSchemaFactory({
   },
 })
 
-export const endpointMonitorsInsertSchema = createInsertSchema(endpointMonitorsTable, {
+export const endpointMonitorsInsertSchema = createInsertSchema(EndpointMonitorsTable, {
   url: (schema) => schema.url(),
   expectedStatusCode: z.number().positive().int().optional(),
 }).omit({
@@ -26,8 +26,8 @@ export const endpointMonitorsInsertSchema = createInsertSchema(endpointMonitorsT
 export const endpointMonitorsInsertDTOSchema = endpointMonitorsInsertSchema.omit({
   id: true,
 })
-export const endpointMonitorsSelectSchema = createSelectSchema(endpointMonitorsTable)
-export const endpointMonitorsPatchSchema = createInsertSchema(endpointMonitorsTable).partial()
+export const endpointMonitorsSelectSchema = createSelectSchema(EndpointMonitorsTable)
+export const endpointMonitorsPatchSchema = createInsertSchema(EndpointMonitorsTable).partial()
 
 export const uptimeChecksInsertSchema = createInsertSchema(
   UptimeChecksTable,
