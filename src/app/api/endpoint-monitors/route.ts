@@ -17,7 +17,7 @@ import * as HttpStatusCodes from "stoker/http-status-codes"
 import { z } from "zod"
 
 /**
- * GET /api/endpointMonitors
+ * GET /api/endpoint-monitors
  *
  * Retrieves a paginated list of endpointMonitors with ordering options.
  *
@@ -113,7 +113,7 @@ export const GET = createRoute
   })
 
 /**
- * POST /api/endpointMonitors
+ * POST /api/endpoint-monitors
  *
  * Creates a new endpointMonitor entry. Checks for URL conflicts before creating.
  *

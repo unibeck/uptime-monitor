@@ -1,3 +1,6 @@
+import { endpointMonitorsSelectSchema } from "@/db/zod-schema"
+import type { z } from "zod"
+
 export function msToHumanReadable(
   ms: number,
   short = false,
@@ -31,4 +34,10 @@ export function secsToHumanReadable(
 
   const days = Math.floor(hours / 24)
   return `${Number.parseFloat(days.toFixed(toFixed))}${short ? "" : " "}${short ? "d" : "days"}`
+}
+
+export function endpointSignature(
+  endpointMonitor: z.infer<typeof endpointMonitorsSelectSchema>,
+): string {
+  return `[${endpointMonitor.id}](${endpointMonitor.url})`
 }

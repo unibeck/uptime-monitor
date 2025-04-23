@@ -1,4 +1,5 @@
-import { takeUniqueOrThrow, useDrizzle } from "@/db"
+import { useDrizzle } from "@/db"
+import { takeUniqueOrThrow } from "@/db"
 import { endpointMonitorsTable } from "@/db/schema"
 import { createRoute } from "@/lib/api-utils"
 import { idStringParamsSchema } from "@/lib/route-schemas"
@@ -8,14 +9,14 @@ import { NextResponse } from "next/server"
 import * as HttpStatusCodes from "stoker/http-status-codes"
 
 /**
- * GET /api/endpointMonitors/[id]/status
+ * POST /api/endpoint-monitors/[id]/init-do
  *
- * Retrieves the current monitoring status of a specific endpointMonitor.
+ * Initializes a new Monitor DO for a specific endpointMonitor.
  *
  * @params {string} id - Endpoint Monitor ID
- * @returns {Promise<NextResponse>} JSON response with the endpointMonitor's running status
+ * @returns {Promise<NextResponse>} JSON response confirming the Monitor DO has been initialized
  */
-export const GET = createRoute
+export const POST = createRoute
   .params(idStringParamsSchema)
   .handler(async (request, context) => {
     const { env } = getCloudflareContext()
@@ -26,8 +27,10 @@ export const GET = createRoute
       .where(eq(endpointMonitorsTable.id, context.params.id))
       .then(takeUniqueOrThrow)
 
+    await env.MONITOR_TRIGGER_RPC.init(endpointMonitor.id, endpointMonitor.checkInterval)
+
     return NextResponse.json(
-      { status: endpointMonitor.isRunning },
+      { message: "Initialized Monitor DO" },
       { status: HttpStatusCodes.OK },
     )
   })

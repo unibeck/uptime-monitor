@@ -52,11 +52,11 @@ export const columns: AppColumnDef<z.infer<typeof endpointMonitorsSelectSchema>>
   {
     accessorKey: "name",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Endpoint Monitor Name" />
+      <DataTableColumnHeader column={column} title="Name" />
     ),
-    headerLabel: "Endpoint Monitor Name",
+    headerLabel: "Name",
     cell: ({ row }) => (
-      <Link href={`/endpointMonitors/${row.original.id}`} className="hover:underline">
+      <Link href={`/endpoint-monitors/${row.original.id}`} className="hover:underline">
         {row.original.name.length > 32
           ? `${row.original.name.substring(0, 32)}...`
           : row.original.name}

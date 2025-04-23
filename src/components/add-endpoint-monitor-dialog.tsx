@@ -118,7 +118,7 @@ export function AddEndpointMonitorDialog({
 
   const onSubmit = async (data: WebsiteFormData) => {
     setIsSubmitting(true)
-    const url = isEditing ? `/api/endpointMonitors/${endpointMonitor.id}` : "/api/endpointMonitors"
+    const url = isEditing ? `/api/endpoint-monitors/${endpointMonitor.id}` : "/api/endpoint-monitors"
     const method = isEditing ? "PATCH" : "POST"
 
     try {

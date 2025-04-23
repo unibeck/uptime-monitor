@@ -99,7 +99,7 @@ export const useDataTableStore = create<DataTableState>((set, get) => ({
       }
 
       // Fetch endpointMonitors with query parameters
-      const response = await fetch(`/api/endpointMonitors?${queryParams.toString()}`)
+      const response = await fetch(`/api/endpoint-monitors?${queryParams.toString()}`)
 
       if (!response.ok) {
         throw new Error("Failed to fetch endpointMonitors")

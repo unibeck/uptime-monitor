@@ -1,5 +1,4 @@
-import { useDrizzle } from "@/db"
-import { takeUniqueOrThrow } from "@/db"
+import { takeUniqueOrThrow, useDrizzle } from "@/db"
 import { endpointMonitorsTable } from "@/db/schema"
 import { createRoute } from "@/lib/api-utils"
 import { idStringParamsSchema } from "@/lib/route-schemas"
@@ -9,28 +8,29 @@ import { NextResponse } from "next/server"
 import * as HttpStatusCodes from "stoker/http-status-codes"
 
 /**
- * POST /api/endpointMonitors/[id]/init-do
+ * GET /api/endpoint-monitors/[id]/execute-check
  *
- * Initializes a new Monitor DO for a specific endpointMonitor.
+ * Manually executes an uptime check for a specific endpointMonitor.
  *
  * @params {string} id - Endpoint Monitor ID
- * @returns {Promise<NextResponse>} JSON response confirming the Monitor DO has been initialized
+ * @returns {Promise<NextResponse>} JSON response confirming the check execution
  */
-export const POST = createRoute
+export const GET = createRoute
   .params(idStringParamsSchema)
   .handler(async (request, context) => {
     const { env } = getCloudflareContext()
     const db = useDrizzle(env.DB)
+
     const endpointMonitor = await db
       .select()
       .from(endpointMonitorsTable)
       .where(eq(endpointMonitorsTable.id, context.params.id))
       .then(takeUniqueOrThrow)
 
-    await env.MONITOR_TRIGGER_RPC.init(endpointMonitor.id, endpointMonitor.checkInterval)
+    await env.MONITOR_EXEC.executeCheck(endpointMonitor)
 
     return NextResponse.json(
-      { message: "Initialized Monitor DO" },
+      { message: "Executed check via DO" },
       { status: HttpStatusCodes.OK },
     )
   })

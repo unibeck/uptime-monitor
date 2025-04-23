@@ -115,4 +115,3 @@ export async function createEndpointMonitorDownAlert(
     },
   })
 }
-// TODO check with unibeck if i modify the payload sent to opsgenie will it have big impact, (alias and details.endpointMonitor)

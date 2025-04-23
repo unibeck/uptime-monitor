@@ -25,8 +25,8 @@ export async function handleToggleStatus(
 
   try {
     const endpoint = newStatus
-      ? `/api/endpointMonitors/${endpointMonitorId}/resume`
-      : `/api/endpointMonitors/${endpointMonitorId}/pause`
+      ? `/api/endpoint-monitors/${endpointMonitorId}/resume`
+      : `/api/endpoint-monitors/${endpointMonitorId}/pause`
 
     const response = await fetch(endpoint, {
       method: "POST",
@@ -60,7 +60,7 @@ export async function handleDeleteWebsite(endpointMonitorId: string) {
   }
 
   try {
-    const response = await fetch(`/api/endpointMonitors/${endpointMonitorId}`, {
+    const response = await fetch(`/api/endpoint-monitors/${endpointMonitorId}`, {
       method: "DELETE",
     })
 

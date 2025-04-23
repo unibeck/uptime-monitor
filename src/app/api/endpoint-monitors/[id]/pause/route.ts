@@ -5,7 +5,7 @@ import { NextResponse } from "next/server"
 import * as HttpStatusCodes from "stoker/http-status-codes"
 
 /**
- * POST /api/endpointMonitors/[id]/pause
+ * POST /api/endpoint-monitors/[id]/pause
  *
  * Pauses monitoring for a specific endpointMonitor.
  *

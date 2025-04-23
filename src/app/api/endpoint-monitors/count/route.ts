@@ -11,7 +11,7 @@ import { NextResponse } from "next/server"
 import { z } from "zod"
 
 /**
- * GET /api/endpointMonitors/count
+ * GET /api/endpoint-monitors/count
  *
  * Retrieves the total count of endpointMonitors in the database, subject to optional search and filter parameters.
  *

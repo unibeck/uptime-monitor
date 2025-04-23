@@ -14,7 +14,7 @@ const querySchema = z.object({
 })
 
 /**
- * GET /api/endpointMonitors/[id]/uptime/limit
+ * GET /api/endpoint-monitors/[id]/uptime/limit
  *
  * Retrieves uptime limit data for a specific endpointMonitor.
  *

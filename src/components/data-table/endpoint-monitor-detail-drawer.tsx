@@ -72,7 +72,7 @@ export function EndpointMonitorDetailDrawer({
       setIsLoadingCheck(true)
       setCheckError(null)
       try {
-        const response = await fetch(`/api/endpointMonitors/${endpointMonitor.id}/uptime`)
+        const response = await fetch(`/api/endpoint-monitors/${endpointMonitor.id}/uptime`)
         if (!response.ok) {
           if (response.status === 404) {
             setLatestUptimeCheck(null) // No check found yet
@@ -402,7 +402,7 @@ export function EndpointMonitorDetailDrawer({
         </div>
         <DrawerFooter className="flex-col gap-4">
           <Button variant="primary" asChild>
-            <Link href={`/endpointMonitors/${endpointMonitor.id}`}>
+            <Link href={`/endpoint-monitors/${endpointMonitor.id}`}>
               View Detailed Analytics
             </Link>
           </Button>

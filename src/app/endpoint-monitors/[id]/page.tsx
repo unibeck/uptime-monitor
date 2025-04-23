@@ -32,7 +32,7 @@ import type { TimeRange } from "@/types/endpointMonitor"
 import { IconPointFilled } from "@tabler/icons-react"
 import { formatDistance } from "date-fns"
 import { ArrowLeft } from "lucide-react"
-import type { Route } from "next" // Import Route type
+import type { Route } from "next"
 import Link from "next/link"
 import { useParams, useRouter, useSearchParams } from "next/navigation"
 import React, { useEffect, useState } from "react"
@@ -41,7 +41,7 @@ import type { z } from "zod"
 // Define the type for a single uptime check
 type LatestUptimeCheck = z.infer<typeof uptimeChecksSelectSchema>
 
-export default function WebsiteDetailPage() {
+export default function EndpointMonitorDetailPage() {
   const params = useParams()
   const router = useRouter()
   const endpointMonitorId = params.id as string
@@ -75,7 +75,7 @@ export default function WebsiteDetailPage() {
     const fetchWebsite = async () => {
       setIsLoading(true)
       try {
-        const response = await fetch(`/api/endpointMonitors/${endpointMonitorId}`)
+        const response = await fetch(`/api/endpoint-monitors/${endpointMonitorId}`)
         if (!response.ok) {
           if (response.status === 404) {
             router.push("/")
@@ -177,7 +177,7 @@ export default function WebsiteDetailPage() {
 
       try {
         const response = await fetch(
-          `/api/endpointMonitors/${endpointMonitorId}/uptime/range?range=${timeRange}`,
+          `/api/endpoint-monitors/${endpointMonitorId}/uptime/range?range=${timeRange}`,
         )
         if (!response.ok) {
           console.error(
@@ -241,7 +241,7 @@ export default function WebsiteDetailPage() {
     const fetchLatestUptimeCheck = async () => {
       // Consider adding loading/error state specifically for this fetch if needed
       try {
-        const response = await fetch(`/api/endpointMonitors/${endpointMonitorId}/uptime`)
+        const response = await fetch(`/api/endpoint-monitors/${endpointMonitorId}/uptime`)
         if (!response.ok) {
           if (response.status !== 404) {
             // Don't error if no check exists yet
@@ -322,8 +322,8 @@ export default function WebsiteDetailPage() {
               // Update URL
               const newPath =
                 newTimeRange === "1d"
-                  ? `/endpointMonitors/${endpointMonitorId}`
-                  : `/endpointMonitors/${endpointMonitorId}?range=${newTimeRange}`
+                  ? `/endpoint-monitors/${endpointMonitorId}`
+                  : `/endpoint-monitors/${endpointMonitorId}?range=${newTimeRange}`
               router.push(newPath as Route, { scroll: false })
             }}
             className="w-full"

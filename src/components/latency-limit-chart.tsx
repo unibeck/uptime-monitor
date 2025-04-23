@@ -66,7 +66,7 @@ export function LatencyLimitChart({
       setIsLoading(true)
       try {
         const response = await fetch(
-          `/api/endpointMonitors/${endpointMonitorId}/uptime/limit?limit=${limit}`,
+          `/api/endpoint-monitors/${endpointMonitorId}/uptime/limit?limit=${limit}`,
         )
         if (!response.ok) {
           console.error(`Failed to fetch latency data: ${response.statusText}`)

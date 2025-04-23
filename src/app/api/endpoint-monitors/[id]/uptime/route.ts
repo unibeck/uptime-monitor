@@ -11,7 +11,7 @@ import * as HttpStatusPhrases from "stoker/http-status-phrases"
 import type { z } from "zod"
 
 /**
- * GET /api/endpointMonitors/[id]/uptime
+ * GET /api/endpoint-monitors/[id]/uptime
  *
  * Get the latest uptime check for a endpointMonitor
  *

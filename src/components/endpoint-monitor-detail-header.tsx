@@ -51,7 +51,7 @@ export function EndpointMonitorDetailHeader({
     setIsLoading(true)
 
     try {
-      const response = await fetch(`/api/endpointMonitors/${endpointMonitor.id}/execute-check`)
+      const response = await fetch(`/api/endpoint-monitors/${endpointMonitor.id}/execute-check`)
       if (!response.ok) {
         throw new Error("Failed to execute check")
       }
@@ -74,7 +74,7 @@ export function EndpointMonitorDetailHeader({
   const pauseMonitoring = async () => {
     setIsLoading(true)
     try {
-      const response = await fetch(`/api/endpointMonitors/${endpointMonitor.id}/pause`, {
+      const response = await fetch(`/api/endpoint-monitors/${endpointMonitor.id}/pause`, {
         method: "POST",
       })
       if (!response.ok) {
@@ -99,7 +99,7 @@ export function EndpointMonitorDetailHeader({
   const resumeMonitoring = async () => {
     setIsLoading(true)
     try {
-      const response = await fetch(`/api/endpointMonitors/${endpointMonitor.id}/resume`, {
+      const response = await fetch(`/api/endpoint-monitors/${endpointMonitor.id}/resume`, {
         method: "POST",
       })
       console.log("response", response)

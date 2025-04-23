@@ -10,7 +10,7 @@ import { NextResponse } from "next/server"
 import * as HttpStatusCodes from "stoker/http-status-codes"
 
 /**
- * GET /api/endpointMonitors/[id]/checks
+ * GET /api/endpoint-monitors/[id]/checks
  *
  * Retrieves uptime checks for a specific endpointMonitor within a given time range.
  *

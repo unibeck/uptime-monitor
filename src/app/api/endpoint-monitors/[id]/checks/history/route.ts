@@ -8,7 +8,7 @@ import { NextResponse } from "next/server"
 import * as HttpStatusCodes from "stoker/http-status-codes"
 
 /**
- * GET /api/endpointMonitors/[id]/checks/history
+ * GET /api/endpoint-monitors/[id]/checks/history
  *
  * Retrieves the history of uptime checks for a specific endpointMonitor within a given time period.
  *

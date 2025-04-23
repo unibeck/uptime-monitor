@@ -12,7 +12,7 @@ import { z } from "zod"
 export const revalidate = 120
 
 /**
- * GET /api/endpointMonitors/stats
+ * GET /api/endpoint-monitors/stats
  *
  * Retrieves aggregate statistics for endpointMonitor monitoring dashboard.
  *

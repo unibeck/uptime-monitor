@@ -9,6 +9,7 @@ import type { DrizzleD1Database } from "drizzle-orm/d1"
 import * as HttpStatusCodes from "stoker/http-status-codes"
 import * as HttpStatusPhrases from "stoker/http-status-phrases"
 import type { z } from "zod"
+import { endpointSignature } from "@/lib/formatters"
 
 export default class MonitorExec extends WorkerEntrypoint<CloudflareEnv> {
   async fetch(request: Request) {
@@ -32,7 +33,7 @@ export default class MonitorExec extends WorkerEntrypoint<CloudflareEnv> {
       .where(eq(endpointMonitorsTable.id, endpointMonitorId))
       .then(takeUniqueOrThrow)
 
-    console.log(`Performing check for ${endpointMonitor.name} (${endpointMonitor.url})`)
+    console.log(`${endpointSignature(endpointMonitor)}: performing check...`)
     let isExpectedStatus = false
     let responseTime = 0
     let status = 0
@@ -57,7 +58,7 @@ export default class MonitorExec extends WorkerEntrypoint<CloudflareEnv> {
           ? response.status === endpointMonitor.expectedStatusCode
           : response.status >= 200 && response.status < 400
       console.log(
-        `Check complete - Status: ${status}, Response Time: ${responseTime}ms, ExpectedStatus: ${isExpectedStatus}`,
+        `${endpointSignature(endpointMonitor)}: check complete. Status: ${status}, Response Time: ${responseTime}ms, ExpectedStatus: ${isExpectedStatus}`,
       )
     } catch (error) {
       responseTime = Date.now() - startTime
@@ -125,7 +126,7 @@ async function handleFailureTracking(
   } else {
     const consecutiveFailures = endpointMonitor.consecutiveFailures + 1
     console.log(
-      `EndpointMonitor ${endpointMonitor.name} has ${consecutiveFailures} consecutive failures`,
+      `${endpointSignature(endpointMonitor)} has ${consecutiveFailures} consecutive failures`,
     )
 
     const endpointMonitorPatch: z.infer<typeof endpointMonitorsPatchSchema> = {
@@ -157,7 +158,7 @@ async function sendAlert(
   }
 
   console.log(
-    `Sending alert for endpointMonitor ${endpointMonitor.name} after consecutive failures`,
+    `${endpointSignature(endpointMonitor)}: consecutive failures threshold reached, sending alert...`,
   )
 
   try {
@@ -171,12 +172,12 @@ async function sendAlert(
 
     if (result) {
       console.log(
-        `Alert sent successfully for ${endpointMonitor.name}. RequestId: ${result.requestId}`,
+        `${endpointSignature(endpointMonitor)}: alert sent successfully. RequestId: ${result.requestId}`,
       )
     } else {
-      console.error(`Failed to send alert for ${endpointMonitor.name}`)
+      console.error(`${endpointSignature(endpointMonitor)}: failed to send alert`)
     }
   } catch (error) {
-    console.error(`Error sending alert for ${endpointMonitor.name}:`, error)
+    console.error(`${endpointSignature(endpointMonitor)}: error sending alert.`, error)
   }
 }

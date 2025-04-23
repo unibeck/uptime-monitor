@@ -1,5 +1,5 @@
 import { DurableObject, WorkerEntrypoint } from "cloudflare:workers"
-import { useDrizzle } from "@/db"
+import { takeUniqueOrThrow, useDrizzle } from "@/db"
 import { endpointMonitorsTable } from "@/db/schema"
 import {
   MonitorTriggerNotInitializedError,
@@ -9,6 +9,7 @@ import { diffable, state } from "diffable-objects"
 import { eq } from "drizzle-orm"
 import * as HttpStatusCodes from "stoker/http-status-codes"
 import * as HttpStatusPhrases from "stoker/http-status-phrases"
+import { endpointSignature } from "@/lib/formatters"
 
 /**
  * The Monitor class is a Durable Object that is used to trigger checks on a endpointMonitor.
@@ -99,12 +100,14 @@ export class MonitorTrigger extends DurableObject<CloudflareEnv> {
     await this.ctx.storage.deleteAlarm()
 
     const db = useDrizzle(this.env.DB)
-    await db
+    const endpointMonitor = await db
       .update(endpointMonitorsTable)
       .set({ isRunning: false })
       .where(eq(endpointMonitorsTable.id, endpointMonitorId))
+      .returning()
+      .then(takeUniqueOrThrow)
 
-    console.log(`Paused MonitorTrigger DO for [${endpointMonitorId}]`)
+    console.log(`Paused MonitorTrigger DO for ${endpointSignature(endpointMonitor)}`)
   }
 
   async resume() {
@@ -117,12 +120,14 @@ export class MonitorTrigger extends DurableObject<CloudflareEnv> {
     this.ctx.storage.setAlarm(Date.now() + checkInterval * 1000)
 
     const db = useDrizzle(this.env.DB)
-    await db
+    const endpointMonitor = await db
       .update(endpointMonitorsTable)
       .set({ isRunning: true })
       .where(eq(endpointMonitorsTable.id, endpointMonitorId))
+      .returning()
+      .then(takeUniqueOrThrow)
 
-    console.log(`Resumed MonitorTrigger DO for [${endpointMonitorId}]`)
+    console.log(`Resumed MonitorTrigger DO for ${endpointSignature(endpointMonitor)}`)
   }
 
   async delete() {

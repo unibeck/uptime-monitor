@@ -67,7 +67,7 @@ const seedDatabase = async () => {
       return {
         id: createId(PRE_ID.endpointMonitor),
         url: url,
-        name: `${domain.charAt(0).toUpperCase() + domain.slice(1)} EndpointMonitor`,
+        name: `${domain.charAt(0).toUpperCase() + domain.slice(1)}`,
         checkInterval:
           checkIntervals[Math.floor(Math.random() * checkIntervals.length)],
       }

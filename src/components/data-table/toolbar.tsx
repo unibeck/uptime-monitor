@@ -95,7 +95,7 @@ export function Toolbar({ table }: ToolbarProps) {
       <div className="relative flex items-center">
         <IconSearch className="absolute left-2.5 h-4 w-4 text-muted-foreground" />
         <Input
-          placeholder="Search endpoint monitors..."
+          placeholder="Search..."
           value={searchValue}
           onChange={onSearchChange}
           className="w-[200px] lg:w-[300px] pl-8"

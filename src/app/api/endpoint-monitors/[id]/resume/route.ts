@@ -10,7 +10,7 @@ import { NextResponse } from "next/server"
 import * as HttpStatusCodes from "stoker/http-status-codes"
 
 /**
- * POST /api/endpointMonitors/[id]/resume
+ * POST /api/endpoint-monitors/[id]/resume
  *
  * Resumes monitoring for a specific endpointMonitor.
  *

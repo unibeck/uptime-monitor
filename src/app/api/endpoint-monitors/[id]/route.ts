@@ -11,7 +11,7 @@ import * as HttpStatusPhrases from "stoker/http-status-phrases"
 import type { z } from "zod"
 
 /**
- * GET /api/endpointMonitors/[id]
+ * GET /api/endpoint-monitors/[id]
  *
  * Retrieves a specific endpointMonitor by ID.
  *
@@ -51,7 +51,7 @@ export const GET = createRoute
   })
 
 /**
- * PATCH /api/endpointMonitors/[id]
+ * PATCH /api/endpoint-monitors/[id]
  *
  * Updates a specific endpointMonitor by ID with partial data.
  *
@@ -106,7 +106,7 @@ export const PATCH = createRoute
   })
 
 /**
- * DELETE /api/endpointMonitors/[id]
+ * DELETE /api/endpoint-monitors/[id]
  *
  * Deletes a specific endpointMonitor by ID and its associated monitor.
  *
