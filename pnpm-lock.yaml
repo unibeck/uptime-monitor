@@ -14,9 +14,6 @@ importers:
       '@hookform/resolvers':
         specifier: ^5.0.1
         version: 5.0.1(react-hook-form@7.56.0(react@19.1.0))
-      '@next/bundle-analyzer':
-        specifier: ^15.3.1
-        version: 15.3.1
       '@radix-ui/react-accessible-icon':
         specifier: ^1.1.4
         version: 1.1.4(@types/react-dom@19.1.2(@types/react@19.1.2))(@types/react@19.1.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -237,6 +234,9 @@ importers:
       '@libsql/client':
         specifier: ^0.15.4
         version: 0.15.4
+      '@next/bundle-analyzer':
+        specifier: ^15.3.1
+        version: 15.3.1
       '@opennextjs/cloudflare':
         specifier: ^0.6.6
         version: 0.6.6(wrangler@4.12.0)
