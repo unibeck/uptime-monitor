@@ -10,20 +10,6 @@ const timestamps = {
     .$onUpdate(() => new Date()),
 }
 
-export const WebsitesTable = sqliteTable("websites", {
-  id: text("id").primaryKey(),
-  url: text("url").notNull(),
-  name: text("name").notNull(),
-  checkInterval: integer("checkInterval").notNull(),
-  isRunning: integer("isRunning", { mode: "boolean" }).notNull().default(true),
-  expectedStatusCode: integer("expectedStatusCode"),
-  consecutiveFailures: integer("consecutiveFailures").notNull().default(0),
-  activeAlert: integer("activeAlert", { mode: "boolean" })
-    .notNull()
-    .default(false),
-
-  ...timestamps,
-})
 
 export const endpointMonitorsTable = sqliteTable("endpointMonitors", {
   id: text("id").primaryKey(),

@@ -18,9 +18,9 @@ To get help on API route development in Cursor, reference this rule by with `@ap
 ## Route Structure and Organization
 
 - Organize routes under `src/app/api/` using Next.js App Router pattern
-- Use `route.ts` for base endpoints (e.g., `/api/websites`)
-- Use dynamic segments with `[param]` for parameterized routes (e.g., `/api/websites/[id]/route.ts`)
-- Group related functionality in subdirectories (e.g., `/api/websites/stats/`)
+- Use `route.ts` for base endpoints (e.g., `/api/endpointMonitors`)
+- Use dynamic segments with `[param]` for parameterized routes (e.g., `/api/endpointMonitors/[id]/route.ts`)
+- Group related functionality in subdirectories (e.g., `/api/endpointMonitors/stats/`)
 
 ## Route Creation
 

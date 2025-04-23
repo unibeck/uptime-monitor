@@ -22,7 +22,7 @@ import {
 import { BarRectangleItem } from "recharts/types/cartesian/Bar"
 
 interface LatencyLimitChartProps {
-  websiteId: string
+  endpointMonitorId: string
   limit?: number
   height?: number
 }
@@ -54,7 +54,7 @@ const getColorForResponseTime = (responseTime: number): string => {
 }
 
 export function LatencyLimitChart({
-  websiteId,
+  endpointMonitorId,
   limit = 30,
   height = 75,
 }: LatencyLimitChartProps) {
@@ -66,7 +66,7 @@ export function LatencyLimitChart({
       setIsLoading(true)
       try {
         const response = await fetch(
-          `/api/websites/${websiteId}/uptime/limit?limit=${limit}`,
+          `/api/endpointMonitors/${endpointMonitorId}/uptime/limit?limit=${limit}`,
         )
         if (!response.ok) {
           console.error(`Failed to fetch latency data: ${response.statusText}`)
@@ -95,7 +95,7 @@ export function LatencyLimitChart({
     }
 
     fetchLatencyData()
-  }, [websiteId, limit])
+  }, [endpointMonitorId, limit])
 
   // Calculate min/max response times for gradient calculation
   const { minResponseTime, maxResponseTime } = useMemo(() => {

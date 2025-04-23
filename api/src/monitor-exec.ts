@@ -1,9 +1,9 @@
 import { WorkerEntrypoint } from "cloudflare:workers"
 import { takeFirstOrNull, takeUniqueOrThrow, useDrizzle } from "@/db"
-import { UptimeChecksTable, WebsitesTable } from "@/db/schema"
+import { UptimeChecksTable, endpointMonitorsTable } from "@/db/schema"
 import type * as schema from "@/db/schema"
-import type { websitesPatchSchema, websitesSelectSchema } from "@/db/zod-schema"
-import { createWebsiteDownAlert } from "@/lib/opsgenie"
+import type { endpointMonitorsPatchSchema, endpointMonitorsSelectSchema } from "@/db/zod-schema"
+import { createEndpointMonitorDownAlert } from "@/lib/opsgenie"
 import { eq } from "drizzle-orm"
 import type { DrizzleD1Database } from "drizzle-orm/d1"
 import * as HttpStatusCodes from "stoker/http-status-codes"
@@ -20,19 +20,19 @@ export default class MonitorExec extends WorkerEntrypoint<CloudflareEnv> {
   }
 
   //waitUntil is used to avoid immediately return a response so that the durable object is not charged for wall time
-  async executeCheck(websiteId: string) {
-    this.ctx.waitUntil(this._executeCheck(websiteId))
+  async executeCheck(endpointMonitorId: string) {
+    this.ctx.waitUntil(this._executeCheck(endpointMonitorId))
   }
 
-  private async _executeCheck(websiteId: string) {
+  private async _executeCheck(endpointMonitorId: string) {
     const db = useDrizzle(this.env.DB)
-    const website = await db
+    const endpointMonitor = await db
       .select()
-      .from(WebsitesTable)
-      .where(eq(WebsitesTable.id, websiteId))
+      .from(endpointMonitorsTable)
+      .where(eq(endpointMonitorsTable.id, endpointMonitorId))
       .then(takeUniqueOrThrow)
 
-    console.log(`Performing check for ${website.name} (${website.url})`)
+    console.log(`Performing check for ${endpointMonitor.name} (${endpointMonitor.url})`)
     let isExpectedStatus = false
     let responseTime = 0
     let status = 0
@@ -40,7 +40,7 @@ export default class MonitorExec extends WorkerEntrypoint<CloudflareEnv> {
     const startTime = Date.now()
 
     try {
-      const response = await fetch(website.url, {
+      const response = await fetch(endpointMonitor.url, {
         method: "GET",
         redirect: "follow",
         cf: {
@@ -53,8 +53,8 @@ export default class MonitorExec extends WorkerEntrypoint<CloudflareEnv> {
       status = response.status
       // Use expectedStatusCode if provided, otherwise default to 2xx/3xx
       isExpectedStatus =
-        website.expectedStatusCode != null
-          ? response.status === website.expectedStatusCode
+        endpointMonitor.expectedStatusCode != null
+          ? response.status === endpointMonitor.expectedStatusCode
           : response.status >= 200 && response.status < 400
       console.log(
         `Check complete - Status: ${status}, Response Time: ${responseTime}ms, ExpectedStatus: ${isExpectedStatus}`,
@@ -69,7 +69,7 @@ export default class MonitorExec extends WorkerEntrypoint<CloudflareEnv> {
     // Store check result
     try {
       await db.insert(UptimeChecksTable).values({
-        websiteId: website.id,
+        endpointMonitorId: endpointMonitor.id,
         timestamp: new Date(),
         status,
         responseTime,
@@ -83,26 +83,26 @@ export default class MonitorExec extends WorkerEntrypoint<CloudflareEnv> {
       isExpectedStatus,
       status,
       errorMessage,
-      website,
+      endpointMonitor,
       db,
       this.env.OPSGENIE_API_KEY,
     )
   }
 
-  async testSendAlert(websiteId: string, status: number, errorMessage: string) {
+  async testSendAlert(endpointMonitorId: string, status: number, errorMessage: string) {
     console.log(this.env.ENVIRONMENT)
     const db = useDrizzle(this.env.DB)
 
-    const website = await db
+    const endpointMonitor = await db
       .select()
-      .from(WebsitesTable)
-      .where(eq(WebsitesTable.id, websiteId))
+      .from(endpointMonitorsTable)
+      .where(eq(endpointMonitorsTable.id, endpointMonitorId))
       .then(takeFirstOrNull)
-    if (!website) {
-      throw new Error(`Website [${websiteId}] does not exist`)
+    if (!endpointMonitor) {
+      throw new Error(`EndpointMonitor [${endpointMonitorId}] does not exist`)
     }
 
-    await sendAlert(status, errorMessage, website, this.env.OPSGENIE_API_KEY)
+    await sendAlert(status, errorMessage, endpointMonitor, this.env.OPSGENIE_API_KEY)
   }
 }
 
@@ -110,45 +110,45 @@ async function handleFailureTracking(
   isExpectedStatus: boolean,
   status: number,
   errorMessage: string,
-  website: z.infer<typeof websitesSelectSchema>,
+  endpointMonitor: z.infer<typeof endpointMonitorsSelectSchema>,
   db: DrizzleD1Database<typeof schema>,
   opsgenieApiKey: string,
 ) {
   if (isExpectedStatus) {
     // Reset consecutive failures if the check passes
-    if (website.consecutiveFailures > 0) {
+    if (endpointMonitor.consecutiveFailures > 0) {
       await db
-        .update(WebsitesTable)
+        .update(endpointMonitorsTable)
         .set({ consecutiveFailures: 0 })
-        .where(eq(WebsitesTable.id, website.id))
+        .where(eq(endpointMonitorsTable.id, endpointMonitor.id))
     }
   } else {
-    const consecutiveFailures = website.consecutiveFailures + 1
+    const consecutiveFailures = endpointMonitor.consecutiveFailures + 1
     console.log(
-      `Website ${website.name} has ${consecutiveFailures} consecutive failures`,
+      `EndpointMonitor ${endpointMonitor.name} has ${consecutiveFailures} consecutive failures`,
     )
 
-    const websitePatch: z.infer<typeof websitesPatchSchema> = {
+    const endpointMonitorPatch: z.infer<typeof endpointMonitorsPatchSchema> = {
       consecutiveFailures: consecutiveFailures,
     }
 
     // Send alert if this is the second consecutive failure and no alert has been sent yet
-    if (consecutiveFailures >= 2 && !website.activeAlert) {
-      await sendAlert(status, errorMessage, website, opsgenieApiKey)
-      websitePatch.activeAlert = true
+    if (consecutiveFailures >= 2 && !endpointMonitor.activeAlert) {
+      await sendAlert(status, errorMessage, endpointMonitor, opsgenieApiKey)
+      endpointMonitorPatch.activeAlert = true
     }
 
     await db
-      .update(WebsitesTable)
-      .set(websitePatch)
-      .where(eq(WebsitesTable.id, website.id))
+      .update(endpointMonitorsTable)
+      .set(endpointMonitorPatch)
+      .where(eq(endpointMonitorsTable.id, endpointMonitor.id))
   }
 }
 
 async function sendAlert(
   status: number,
   errorMessage: string,
-  website: z.infer<typeof websitesSelectSchema>,
+  endpointMonitor: z.infer<typeof endpointMonitorsSelectSchema>,
   opsgenieApiKey: string,
 ) {
   if (!opsgenieApiKey) {
@@ -157,26 +157,26 @@ async function sendAlert(
   }
 
   console.log(
-    `Sending alert for website ${website.name} after consecutive failures`,
+    `Sending alert for endpointMonitor ${endpointMonitor.name} after consecutive failures`,
   )
 
   try {
-    const result = await createWebsiteDownAlert(
+    const result = await createEndpointMonitorDownAlert(
       opsgenieApiKey,
-      website.name,
-      website.url,
+      endpointMonitor.name,
+      endpointMonitor.url,
       status,
       errorMessage,
     )
 
     if (result) {
       console.log(
-        `Alert sent successfully for ${website.name}. RequestId: ${result.requestId}`,
+        `Alert sent successfully for ${endpointMonitor.name}. RequestId: ${result.requestId}`,
       )
     } else {
-      console.error(`Failed to send alert for ${website.name}`)
+      console.error(`Failed to send alert for ${endpointMonitor.name}`)
     }
   } catch (error) {
-    console.error(`Error sending alert for ${website.name}:`, error)
+    console.error(`Error sending alert for ${endpointMonitor.name}:`, error)
   }
 }

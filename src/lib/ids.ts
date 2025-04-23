@@ -5,7 +5,7 @@ export const nanoid = customAlphabet(
 )
 
 export enum PRE_ID {
-  website = "webs",
+  endpointMonitor = "webs",
   uptimeCheck = "uptc",
 }
 

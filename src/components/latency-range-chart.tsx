@@ -1,6 +1,6 @@
 import type { uptimeChecksSelectSchema } from "@/db/zod-schema"
 import { msToHumanReadable } from "@/lib/formatters"
-import type { TimeRange } from "@/types/website"
+import type { TimeRange } from "@/types/endpointMonitor"
 import {
   format,
   getUnixTime,

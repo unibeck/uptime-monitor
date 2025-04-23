@@ -1,7 +1,7 @@
 "use client"
 
 import type { AppColumnDef } from "@/components/data-table/columns"
-import type { websitesSelectSchema } from "@/db/zod-schema"
+import type { endpointMonitorsSelectSchema } from "@/db/zod-schema"
 import { Button } from "@/registry/new-york-v4/ui/button"
 import {
   DropdownMenu,
@@ -24,8 +24,8 @@ import { useDebouncedCallback } from "use-debounce"
 import type { z } from "zod"
 
 interface ToolbarProps {
-  table: Table<z.infer<typeof websitesSelectSchema>>
-  totalWebsites: number
+  table: Table<z.infer<typeof endpointMonitorsSelectSchema>>
+  totalEndpointMonitors: number
 }
 
 export function Toolbar({ table }: ToolbarProps) {
@@ -39,7 +39,7 @@ export function Toolbar({ table }: ToolbarProps) {
   const searchValue = useDataTableStore((state) => state.searchValue)
   const setSearchValue = useDataTableStore((state) => state.setSearchValue)
   const setPagination = useDataTableStore((state) => state.setPagination)
-  const fetchWebsites = useDataTableStore((state) => state.fetchWebsites)
+  const fetchEndpointMonitors = useDataTableStore((state) => state.fetchEndpointMonitors)
 
   // Debounce search updates to avoid too many requests
   const handleSearch = useDebouncedCallback((term: string) => {
@@ -56,7 +56,7 @@ export function Toolbar({ table }: ToolbarProps) {
     updateUrlSearchParams(term)
 
     // Fetch data with new search term
-    fetchWebsites()
+    fetchEndpointMonitors()
   }, 500)
 
   // Update URL search params without triggering navigation
@@ -95,7 +95,7 @@ export function Toolbar({ table }: ToolbarProps) {
       <div className="relative flex items-center">
         <IconSearch className="absolute left-2.5 h-4 w-4 text-muted-foreground" />
         <Input
-          placeholder="Search websites..."
+          placeholder="Search endpoint monitors..."
           value={searchValue}
           onChange={onSearchChange}
           className="w-[200px] lg:w-[300px] pl-8"
@@ -132,7 +132,7 @@ export function Toolbar({ table }: ToolbarProps) {
                 const headerLabel =
                   (
                     column.columnDef as AppColumnDef<
-                      z.infer<typeof websitesSelectSchema>
+                      z.infer<typeof endpointMonitorsSelectSchema>
                     >
                   ).headerLabel ?? column.id
                 return (

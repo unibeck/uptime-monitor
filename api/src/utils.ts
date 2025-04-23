@@ -1,8 +1,10 @@
-import type { websitesSelectSchema } from "@/db/zod-schema"
+import type { endpointMonitorsSelectSchema } from "@/db/zod-schema"
 import type { z } from "zod"
 
-export function getWebsiteSignature(
-  website: z.infer<typeof websitesSelectSchema>,
+// TODO this method isn't used, is it normal ?
+
+export function getEndpointMonitorSignature(
+  endpointMonitor: z.infer<typeof endpointMonitorsSelectSchema>,
 ): string {
-  return `[${website.id}](${website.url})`
+  return `[${endpointMonitor.id}](${endpointMonitor.url})`
 }

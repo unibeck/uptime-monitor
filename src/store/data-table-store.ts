@@ -1,4 +1,4 @@
-import type { websitesSelectSchema } from "@/db/zod-schema"
+import type { endpointMonitorsSelectSchema } from "@/db/zod-schema"
 import { DEFAULT_TOAST_OPTIONS } from "@/lib/toasts"
 import type {
   ColumnFiltersState,
@@ -12,8 +12,8 @@ import { create } from "zustand"
 
 interface DataTableState {
   // Data
-  data: z.infer<typeof websitesSelectSchema>[]
-  totalWebsites: number
+  data: z.infer<typeof endpointMonitorsSelectSchema>[]
+  totalEndpointMonitors: number
   isLoading: boolean
 
   // Table state
@@ -27,8 +27,8 @@ interface DataTableState {
   searchValue: string
 
   // Actions
-  setData: (data: z.infer<typeof websitesSelectSchema>[]) => void
-  setTotalWebsites: (count: number) => void
+  setData: (data: z.infer<typeof endpointMonitorsSelectSchema>[]) => void
+  setTotalEndpointMonitors: (count: number) => void
   setIsLoading: (isLoading: boolean) => void
   setSorting: (sorting: SortingState) => void
   setColumnFilters: (columnFilters: ColumnFiltersState) => void
@@ -38,13 +38,13 @@ interface DataTableState {
   setSearchValue: (searchValue: string) => void
 
   // Data fetching
-  fetchWebsites: () => Promise<void>
+  fetchEndpointMonitors: () => Promise<void>
 }
 
 export const useDataTableStore = create<DataTableState>((set, get) => ({
   // Initial state
   data: [],
-  totalWebsites: 0,
+  totalEndpointMonitors: 0,
   isLoading: false,
   sorting: [{ id: "consecutiveFailures", desc: true }],
   columnFilters: [],
@@ -62,7 +62,7 @@ export const useDataTableStore = create<DataTableState>((set, get) => ({
 
   // Actions
   setData: (data) => set({ data }),
-  setTotalWebsites: (totalWebsites) => set({ totalWebsites }),
+  setTotalEndpointMonitors: (totalEndpointMonitors) => set({ totalEndpointMonitors: totalEndpointMonitors }),
   setIsLoading: (isLoading) => set({ isLoading }),
   setSorting: (sorting) => set({ sorting }),
   setColumnFilters: (columnFilters) => set({ columnFilters }),
@@ -72,7 +72,7 @@ export const useDataTableStore = create<DataTableState>((set, get) => ({
   setSearchValue: (searchValue) => set({ searchValue }),
 
   // Data fetching
-  fetchWebsites: async () => {
+  fetchEndpointMonitors: async () => {
     const { pagination, searchValue, sorting } = get()
 
     set({ isLoading: true })
@@ -98,29 +98,29 @@ export const useDataTableStore = create<DataTableState>((set, get) => ({
         queryParams.set("search", searchValue)
       }
 
-      // Fetch websites with query parameters
-      const response = await fetch(`/api/websites?${queryParams.toString()}`)
+      // Fetch endpointMonitors with query parameters
+      const response = await fetch(`/api/endpointMonitors?${queryParams.toString()}`)
 
       if (!response.ok) {
-        throw new Error("Failed to fetch websites")
+        throw new Error("Failed to fetch endpointMonitors")
       }
 
       const responseData = (await response.json()) as {
-        data: z.infer<typeof websitesSelectSchema>[]
+        data: z.infer<typeof endpointMonitorsSelectSchema>[]
         totalCount: number
       }
 
       // Extract data and totalCount from the response
-      const { data: websitesData, totalCount } = responseData
+      const { data: endpointMonitorsData, totalCount } = responseData
 
       // Update state with received data
       set({
-        data: websitesData as z.infer<typeof websitesSelectSchema>[],
-        totalWebsites: totalCount,
+        data: endpointMonitorsData as z.infer<typeof endpointMonitorsSelectSchema>[],
+        totalEndpointMonitors: totalCount,
       })
     } catch (error) {
-      console.error("Error fetching websites:", error)
-      toast.error("Failed to load websites", {
+      console.error("Error fetching endpointMonitors:", error)
+      toast.error("Failed to load endpointMonitors", {
         ...DEFAULT_TOAST_OPTIONS,
       })
     } finally {
