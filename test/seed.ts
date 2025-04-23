@@ -9,12 +9,12 @@ import type { z } from "zod"
 import * as schema from "../src/db/schema"
 import { UptimeChecksTable } from "../src/db/schema"
 import type {
+  endpointMonitorsInsertSchema,
   uptimeChecksInsertSchema,
-  websitesInsertSchema,
 } from "../src/db/zod-schema"
 
-// List of 23 predefined URLs for websites
-const websiteUrls = [
+// List of 23 predefined URLs for endpointMonitors
+const endpointMonitorUrls = [
   "https://cloudflare.com",
   "https://workers.cloudflare.com",
   "https://developers.cloudflare.com",
@@ -60,36 +60,36 @@ const seedDatabase = async () => {
 
   console.log("Seeding database...")
   try {
-    console.log("Seeding websites...")
-    // Create 23 websites with predefined URLs
-    const seedWebsites = websiteUrls.map((url) => {
+    console.log("Seeding endpointMonitors...")
+    // Create 23 endpointMonitors with predefined URLs
+    const seedEndpointMonitors = endpointMonitorUrls.map((url) => {
       const domain = new URL(url).hostname.replace("www.", "")
       return {
-        id: createId(PRE_ID.website),
+        id: createId(PRE_ID.endpointMonitor),
         url: url,
-        name: `${domain.charAt(0).toUpperCase() + domain.slice(1)} Website`,
+        name: `${domain.charAt(0).toUpperCase() + domain.slice(1)}`,
         checkInterval:
           checkIntervals[Math.floor(Math.random() * checkIntervals.length)],
       }
     })
-    await db.insert(schema.WebsitesTable).values(seedWebsites)
+    await db.insert(schema.EndpointMonitorsTable).values(seedEndpointMonitors)
 
     console.log("Seeding uptime checks...")
-    // Create historical uptime checks for each website
+    // Create historical uptime checks for each endpointMonitor
     const now = new Date()
     const twoWeeksAgo = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000) // 2 weeks ago
 
-    for (const website of seedWebsites) {
+    for (const endpointMonitor of seedEndpointMonitors) {
       const checksToCreate = Math.floor(Math.random() * 201) + 100 // Random number between 100-300
       const timeSpan = now.getTime() - twoWeeksAgo.getTime()
-      const checksPerInterval = timeSpan / (website.checkInterval * 1000)
+      const checksPerInterval = timeSpan / (endpointMonitor.checkInterval * 1000)
       const skipFactor = Math.floor(checksPerInterval / checksToCreate)
 
       const uptimeChecks: z.infer<typeof uptimeChecksInsertSchema>[] =
         Array.from({ length: checksToCreate }, (_, i) => {
           const timestamp = new Date(
             twoWeeksAgo.getTime() +
-              i * skipFactor * website.checkInterval * 1000,
+              i * skipFactor * endpointMonitor.checkInterval * 1000,
           )
 
           // 95% chance of success
@@ -101,7 +101,7 @@ const seedDatabase = async () => {
             : 15000
 
           return {
-            websiteId: website.id,
+            endpointMonitorId: endpointMonitor.id,
             timestamp,
             isExpectedStatus: isSuccess,
             status: isSuccess ? 200 : 504,

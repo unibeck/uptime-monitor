@@ -42,3 +42,6 @@ next-env.d.ts
 .env.production
 .dev.vars
 .prod.vars
+
+# intelij
+.idea

@@ -18,7 +18,7 @@ export function SiteHeader() {
           orientation="vertical"
           className="mx-2 data-[orientation=vertical]:h-4"
         />
-        <h1 className="text-base font-medium">Website Monitors</h1>
+        <h1 className="text-base font-medium">Endpoint Monitors</h1>
         <div className="ml-auto flex items-center gap-2">{headerContent}</div>
       </div>
     </header>

@@ -8,7 +8,7 @@ import {
 import { useTheme } from "next-themes"
 import * as React from "react"
 
-import { AddWebsiteDialog } from "@/components/add-website-dialog"
+import { AddEndpointMonitorDialog } from "@/components/add-endpoint-monitor-dialog"
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -41,15 +41,15 @@ export function NavSecondary({
     <SidebarGroup {...props}>
       <SidebarGroupContent>
         <SidebarMenu className="my-4">
-          <AddWebsiteDialog
+          <AddEndpointMonitorDialog
             trigger={
               <SidebarMenuItem className="flex items-center gap-2">
                 <SidebarMenuButton
                   variant="primary"
-                  tooltip="Create a new website monitor to track its uptime and get notified when it's down."
+                  tooltip="Create a new endpoint monitor to track its uptime and get notified when it's down."
                 >
                   <IconCirclePlusFilled />
-                  <span>Add Website Monitor</span>
+                  <span>Add Endpoint Monitor</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             }

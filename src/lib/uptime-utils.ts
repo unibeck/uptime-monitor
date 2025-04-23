@@ -1,4 +1,4 @@
-import type { TimeRange } from "@/types/website"
+import type { TimeRange } from "@/types/endpointMonitor"
 
 export function formatTimeLabel(
   timestamp: number,

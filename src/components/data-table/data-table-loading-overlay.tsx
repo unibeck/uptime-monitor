@@ -9,7 +9,7 @@ export function DataTableLoadingOverlay() {
       <div className="flex flex-col items-center gap-2 p-4 rounded-md">
         <IconLoader2 className="h-8 w-8 animate-spin text-primary" />
         <span className="text-sm text-muted-foreground">
-          Loading websites...
+          Loading endpoint Monitors...
         </span>
       </div>
     </div>

@@ -2,7 +2,7 @@
 
 import { PolkaDots } from "@/components/bg-patterns/polka-dots"
 import type { uptimeChecksSelectSchema } from "@/db/zod-schema"
-import type { TimeRange } from "@/types/website"
+import type { TimeRange } from "@/types/endpointMonitor"
 import {
   format,
   getUnixTime,

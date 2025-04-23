@@ -10,7 +10,8 @@ const timestamps = {
     .$onUpdate(() => new Date()),
 }
 
-export const WebsitesTable = sqliteTable("websites", {
+
+export const EndpointMonitorsTable = sqliteTable("endpointMonitors", {
   id: text("id").primaryKey(),
   url: text("url").notNull(),
   name: text("name").notNull(),
@@ -25,11 +26,12 @@ export const WebsitesTable = sqliteTable("websites", {
   ...timestamps,
 })
 
+
 export const UptimeChecksTable = sqliteTable("uptimeChecks", {
   id: integer("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
-  websiteId: text("websiteId")
+  endpointMonitorId: text("endpointMonitorId")
     .notNull()
-    .references(() => WebsitesTable.id, { onDelete: "cascade" }),
+    .references(() => EndpointMonitorsTable.id, { onDelete: "cascade" }),
   timestamp: integer("timestamp", { mode: "timestamp" }).notNull(),
   status: integer("status"),
   responseTime: integer("responseTime"),

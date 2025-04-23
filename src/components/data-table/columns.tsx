@@ -1,7 +1,7 @@
 "use client"
 
 import { LatencyLimitChart } from "@/components/latency-limit-chart"
-import type { websitesSelectSchema } from "@/db/zod-schema"
+import type { endpointMonitorsSelectSchema } from "@/db/zod-schema"
 import { secsToHumanReadable } from "@/lib/formatters"
 import { Badge } from "@/registry/new-york-v4/ui/badge"
 import { Button } from "@/registry/new-york-v4/ui/button"
@@ -15,14 +15,14 @@ import Link from "next/link"
 import * as React from "react"
 import type { z } from "zod"
 import { DataTableColumnHeader } from "./column-header"
-import { WebsiteDetailDrawer } from "./website-detail-drawer"
+import { EndpointMonitorDetailDrawer } from "./endpoint-monitor-detail-drawer"
 
 // Custom ColumnDef type with optional headerLabel
 export type AppColumnDef<TData> = ColumnDef<TData> & {
   headerLabel?: string
 }
 
-export const columns: AppColumnDef<z.infer<typeof websitesSelectSchema>>[] = [
+export const columns: AppColumnDef<z.infer<typeof endpointMonitorsSelectSchema>>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -52,11 +52,11 @@ export const columns: AppColumnDef<z.infer<typeof websitesSelectSchema>>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Website Name" />
+      <DataTableColumnHeader column={column} title="Name" />
     ),
-    headerLabel: "Website Name",
+    headerLabel: "Name",
     cell: ({ row }) => (
-      <Link href={`/websites/${row.original.id}`} className="hover:underline">
+      <Link href={`/endpoint-monitors/${row.original.id}`} className="hover:underline">
         {row.original.name.length > 32
           ? `${row.original.name.substring(0, 32)}...`
           : row.original.name}
@@ -74,7 +74,7 @@ export const columns: AppColumnDef<z.infer<typeof websitesSelectSchema>>[] = [
       return (
         <div className="w-[300px]">
           <LatencyLimitChart
-            websiteId={row.original.id}
+            endpointMonitorId={row.original.id}
             limit={30}
             height={40}
           />
@@ -211,8 +211,8 @@ export const columns: AppColumnDef<z.infer<typeof websitesSelectSchema>>[] = [
   {
     id: "open-drawer",
     cell: ({ row }) => (
-      <WebsiteDetailDrawer
-        website={row.original}
+      <EndpointMonitorDetailDrawer
+        endpointMonitor={row.original}
         trigger={
           <Button
             variant="ghost"
@@ -220,7 +220,7 @@ export const columns: AppColumnDef<z.infer<typeof websitesSelectSchema>>[] = [
             size="icon"
           >
             <IconLayoutSidebarRightExpand />
-            <span className="sr-only">Open website details drawer</span>
+            <span className="sr-only">Open endpoint monitor details drawer</span>
           </Button>
         }
       />
