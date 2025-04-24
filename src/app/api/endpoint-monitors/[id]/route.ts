@@ -9,8 +9,8 @@ import { idStringParamsSchema } from "@/lib/route-schemas"
 import { getCloudflareContext } from "@opennextjs/cloudflare"
 import { eq } from "drizzle-orm"
 import { NextResponse } from "next/server"
-import * as HttpStatusCodes from "stoker/http-status-codes"
-import * as HttpStatusPhrases from "stoker/http-status-phrases"
+import { INTERNAL_SERVER_ERROR, NOT_FOUND, OK } from "stoker/http-status-codes"
+import { NOT_FOUND as NOT_FOUND_PHRASE } from "stoker/http-status-phrases"
 import type { z } from "zod"
 
 /**
@@ -41,14 +41,14 @@ export const GET = createRoute
       // TODO: Use HttpStatusCodes.INTERNAL_SERVER_ERROR
       return NextResponse.json(
         { error: "Failed to fetch endpointMonitor" },
-        { status: HttpStatusCodes.INTERNAL_SERVER_ERROR },
+        { status: INTERNAL_SERVER_ERROR },
       )
     }
 
     if (!endpointMonitor) {
       return NextResponse.json(
-        { message: HttpStatusPhrases.NOT_FOUND },
-        { status: HttpStatusCodes.NOT_FOUND },
+        { message: NOT_FOUND_PHRASE },
+        { status: NOT_FOUND },
       )
     }
 
@@ -90,16 +90,16 @@ export const PATCH = createRoute
       console.error("Error updating endpointMonitor: ", error)
       return NextResponse.json(
         { error: "Failed to update endpointMonitor" },
-        { status: HttpStatusCodes.INTERNAL_SERVER_ERROR },
+        { status: INTERNAL_SERVER_ERROR },
       )
     }
 
     if (!updatedWebsite) {
       return NextResponse.json(
         {
-          message: HttpStatusPhrases.NOT_FOUND,
+          message: NOT_FOUND_PHRASE,
         },
-        { status: HttpStatusCodes.NOT_FOUND },
+        { status: NOT_FOUND },
       )
     }
 
@@ -111,7 +111,7 @@ export const PATCH = createRoute
       updatedWebsite.checkInterval,
     )
 
-    return NextResponse.json(updatedWebsite, { status: HttpStatusCodes.OK })
+    return NextResponse.json(updatedWebsite, { status: OK })
   })
 
 /**
@@ -139,7 +139,7 @@ export const DELETE = createRoute
       console.error("Error deleting endpointMonitor: ", error)
       return NextResponse.json(
         { error: "Failed to delete endpointMonitor" },
-        { status: HttpStatusCodes.INTERNAL_SERVER_ERROR },
+        { status: INTERNAL_SERVER_ERROR },
       )
     }
 

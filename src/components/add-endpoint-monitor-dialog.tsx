@@ -34,10 +34,10 @@ import {
 import type { ConflictEndpointMonitorResponse } from "@/types/endpointMonitor"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { IconPlus } from "@tabler/icons-react"
-import * as React from "react"
+import React from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
-import * as HttpStatusCodes from "stoker/http-status-codes"
+import { CONFLICT, CREATED, OK } from "stoker/http-status-codes"
 import type { z } from "zod"
 
 type WebsiteFormData = z.infer<typeof endpointMonitorsInsertDTOSchema>
@@ -133,9 +133,7 @@ export function AddEndpointMonitorDialog({
         body: JSON.stringify(data),
       })
 
-      const successStatus = isEditing
-        ? HttpStatusCodes.OK
-        : HttpStatusCodes.CREATED
+      const successStatus = isEditing ? OK : CREATED
       const successMessage = isEditing
         ? "Endpoint Monitor Updated"
         : "Endpoint Monitor Added"
@@ -150,7 +148,7 @@ export function AddEndpointMonitorDialog({
         })
         setOpen(false)
         onSuccess?.()
-      } else if (response.status === HttpStatusCodes.CONFLICT && !isEditing) {
+      } else if (response.status === CONFLICT && !isEditing) {
         console.log("Endpoint Monitor already exists")
         const error: ConflictEndpointMonitorResponse = await response.json()
         toast.info("Similar endpoint monitor already exists", {

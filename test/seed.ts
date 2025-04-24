@@ -6,7 +6,7 @@ import { createClient } from "@libsql/client"
 import { drizzle } from "drizzle-orm/libsql"
 import { reset } from "drizzle-seed"
 import type { z } from "zod"
-import * as schema from "../src/db/schema"
+import { schema } from "../src/db/schema"
 import type { uptimeChecksInsertSchema } from "../src/db/zod-schema"
 
 // List of 23 predefined URLs for endpointMonitors

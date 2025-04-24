@@ -5,7 +5,7 @@ import { idStringParamsSchema } from "@/lib/route-schemas"
 import { getCloudflareContext } from "@opennextjs/cloudflare"
 import { eq } from "drizzle-orm"
 import { NextResponse } from "next/server"
-import * as HttpStatusCodes from "stoker/http-status-codes"
+import { OK } from "stoker/http-status-codes"
 
 /**
  * GET /api/endpoint-monitors/[id]/status
@@ -28,6 +28,6 @@ export const GET = createRoute
 
     return NextResponse.json(
       { status: endpointMonitor.isRunning },
-      { status: HttpStatusCodes.OK },
+      { status: OK },
     )
   })
