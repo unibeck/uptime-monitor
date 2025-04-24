@@ -7,9 +7,7 @@ import { drizzle } from "drizzle-orm/libsql"
 import { reset } from "drizzle-seed"
 import type { z } from "zod"
 import * as schema from "../src/db/schema"
-import type {
-  uptimeChecksInsertSchema,
-} from "../src/db/zod-schema"
+import type { uptimeChecksInsertSchema } from "../src/db/zod-schema"
 
 // List of 23 predefined URLs for endpointMonitors
 const endpointMonitorUrls = [
@@ -80,7 +78,8 @@ const seedDatabase = async () => {
     for (const endpointMonitor of seedEndpointMonitors) {
       const checksToCreate = Math.floor(Math.random() * 201) + 100 // Random number between 100-300
       const timeSpan = now.getTime() - twoWeeksAgo.getTime()
-      const checksPerInterval = timeSpan / (endpointMonitor.checkInterval * 1000)
+      const checksPerInterval =
+        timeSpan / (endpointMonitor.checkInterval * 1000)
       const skipFactor = Math.floor(checksPerInterval / checksToCreate)
 
       const uptimeChecks: z.infer<typeof uptimeChecksInsertSchema>[] =

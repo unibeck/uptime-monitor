@@ -10,7 +10,6 @@ const timestamps = {
     .$onUpdate(() => new Date()),
 }
 
-
 export const EndpointMonitorsTable = sqliteTable("endpointMonitors", {
   id: text("id").primaryKey(),
   url: text("url").notNull(),
@@ -25,7 +24,6 @@ export const EndpointMonitorsTable = sqliteTable("endpointMonitors", {
 
   ...timestamps,
 })
-
 
 export const UptimeChecksTable = sqliteTable("uptimeChecks", {
   id: integer("id", { mode: "number" }).primaryKey({ autoIncrement: true }),

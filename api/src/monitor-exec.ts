@@ -2,7 +2,10 @@ import { WorkerEntrypoint } from "cloudflare:workers"
 import { takeFirstOrNull, takeUniqueOrThrow, useDrizzle } from "@/db"
 import { EndpointMonitorsTable, UptimeChecksTable } from "@/db/schema"
 import type * as schema from "@/db/schema"
-import type { endpointMonitorsPatchSchema, endpointMonitorsSelectSchema } from "@/db/zod-schema"
+import type {
+  endpointMonitorsPatchSchema,
+  endpointMonitorsSelectSchema,
+} from "@/db/zod-schema"
 import { endpointSignature } from "@/lib/formatters"
 import { createEndpointMonitorDownAlert } from "@/lib/opsgenie"
 import { eq } from "drizzle-orm"
@@ -90,7 +93,11 @@ export default class MonitorExec extends WorkerEntrypoint<CloudflareEnv> {
     )
   }
 
-  async testSendAlert(endpointMonitorId: string, status: number, errorMessage: string) {
+  async testSendAlert(
+    endpointMonitorId: string,
+    status: number,
+    errorMessage: string,
+  ) {
     console.log(this.env.ENVIRONMENT)
     const db = useDrizzle(this.env.DB)
 
@@ -103,7 +110,12 @@ export default class MonitorExec extends WorkerEntrypoint<CloudflareEnv> {
       throw new Error(`EndpointMonitor [${endpointMonitorId}] does not exist`)
     }
 
-    await sendAlert(status, errorMessage, endpointMonitor, this.env.OPSGENIE_API_KEY)
+    await sendAlert(
+      status,
+      errorMessage,
+      endpointMonitor,
+      this.env.OPSGENIE_API_KEY,
+    )
   }
 }
 
@@ -175,9 +187,14 @@ async function sendAlert(
         `${endpointSignature(endpointMonitor)}: alert sent successfully. RequestId: ${result.requestId}`,
       )
     } else {
-      console.error(`${endpointSignature(endpointMonitor)}: failed to send alert`)
+      console.error(
+        `${endpointSignature(endpointMonitor)}: failed to send alert`,
+      )
     }
   } catch (error) {
-    console.error(`${endpointSignature(endpointMonitor)}: error sending alert.`, error)
+    console.error(
+      `${endpointSignature(endpointMonitor)}: error sending alert.`,
+      error,
+    )
   }
 }

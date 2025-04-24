@@ -42,7 +42,10 @@ export const POST = createRoute
         console.log(
           `DO [${endpointMonitor.id}] not initialized. Initializing automatically...`,
         )
-        await env.MONITOR_TRIGGER_RPC.init(endpointMonitor.id, endpointMonitor.checkInterval)
+        await env.MONITOR_TRIGGER_RPC.init(
+          endpointMonitor.id,
+          endpointMonitor.checkInterval,
+        )
       } else {
         throw error
       }

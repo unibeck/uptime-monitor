@@ -1,11 +1,9 @@
 import { DurableObject, WorkerEntrypoint } from "cloudflare:workers"
 import { takeUniqueOrThrow, useDrizzle } from "@/db"
 import { EndpointMonitorsTable } from "@/db/schema"
-import {
-  MonitorTriggerNotInitializedError,
-} from "@/lib/errors"
+import { MonitorTriggerNotInitializedError } from "@/lib/errors"
 import { endpointSignature } from "@/lib/formatters"
-import { diffable, } from "diffable-objects"
+import { diffable } from "diffable-objects"
 import { eq } from "drizzle-orm"
 import { OK } from "stoker/http-status-codes"
 import { OK as OK_PHRASE } from "stoker/http-status-phrases"
@@ -106,7 +104,9 @@ export class MonitorTrigger extends DurableObject<CloudflareEnv> {
       .returning()
       .then(takeUniqueOrThrow)
 
-    console.log(`Paused MonitorTrigger DO for ${endpointSignature(endpointMonitor)}`)
+    console.log(
+      `Paused MonitorTrigger DO for ${endpointSignature(endpointMonitor)}`,
+    )
   }
 
   async resume() {
@@ -126,14 +126,20 @@ export class MonitorTrigger extends DurableObject<CloudflareEnv> {
       .returning()
       .then(takeUniqueOrThrow)
 
-    console.log(`Resumed MonitorTrigger DO for ${endpointSignature(endpointMonitor)}`)
+    console.log(
+      `Resumed MonitorTrigger DO for ${endpointSignature(endpointMonitor)}`,
+    )
   }
 
   async delete() {
-    console.log(`Deleting MonitorTrigger DO for [${this.#state.endpointMonitorId}]`)
+    console.log(
+      `Deleting MonitorTrigger DO for [${this.#state.endpointMonitorId}]`,
+    )
     await this.ctx.storage.deleteAlarm()
     await this.ctx.storage.deleteAll()
-    console.log(`Deleted MonitorTrigger DO for [${this.#state.endpointMonitorId}]`)
+    console.log(
+      `Deleted MonitorTrigger DO for [${this.#state.endpointMonitorId}]`,
+    )
   }
 }
 

@@ -48,7 +48,9 @@ export function DataTable() {
   // Get state and actions from the store
   const data = useDataTableStore((state) => state.data)
   const isLoading = useDataTableStore((state) => state.isLoading)
-  const totalEndpointMonitors = useDataTableStore((state) => state.totalEndpointMonitors)
+  const totalEndpointMonitors = useDataTableStore(
+    (state) => state.totalEndpointMonitors,
+  )
   const rowSelection = useDataTableStore((state) => state.rowSelection)
   const columnVisibility = useDataTableStore((state) => state.columnVisibility)
   const columnFilters = useDataTableStore((state) => state.columnFilters)
@@ -307,7 +309,10 @@ export function DataTable() {
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
     manualPagination: true,
-    pageCount: Math.max(1, Math.ceil(totalEndpointMonitors / pagination.pageSize)),
+    pageCount: Math.max(
+      1,
+      Math.ceil(totalEndpointMonitors / pagination.pageSize),
+    ),
   })
 
   const hasData = data.length > 0

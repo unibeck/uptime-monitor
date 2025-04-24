@@ -1,6 +1,9 @@
 import { takeUniqueOrThrow, useDrizzle } from "@/db"
 import { EndpointMonitorsTable } from "@/db/schema"
-import { endpointMonitorsPatchSchema, type endpointMonitorsSelectSchema } from "@/db/zod-schema"
+import {
+  endpointMonitorsPatchSchema,
+  type endpointMonitorsSelectSchema,
+} from "@/db/zod-schema"
 import { createRoute } from "@/lib/api-utils"
 import { idStringParamsSchema } from "@/lib/route-schemas"
 import { getCloudflareContext } from "@opennextjs/cloudflare"
@@ -26,7 +29,9 @@ export const GET = createRoute
     const { env } = getCloudflareContext()
     const db = useDrizzle(env.DB)
 
-    let endpointMonitor: z.infer<typeof endpointMonitorsSelectSchema> | undefined
+    let endpointMonitor:
+      | z.infer<typeof endpointMonitorsSelectSchema>
+      | undefined
     try {
       endpointMonitor = await db.query.EndpointMonitorsTable.findFirst({
         where: eq(EndpointMonitorsTable.id, context.params.id),
@@ -68,8 +73,12 @@ export const PATCH = createRoute
     const { env } = getCloudflareContext()
     const db = useDrizzle(env.DB)
 
-    const endpointMonitor: z.infer<typeof endpointMonitorsPatchSchema> = context.body
-    let updatedWebsite: z.infer<typeof endpointMonitorsSelectSchema> | undefined | null
+    const endpointMonitor: z.infer<typeof endpointMonitorsPatchSchema> =
+      context.body
+    let updatedWebsite:
+      | z.infer<typeof endpointMonitorsSelectSchema>
+      | undefined
+      | null
     try {
       updatedWebsite = await db
         .update(EndpointMonitorsTable)

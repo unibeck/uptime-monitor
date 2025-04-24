@@ -62,7 +62,8 @@ export const useDataTableStore = create<DataTableState>((set, get) => ({
 
   // Actions
   setData: (data) => set({ data }),
-  setTotalEndpointMonitors: (totalEndpointMonitors) => set({ totalEndpointMonitors: totalEndpointMonitors }),
+  setTotalEndpointMonitors: (totalEndpointMonitors) =>
+    set({ totalEndpointMonitors: totalEndpointMonitors }),
   setIsLoading: (isLoading) => set({ isLoading }),
   setSorting: (sorting) => set({ sorting }),
   setColumnFilters: (columnFilters) => set({ columnFilters }),
@@ -99,7 +100,9 @@ export const useDataTableStore = create<DataTableState>((set, get) => ({
       }
 
       // Fetch endpointMonitors with query parameters
-      const response = await fetch(`/api/endpoint-monitors?${queryParams.toString()}`)
+      const response = await fetch(
+        `/api/endpoint-monitors?${queryParams.toString()}`,
+      )
 
       if (!response.ok) {
         throw new Error("Failed to fetch endpointMonitors")
@@ -115,7 +118,9 @@ export const useDataTableStore = create<DataTableState>((set, get) => ({
 
       // Update state with received data
       set({
-        data: endpointMonitorsData as z.infer<typeof endpointMonitorsSelectSchema>[],
+        data: endpointMonitorsData as z.infer<
+          typeof endpointMonitorsSelectSchema
+        >[],
         totalEndpointMonitors: totalCount,
       })
     } catch (error) {

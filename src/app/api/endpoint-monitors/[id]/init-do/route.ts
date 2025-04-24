@@ -27,7 +27,10 @@ export const POST = createRoute
       .where(eq(EndpointMonitorsTable.id, context.params.id))
       .then(takeUniqueOrThrow)
 
-    await env.MONITOR_TRIGGER_RPC.init(endpointMonitor.id, endpointMonitor.checkInterval)
+    await env.MONITOR_TRIGGER_RPC.init(
+      endpointMonitor.id,
+      endpointMonitor.checkInterval,
+    )
 
     return NextResponse.json(
       { message: "Initialized Monitor DO" },

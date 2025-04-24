@@ -47,7 +47,8 @@ export const GET = createRoute.handler(async (_request, _context) => {
     const highestCheck = await db
       .select({
         highestResponseTime: UptimeChecksTable.responseTime,
-        highestResponseTimeEndpointMonitorId: UptimeChecksTable.endpointMonitorId,
+        highestResponseTimeEndpointMonitorId:
+          UptimeChecksTable.endpointMonitorId,
       })
       .from(UptimeChecksTable)
       .where(
