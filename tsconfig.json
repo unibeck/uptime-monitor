@@ -26,9 +26,6 @@
       "@/*": [
         "./src/*"
       ],
-      "@api/*": [
-        "./api/src/*"
-      ]
     },
     "types": [
       "@types/node",
@@ -42,6 +39,6 @@
     ".next/types/**/*.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules/"
   ]
 }

@@ -4,8 +4,8 @@ interface CloudflareEnv extends CloudflareEnvGen {
   // Durable Objects types are not exported by `wrangler types` (yet)
   // https://github.com/cloudflare/workers-sdk/issues/6905
   MONITOR_TRIGGER: DurableObjectNamespace<
-    import("@api/monitor-trigger").MonitorTrigger
+    import("@uptime-monitor/api").MonitorTrigger
   >
-  MONITOR_TRIGGER_RPC: Service<import("@api/monitor-trigger").MonitorTriggerRPC>
-  MONITOR_EXEC: Service<import("@api/monitor-exec").MonitorExec>
+  MONITOR_TRIGGER_RPC: Service<import("@uptime-monitor/api").MonitorTriggerRPC>
+  MONITOR_EXEC: Service<import("@uptime-monitor/api").MonitorExec>
 }

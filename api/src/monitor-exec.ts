@@ -1,7 +1,7 @@
 import { WorkerEntrypoint } from "cloudflare:workers"
 import { takeFirstOrNull, takeUniqueOrThrow, useDrizzle } from "@/db"
 import { EndpointMonitorsTable, UptimeChecksTable } from "@/db/schema"
-import type * as schema from "@/db/schema"
+import type { schema } from "@/db/schema"
 import type {
   endpointMonitorsPatchSchema,
   endpointMonitorsSelectSchema,

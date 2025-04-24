@@ -27,7 +27,7 @@ export const GET = createRoute
       .where(eq(EndpointMonitorsTable.id, context.params.id))
       .then(takeUniqueOrThrow)
 
-    await env.MONITOR_EXEC.executeCheck(endpointMonitor)
+    await env.MONITOR_EXEC.executeCheck(endpointMonitor.id)
 
     return NextResponse.json(
       { message: "Executed check via DO" },

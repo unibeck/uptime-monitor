@@ -5,9 +5,10 @@ const nextConfig: NextConfig = {
     "/*": ["./registry/**/*"],
   },
   experimental: {
-    // parallelServerBuildTraces: true,
-    // parallelServerCompiles: true,
-    // serverSourceMaps: true,
+    webpackBuildWorker: true,
+    parallelServerBuildTraces: true,
+    parallelServerCompiles: true,
+    serverSourceMaps: true,
     typedRoutes: true,
     reactCompiler: true,
   },
