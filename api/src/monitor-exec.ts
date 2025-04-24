@@ -1,5 +1,5 @@
 import { WorkerEntrypoint } from "cloudflare:workers"
-import { takeFirstOrNull, takeUniqueOrThrow, useDrizzle } from "@/db"
+import { takeFirstOrNull, useDrizzle } from "@/db"
 import { EndpointMonitorsTable, UptimeChecksTable } from "@/db/schema"
 import type { schema } from "@/db/schema"
 import type {
@@ -7,6 +7,7 @@ import type {
   endpointMonitorsSelectSchema,
 } from "@/db/zod-schema"
 import { endpointSignature } from "@/lib/formatters"
+import { PRE_ID } from "@/lib/ids"
 import { createEndpointMonitorDownAlert } from "@/lib/opsgenie"
 import { eq } from "drizzle-orm"
 import type { DrizzleD1Database } from "drizzle-orm/d1"
@@ -34,7 +35,51 @@ export default class MonitorExec extends WorkerEntrypoint<CloudflareEnv> {
       .select()
       .from(EndpointMonitorsTable)
       .where(eq(EndpointMonitorsTable.id, endpointMonitorId))
-      .then(takeUniqueOrThrow)
+      .then(takeFirstOrNull)
+
+    if (!endpointMonitor) {
+      console.error(
+        `EndpointMonitor [${endpointMonitorId}] does not exist. Deleting Durable Object...`,
+      )
+      await this.env.MONITOR_TRIGGER_RPC.deleteDo(endpointMonitorId)
+
+      // TODO: Remove this migration logic after some time/versions have passed
+      if (endpointMonitorId.includes("webs_")) {
+        console.log(
+          `[${endpointMonitorId}] is an obsolete website monitor id and needs to be updated . Will attempt to migrate to a new DO...`,
+        )
+
+        const newEndpointMonitorId = endpointMonitorId.replace(
+          "webs_",
+          PRE_ID.endpointMonitor,
+        )
+        const newEndpointMonitor = await db
+          .select()
+          .from(EndpointMonitorsTable)
+          .where(eq(EndpointMonitorsTable.id, newEndpointMonitorId))
+          .then(takeFirstOrNull)
+
+        if (!newEndpointMonitor) {
+          console.error(
+            `EndpointMonitor [${newEndpointMonitorId}] does not exist. Migration failed.`,
+          )
+          return
+        }
+
+        console.log(
+          `Found updated EndpointMonitor ${endpointSignature(newEndpointMonitor)} for obsolete [${endpointMonitorId}]. Initializing new DO...`,
+        )
+        await this.env.MONITOR_TRIGGER_RPC.init(
+          newEndpointMonitor.id,
+          newEndpointMonitor.checkInterval,
+        )
+
+        console.log(
+          `Successfully migrated [${endpointMonitorId}] to [${newEndpointMonitor.id}]`,
+        )
+      }
+      return
+    }
 
     console.log(`${endpointSignature(endpointMonitor)}: performing check...`)
     let isExpectedStatus = false
