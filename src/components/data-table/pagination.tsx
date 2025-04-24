@@ -1,6 +1,6 @@
 "use client"
 
-import type { websitesSelectSchema } from "@/db/zod-schema"
+import type { endpointMonitorsSelectSchema } from "@/db/zod-schema"
 import { Button } from "@/registry/new-york-v4/ui/button"
 import { Label } from "@/registry/new-york-v4/ui/label"
 import {
@@ -22,7 +22,7 @@ import React from "react"
 import type { z } from "zod"
 
 interface PaginationProps {
-  table: Table<z.infer<typeof websitesSelectSchema>>
+  table: Table<z.infer<typeof endpointMonitorsSelectSchema>>
 }
 
 export function Pagination({ table }: PaginationProps) {
@@ -30,11 +30,11 @@ export function Pagination({ table }: PaginationProps) {
 
   const pagination = useDataTableStore((state) => state.pagination)
   const setPagination = useDataTableStore((state) => state.setPagination)
-  const _fetchWebsites = useDataTableStore((state) => state.fetchWebsites)
-  const totalWebsites = useDataTableStore((state) => state.totalWebsites)
+  const fetchEndpointMonitors = useDataTableStore((state) => state.fetchEndpointMonitors)
+  const totalEndpointMonitors = useDataTableStore((state) => state.totalEndpointMonitors)
 
   // Calculate page count locally to ensure it's consistent
-  const pageCount = Math.max(1, Math.ceil(totalWebsites / pagination.pageSize))
+  const pageCount = Math.max(1, Math.ceil(totalEndpointMonitors / pagination.pageSize))
 
   // Function to handle page changes directly with the store
   const changePage = React.useCallback(
@@ -51,7 +51,7 @@ export function Pagination({ table }: PaginationProps) {
     <div className="flex items-center justify-between px-4">
       <div>
         <div className="text-muted-foreground hidden flex-1 text-sm lg:flex">
-          Total query count: {totalWebsites}
+          Total query count: {totalEndpointMonitors}
         </div>
         <div className="text-muted-foreground hidden flex-1 text-sm lg:flex">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}

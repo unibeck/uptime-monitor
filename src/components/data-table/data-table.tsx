@@ -48,7 +48,7 @@ export function DataTable() {
   // Get state and actions from the store
   const data = useDataTableStore((state) => state.data)
   const isLoading = useDataTableStore((state) => state.isLoading)
-  const totalWebsites = useDataTableStore((state) => state.totalWebsites)
+  const totalEndpointMonitors = useDataTableStore((state) => state.totalEndpointMonitors)
   const rowSelection = useDataTableStore((state) => state.rowSelection)
   const columnVisibility = useDataTableStore((state) => state.columnVisibility)
   const columnFilters = useDataTableStore((state) => state.columnFilters)
@@ -161,7 +161,7 @@ export function DataTable() {
     })
 
     // Fetch data with new sorting
-    store.fetchWebsites()
+    store.fetchEndpointMonitors()
   }
 
   const handleColumnFiltersChange: OnChangeFn<ColumnFiltersState> = (
@@ -207,7 +207,7 @@ export function DataTable() {
     })
 
     // Fetch data with new pagination
-    store.fetchWebsites()
+    store.fetchEndpointMonitors()
   }
 
   // Initialize from URL params on first load
@@ -279,7 +279,7 @@ export function DataTable() {
     // Fetch data only if any state was updated or initially
     if (needsUpdate || store.data.length === 0) {
       // Fetch if state changed or data is empty
-      store.fetchWebsites()
+      store.fetchEndpointMonitors()
     }
   }, [searchParams]) // Only depend on searchParams
 
@@ -307,19 +307,19 @@ export function DataTable() {
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
     manualPagination: true,
-    pageCount: Math.max(1, Math.ceil(totalWebsites / pagination.pageSize)),
+    pageCount: Math.max(1, Math.ceil(totalEndpointMonitors / pagination.pageSize)),
   })
 
   const hasData = data.length > 0
 
   return (
     <Tabs
-      defaultValue="websites"
+      defaultValue="endpointMonitors"
       className="w-full flex-col justify-start gap-6"
     >
-      <Toolbar table={table} totalWebsites={totalWebsites} />
+      <Toolbar table={table} totalEndpointMonitors={totalEndpointMonitors} />
       <TabsContent
-        value="websites"
+        value="endpointMonitors"
         className="relative flex flex-col gap-4 overflow-auto"
       >
         {isLoading && !hasData ? (
@@ -357,7 +357,7 @@ export function DataTable() {
                       colSpan={columns.length}
                       className="h-24 text-center"
                     >
-                      No websites found.
+                      No endpoint monitors found.
                     </TableCell>
                   </TableRow>
                 )}

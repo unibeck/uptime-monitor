@@ -24,7 +24,7 @@ import {
 import Link from "next/link"
 import { useEffect, useState } from "react"
 interface DashboardStats {
-  totalWebsites: number
+  totalEndpointMonitors: number
   sitesWithAlerts: number
   highestResponseTime: number
   highestResponseTimeWebsiteId: string | null
@@ -40,7 +40,7 @@ export function SectionCards() {
     const fetchStats = async () => {
       try {
         setLoading(true)
-        const response = await fetch("/api/websites/stats")
+        const response = await fetch("/api/endpoint-monitors/stats")
         if (!response.ok) {
           throw new Error("Failed to fetch dashboard statistics")
         }
@@ -77,7 +77,7 @@ export function SectionCards() {
 
   // Use placeholder values until data is loaded
   const data = stats || {
-    totalWebsites: 0,
+    totalEndpointMonitors: 0,
     sitesWithAlerts: 0,
     highestResponseTime: 0,
     highestResponseTimeWebsiteId: null,
@@ -88,9 +88,9 @@ export function SectionCards() {
     <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>Total Websites</CardDescription>
+          <CardDescription>Total</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            {data.totalWebsites}
+            {data.totalEndpointMonitors}
           </CardTitle>
           <CardAction>
             <Badge variant="outline">
@@ -101,11 +101,12 @@ export function SectionCards() {
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            Monitored websites
+            Monitored endpoints
           </div>
-          <div className="text-muted-foreground">
-            Total websites being monitored
-          </div>
+          {/* TODO: Show number of active endpoints */}
+          {/* <div className="text-muted-foreground">
+            Total endpoints being monitored
+          </div> */}
         </CardFooter>
       </Card>
       <Card className="@container/card">
@@ -134,7 +135,7 @@ export function SectionCards() {
               : "No active alerts"}
           </div>
           <div className="text-muted-foreground">
-            Websites requiring attention
+            Endpoint Monitors requiring attention
           </div>
         </CardFooter>
       </Card>
@@ -165,9 +166,9 @@ export function SectionCards() {
               <>
                 <IconLink className="h-4 w-4" />
                 <Link
-                  href={`/websites/${data.highestResponseTimeWebsiteId}`}
+                  href={`/endpoint-monitors/${data.highestResponseTimeWebsiteId}`}
                   className="hover:underline"
-                  title={`View website ${data.highestResponseTimeWebsiteId}`}
+                  title={`View endpoint monitor ${data.highestResponseTimeWebsiteId}`}
                 >
                   {data.highestResponseTimeWebsiteId}
                 </Link>

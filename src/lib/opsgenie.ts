@@ -72,39 +72,39 @@ export async function sendOpsgenieAlert(
 }
 
 /**
- * Create an alert for a failed website check
+ * Create an alert for a failed endpointMonitor check
  *
  * @param apiKey - Opsgenie API key
- * @param websiteName - Name of the website that failed
- * @param websiteUrl - URL of the website that failed
+ * @param endpointMonitorName - Name of the endpointMonitor that failed
+ * @param endpointMonitorUrl - URL of the endpointMonitor that failed
  * @param status - HTTP status code (if any)
  * @param error - Error message (if any)
  * @returns Response from Opsgenie API
  */
-export async function createWebsiteDownAlert(
+export async function createEndpointMonitorDownAlert(
   apiKey: string,
-  websiteName: string,
-  websiteUrl: string,
+  endpointMonitorName: string,
+  endpointMonitorUrl: string,
   status?: number,
   error?: string,
 ): Promise<OpsgenieAlertResponse | null> {
-  const message = `Website Down: ${websiteName}`
+  const message = `Endpoint Monitor Down: ${endpointMonitorName}`
 
   const description = status
-    ? `Website ${websiteName} (${websiteUrl}) is down with status code ${status}.`
-    : `Website ${websiteName} (${websiteUrl}) is down. ${error || ""}`
+    ? `Endpoint Monitor ${endpointMonitorName} (${endpointMonitorUrl}) is down with status code ${status}.`
+    : `Endpoint Monitor ${endpointMonitorName} (${endpointMonitorUrl}) is down. ${error || ""}`
 
   return sendOpsgenieAlert(apiKey, {
     message,
     description,
-    alias: `website-down-${websiteUrl.replace(/[^a-zA-Z0-9]/g, "-")}`,
+    alias: `endpointMonitor-down-${endpointMonitorUrl.replace(/[^a-zA-Z0-9]/g, "-")}`,
     priority: "P2",
     tags: ["uptime-monitor", "downtime"],
-    entity: websiteUrl,
+    entity: endpointMonitorUrl,
     source: "Uptime Monitor",
     details: {
-      website: websiteName,
-      url: websiteUrl,
+      endpointMonitor: endpointMonitorName,
+      url: endpointMonitorUrl,
       status: status?.toString() || "N/A",
       error: error || "",
       monitorRepo: "https://github.com/unibeck/uptime-monitor",

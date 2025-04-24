@@ -1,41 +1,44 @@
 import { DurableObject, WorkerEntrypoint } from "cloudflare:workers"
-import { useDrizzle } from "@/db"
-import { WebsitesTable } from "@/db/schema"
-import { MonitorTriggerNotInitializedError } from "@/lib/errors"
-import { diffable } from "diffable-objects"
+import { takeUniqueOrThrow, useDrizzle } from "@/db"
+import { EndpointMonitorsTable } from "@/db/schema"
+import {
+  MonitorTriggerNotInitializedError,
+} from "@/lib/errors"
+import { endpointSignature } from "@/lib/formatters"
+import { diffable, } from "diffable-objects"
 import { eq } from "drizzle-orm"
 import { OK } from "stoker/http-status-codes"
 import { OK as OK_PHRASE } from "stoker/http-status-phrases"
 
 /**
- * The Monitor class is a Durable Object that is used to trigger checks on a website.
+ * The Monitor class is a Durable Object that is used to trigger checks on a endpointMonitor.
  */
 export class MonitorTrigger extends DurableObject<CloudflareEnv> {
   @diffable
   #state = {
-    websiteId: null as string | null,
+    endpointMonitorId: null as string | null,
     checkInterval: null as number | null,
   }
 
-  async init(websiteId: string, checkInterval: number) {
-    console.log(`Initializing Monitor Trigger DO for [${websiteId}]`)
+  async init(endpointMonitorId: string, checkInterval: number) {
+    console.log(`Initializing Monitor Trigger DO for [${endpointMonitorId}]`)
 
     // Initialize state
-    this.#state.websiteId = websiteId
+    this.#state.endpointMonitorId = endpointMonitorId
     this.#state.checkInterval = checkInterval
 
-    await this.triggerCheck(websiteId, checkInterval)
+    await this.triggerCheck(endpointMonitorId, checkInterval)
   }
 
-  private async getWebsiteId(): Promise<string> {
-    const websiteId = this.#state.websiteId
-    if (!websiteId) {
+  private async getEndpointMonitorId(): Promise<string> {
+    const endpointMonitorId = this.#state.endpointMonitorId
+    if (!endpointMonitorId) {
       throw new MonitorTriggerNotInitializedError(
-        "Website ID is not set. This should never happen. Reinitialize if this DO is expected to exist",
+        "EndpointMonitor ID is not set. This should never happen. Reinitialize if this DO is expected to exist",
       )
     }
 
-    return websiteId
+    return endpointMonitorId
   }
 
   private async getCheckInterval(): Promise<number> {
@@ -50,83 +53,87 @@ export class MonitorTrigger extends DurableObject<CloudflareEnv> {
   }
 
   async alarm(alarmInfo: { retryCount: number; isRetry: boolean }) {
-    const websiteId = await this.getWebsiteId()
+    const endpointMonitorId = await this.getEndpointMonitorId()
     const checkInterval = await this.getCheckInterval()
 
     // Log if this is a retry
     if (alarmInfo.isRetry) {
       console.log(
-        `Received an alarm retry #${alarmInfo.retryCount} for [${websiteId}]. Not retrying`,
+        `Received an alarm retry #${alarmInfo.retryCount} for [${endpointMonitorId}]. Not retrying`,
       )
       return
     }
 
-    await this.triggerCheck(websiteId, checkInterval)
+    await this.triggerCheck(endpointMonitorId, checkInterval)
   }
 
-  private async triggerCheck(websiteId: string, checkInterval: number) {
-    console.log(`Triggering check for [${websiteId}]`)
+  private async triggerCheck(endpointMonitorId: string, checkInterval: number) {
+    console.log(`Triggering check for [${endpointMonitorId}]`)
 
-    // Delegate the website check to a Worker, which will return immediately via waitUntil(), to avoid excessive wall time billing
-    await this.env.MONITOR_EXEC.executeCheck(websiteId)
+    // Delegate the endpointMonitor check to a Worker, which will return immediately via waitUntil(), to avoid excessive wall time billing
+    await this.env.MONITOR_EXEC.executeCheck(endpointMonitorId)
 
     // Then immediately schedule the next check
     this.ctx.storage.setAlarm(Date.now() + checkInterval * 1000)
-    console.log(`Scheduled next check for [${websiteId}]`)
+    console.log(`Scheduled next check for [${endpointMonitorId}]`)
   }
 
   async updateCheckInterval(checkInterval: number) {
-    const websiteId = await this.getWebsiteId()
+    const endpointMonitorId = await this.getEndpointMonitorId()
     console.log(
-      `Updating check interval for [${websiteId}] to [${checkInterval}]`,
+      `Updating check interval for [${endpointMonitorId}] to [${checkInterval}]`,
     )
 
     this.#state.checkInterval = checkInterval
     this.ctx.storage.setAlarm(Date.now() + checkInterval * 1000)
 
     console.log(
-      `Updated check interval for [${websiteId}] to [${checkInterval}]`,
+      `Updated check interval for [${endpointMonitorId}] to [${checkInterval}]`,
     )
   }
 
   async pause() {
-    const websiteId = await this.getWebsiteId()
-    console.log(`Pausing MonitorTrigger DO for [${websiteId}]`)
+    const endpointMonitorId = await this.getEndpointMonitorId()
+    console.log(`Pausing MonitorTrigger DO for [${endpointMonitorId}]`)
 
     await this.ctx.storage.deleteAlarm()
 
     const db = useDrizzle(this.env.DB)
-    await db
-      .update(WebsitesTable)
+    const endpointMonitor = await db
+      .update(EndpointMonitorsTable)
       .set({ isRunning: false })
-      .where(eq(WebsitesTable.id, websiteId))
+      .where(eq(EndpointMonitorsTable.id, endpointMonitorId))
+      .returning()
+      .then(takeUniqueOrThrow)
 
-    console.log(`Paused MonitorTrigger DO for [${websiteId}]`)
+    console.log(`Paused MonitorTrigger DO for ${endpointSignature(endpointMonitor)}`)
   }
 
   async resume() {
-    const websiteId = await this.getWebsiteId()
+    const endpointMonitorId = await this.getEndpointMonitorId()
     const checkInterval = await this.getCheckInterval()
     console.log(
-      `Resuming MonitorTrigger DO for [${websiteId}] with check interval [${checkInterval}]`,
+      `Resuming MonitorTrigger DO for [${endpointMonitorId}] with check interval [${checkInterval}]`,
     )
 
     this.ctx.storage.setAlarm(Date.now() + checkInterval * 1000)
 
     const db = useDrizzle(this.env.DB)
-    await db
-      .update(WebsitesTable)
+    const endpointMonitor = await db
+      .update(EndpointMonitorsTable)
       .set({ isRunning: true })
-      .where(eq(WebsitesTable.id, websiteId))
+      .where(eq(EndpointMonitorsTable.id, endpointMonitorId))
+      .returning()
+      .then(takeUniqueOrThrow)
 
-    console.log(`Resumed MonitorTrigger DO for [${websiteId}]`)
+    console.log(`Resumed MonitorTrigger DO for ${endpointSignature(endpointMonitor)}`)
   }
 
   async delete() {
-    console.log(`Deleting MonitorTrigger DO for [${this.#state.websiteId}]`)
+    console.log(`Deleting MonitorTrigger DO for [${this.#state.endpointMonitorId}]`)
     await this.ctx.storage.deleteAlarm()
     await this.ctx.storage.deleteAll()
-    console.log(`Deleted MonitorTrigger DO for [${this.#state.websiteId}]`)
+    console.log(`Deleted MonitorTrigger DO for [${this.#state.endpointMonitorId}]`)
   }
 }
 
@@ -144,36 +151,36 @@ export default class MonitorTriggerRPC extends WorkerEntrypoint<CloudflareEnv> {
   // Monitor DO RPC methods
   //////////////////////////////////////////////////////////////////////
 
-  async init(websiteId: string, checkInterval: number) {
-    const id = this.env.MONITOR_TRIGGER.idFromName(websiteId.toString())
+  async init(endpointMonitorId: string, checkInterval: number) {
+    const id = this.env.MONITOR_TRIGGER.idFromName(endpointMonitorId.toString())
     const stub: DurableObjectStub<MonitorTrigger> =
       this.env.MONITOR_TRIGGER.get(id)
-    await stub.init(websiteId, checkInterval)
+    await stub.init(endpointMonitorId, checkInterval)
   }
 
-  async updateCheckInterval(websiteId: string, checkInterval: number) {
-    const id = this.env.MONITOR_TRIGGER.idFromName(websiteId.toString())
+  async updateCheckInterval(endpointMonitorId: string, checkInterval: number) {
+    const id = this.env.MONITOR_TRIGGER.idFromName(endpointMonitorId.toString())
     const stub: DurableObjectStub<MonitorTrigger> =
       this.env.MONITOR_TRIGGER.get(id)
     await stub.updateCheckInterval(checkInterval)
   }
 
-  async pauseDo(websiteId: string) {
-    const id = this.env.MONITOR_TRIGGER.idFromName(websiteId.toString())
+  async pauseDo(endpointMonitorId: string) {
+    const id = this.env.MONITOR_TRIGGER.idFromName(endpointMonitorId.toString())
     const stub: DurableObjectStub<MonitorTrigger> =
       this.env.MONITOR_TRIGGER.get(id)
     await stub.pause()
   }
 
-  async resumeDo(websiteId: string) {
-    const id = this.env.MONITOR_TRIGGER.idFromName(websiteId.toString())
+  async resumeDo(endpointMonitorId: string) {
+    const id = this.env.MONITOR_TRIGGER.idFromName(endpointMonitorId.toString())
     const stub: DurableObjectStub<MonitorTrigger> =
       this.env.MONITOR_TRIGGER.get(id)
     await stub.resume()
   }
 
-  async deleteDo(websiteId: string) {
-    const id = this.env.MONITOR_TRIGGER.idFromName(websiteId.toString())
+  async deleteDo(endpointMonitorId: string) {
+    const id = this.env.MONITOR_TRIGGER.idFromName(endpointMonitorId.toString())
     const stub: DurableObjectStub<MonitorTrigger> =
       this.env.MONITOR_TRIGGER.get(id)
     await stub.delete()
