@@ -40,7 +40,7 @@ const extendedQuerySchema = paginationQuerySchema().extend({
 
 export const GET = createRoute
   .query(extendedQuerySchema)
-  .handler(async (request, context) => {
+  .handler(async (_request, context) => {
     const { env } = getCloudflareContext()
     const db = useDrizzle(env.DB)
 
@@ -123,7 +123,7 @@ export const GET = createRoute
  */
 export const POST = createRoute
   .body(endpointMonitorsInsertDTOSchema)
-  .handler(async (request, context) => {
+  .handler(async (_request, context) => {
     const endpointMonitor: z.infer<typeof endpointMonitorsInsertDTOSchema> =
       context.body
 

@@ -30,7 +30,7 @@ export function Pagination({ table }: PaginationProps) {
 
   const pagination = useDataTableStore((state) => state.pagination)
   const setPagination = useDataTableStore((state) => state.setPagination)
-  const fetchEndpointMonitors = useDataTableStore(
+  const _fetchEndpointMonitors = useDataTableStore(
     (state) => state.fetchEndpointMonitors,
   )
   const totalEndpointMonitors = useDataTableStore(

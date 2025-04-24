@@ -25,7 +25,7 @@ import type { z } from "zod"
  */
 export const GET = createRoute
   .params(idStringParamsSchema)
-  .handler(async (request, context) => {
+  .handler(async (_request, context) => {
     const { env } = getCloudflareContext()
     const db = useDrizzle(env.DB)
 
@@ -69,7 +69,7 @@ export const GET = createRoute
 export const PATCH = createRoute
   .params(idStringParamsSchema)
   .body(endpointMonitorsPatchSchema)
-  .handler(async (request, context) => {
+  .handler(async (_request, context) => {
     const { env } = getCloudflareContext()
     const db = useDrizzle(env.DB)
 
@@ -125,7 +125,7 @@ export const PATCH = createRoute
  */
 export const DELETE = createRoute
   .params(idStringParamsSchema)
-  .handler(async (request, context) => {
+  .handler(async (_request, context) => {
     const { env } = getCloudflareContext()
     const db = useDrizzle(env.DB)
 

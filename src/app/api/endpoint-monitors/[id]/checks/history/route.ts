@@ -20,7 +20,7 @@ import * as HttpStatusCodes from "stoker/http-status-codes"
 export const GET = createRoute
   .params(idStringParamsSchema)
   .query(daysQuerySchema())
-  .handler(async (request, context) => {
+  .handler(async (_request, context) => {
     const { env } = getCloudflareContext()
     const db = useDrizzle(env.DB)
 

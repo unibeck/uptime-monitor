@@ -28,7 +28,7 @@ const querySchema = z.object({
 
 export const GET = createRoute
   .query(querySchema)
-  .handler(async (request, context) => {
+  .handler(async (_request, context) => {
     const { env } = getCloudflareContext()
     const db = useDrizzle(env.DB)
 

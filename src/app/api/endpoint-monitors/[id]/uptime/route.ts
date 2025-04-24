@@ -21,7 +21,7 @@ import type { z } from "zod"
  */
 export const GET = createRoute
   .params(idStringParamsSchema)
-  .handler(async (request, context) => {
+  .handler(async (_request, context) => {
     const { env } = getCloudflareContext()
     const db = useDrizzle(env.DB)
     const { id: endpointMonitorId } = context.params
