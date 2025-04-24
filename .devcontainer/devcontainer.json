@@ -1,12 +1,6 @@
 {
   "image": "mcr.microsoft.com/devcontainers/typescript-node:22",
   "postStartCommand": "scripts/bootstrap.sh",
-  "features": {
-    "ghcr.io/devcontainers/features/github-cli:1": {},
-    "ghcr.io/devcontainers/features/common-utils:2": {},
-    "ghcr.io/eitsupi/devcontainer-features/jq-likes:2": {},
-    "ghcr.io/dhoeric/features/act:1": {}
-  },
   "customizations": {
     "vscode": {
       "extensions": [

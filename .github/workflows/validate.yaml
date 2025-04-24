@@ -1,0 +1,27 @@
+name: Validate
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Run Biome Linter and Formatter
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main 
+          fetch-depth: 0
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: true
+
+      - name: Setup Biome CLI
+        uses: biomejs/setup-biome@v2
+        
+      - name: Run Biome
+        run: biome ci
