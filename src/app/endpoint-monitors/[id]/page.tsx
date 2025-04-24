@@ -1,27 +1,22 @@
 "use client"
 
-import LatencyRangeChart from "@/components/latency-range-chart"
-import { UptimeChart } from "@/components/uptime-chart"
 import { EndpointMonitorDetailHeader } from "@/components/endpoint-monitor-detail-header"
 import { EndpointMonitorSectionCards } from "@/components/endpoint-monitor-section-cards"
+import LatencyRangeChart from "@/components/latency-range-chart"
+import { UptimeChart } from "@/components/uptime-chart"
 import {
   defaultHeaderContent,
   useHeaderContext,
 } from "@/context/header-context"
 import type {
-  uptimeChecksSelectSchema,
   endpointMonitorsSelectSchema,
+  uptimeChecksSelectSchema,
 } from "@/db/zod-schema"
 import { msToHumanReadable, secsToHumanReadable } from "@/lib/formatters"
 import { Badge } from "@/registry/new-york-v4/ui/badge"
 import { Button } from "@/registry/new-york-v4/ui/button"
 import { Card, CardContent } from "@/registry/new-york-v4/ui/card"
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/registry/new-york-v4/ui/tabs"
+import { Tabs, TabsList, TabsTrigger } from "@/registry/new-york-v4/ui/tabs"
 import { TooltipContent } from "@/registry/new-york-v4/ui/tooltip"
 import {
   TooltipProvider,
@@ -30,12 +25,11 @@ import {
 import { Tooltip } from "@/registry/new-york-v4/ui/tooltip"
 import type { TimeRange } from "@/types/endpointMonitor"
 import { IconPointFilled } from "@tabler/icons-react"
-import { formatDistance } from "date-fns"
 import { ArrowLeft } from "lucide-react"
 import type { Route } from "next"
 import Link from "next/link"
 import { useParams, useRouter, useSearchParams } from "next/navigation"
-import React, { useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import type { z } from "zod"
 
 // Define the type for a single uptime check
@@ -75,13 +69,17 @@ export default function EndpointMonitorDetailPage() {
     const fetchWebsite = async () => {
       setIsLoading(true)
       try {
-        const response = await fetch(`/api/endpoint-monitors/${endpointMonitorId}`)
+        const response = await fetch(
+          `/api/endpoint-monitors/${endpointMonitorId}`,
+        )
         if (!response.ok) {
           if (response.status === 404) {
             router.push("/")
             return
           }
-          throw new Error(`Failed to fetch endpointMonitor: ${response.statusText}`)
+          throw new Error(
+            `Failed to fetch endpointMonitor: ${response.statusText}`,
+          )
         }
         const data = await response.json()
         setEndpointMonitor(data as z.infer<typeof endpointMonitorsSelectSchema>)
@@ -201,7 +199,9 @@ export default function EndpointMonitorDetailPage() {
         console.error("Error fetching combined uptime/latency data:", error)
         // Reset states on error
         setUptimeData([])
-        setUptimeDataError("An error occurred while loading endpointMonitor data.")
+        setUptimeDataError(
+          "An error occurred while loading endpointMonitor data.",
+        )
       } finally {
         setIsUptimeDataLoading(false)
       }
@@ -213,7 +213,8 @@ export default function EndpointMonitorDetailPage() {
   useEffect(() => {
     if (uptimeData.length > 0) {
       const uptimePercentage =
-        (uptimeData.filter((check) => check.isExpectedStatus).length / uptimeData.length) *
+        (uptimeData.filter((check) => check.isExpectedStatus).length /
+          uptimeData.length) *
         100
       setUptimePercentage(uptimePercentage)
     } else {
@@ -241,7 +242,9 @@ export default function EndpointMonitorDetailPage() {
     const fetchLatestUptimeCheck = async () => {
       // Consider adding loading/error state specifically for this fetch if needed
       try {
-        const response = await fetch(`/api/endpoint-monitors/${endpointMonitorId}/uptime`)
+        const response = await fetch(
+          `/api/endpoint-monitors/${endpointMonitorId}/uptime`,
+        )
         if (!response.ok) {
           if (response.status !== 404) {
             // Don't error if no check exists yet
@@ -275,7 +278,9 @@ export default function EndpointMonitorDetailPage() {
           </Button>
         </div>
         <div className="h-[400px] flex items-center justify-center">
-          <p className="text-muted-foreground">Loading endpoint Monitor details...</p>
+          <p className="text-muted-foreground">
+            Loading endpoint Monitor details...
+          </p>
         </div>
       </div>
     )

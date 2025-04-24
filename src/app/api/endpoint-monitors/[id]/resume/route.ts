@@ -7,7 +7,7 @@ import { idStringParamsSchema } from "@/lib/route-schemas"
 import { getCloudflareContext } from "@opennextjs/cloudflare"
 import { eq } from "drizzle-orm"
 import { NextResponse } from "next/server"
-import * as HttpStatusCodes from "stoker/http-status-codes"
+import { OK } from "stoker/http-status-codes"
 
 /**
  * POST /api/endpoint-monitors/[id]/resume
@@ -19,7 +19,7 @@ import * as HttpStatusCodes from "stoker/http-status-codes"
  */
 export const POST = createRoute
   .params(idStringParamsSchema)
-  .handler(async (request, context) => {
+  .handler(async (_request, context) => {
     const { env } = getCloudflareContext()
     const db = useDrizzle(env.DB)
     const endpointMonitor = await db
@@ -42,14 +42,14 @@ export const POST = createRoute
         console.log(
           `DO [${endpointMonitor.id}] not initialized. Initializing automatically...`,
         )
-        await env.MONITOR_TRIGGER_RPC.init(endpointMonitor.id, endpointMonitor.checkInterval)
+        await env.MONITOR_TRIGGER_RPC.init(
+          endpointMonitor.id,
+          endpointMonitor.checkInterval,
+        )
       } else {
         throw error
       }
     }
 
-    return NextResponse.json(
-      { message: "Resumed Monitor DO" },
-      { status: HttpStatusCodes.OK },
-    )
+    return NextResponse.json({ message: "Resumed Monitor DO" }, { status: OK })
   })

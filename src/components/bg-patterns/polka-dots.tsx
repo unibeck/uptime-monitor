@@ -1,5 +1,3 @@
-import React from "react"
-
 interface PolkaDotsProps {
   className?: string
   color?: string

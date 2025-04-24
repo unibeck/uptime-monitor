@@ -4,7 +4,6 @@ import { DataTable } from "@/components/data-table"
 
 import { SectionCards } from "@/components/section-cards"
 import { useHeaderContext } from "@/context/header-context"
-import { IconPointFilled } from "@tabler/icons-react"
 import { useEffect } from "react"
 
 export default function Page() {
@@ -15,9 +14,10 @@ export default function Page() {
         <p className="text-sm text-muted-foreground">
           Updating every 60 seconds
         </p>
-        <div className="relative">
-          <IconPointFilled className="absolute text-green-500 animate-ping" />
-          <IconPointFilled className="relative z-10 mr-1 text-green-500" />
+
+        <div className="relative flex size-3">
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-500 opacity-75" />
+          <span className="relative inline-flex size-3 rounded-full bg-green-500" />
         </div>
       </div>,
     )

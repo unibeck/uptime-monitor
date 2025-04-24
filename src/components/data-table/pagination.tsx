@@ -18,7 +18,7 @@ import {
   IconChevronsRight,
 } from "@tabler/icons-react"
 import type { Table } from "@tanstack/react-table"
-import * as React from "react"
+import React from "react"
 import type { z } from "zod"
 
 interface PaginationProps {
@@ -30,11 +30,18 @@ export function Pagination({ table }: PaginationProps) {
 
   const pagination = useDataTableStore((state) => state.pagination)
   const setPagination = useDataTableStore((state) => state.setPagination)
-  const fetchEndpointMonitors = useDataTableStore((state) => state.fetchEndpointMonitors)
-  const totalEndpointMonitors = useDataTableStore((state) => state.totalEndpointMonitors)
+  const _fetchEndpointMonitors = useDataTableStore(
+    (state) => state.fetchEndpointMonitors,
+  )
+  const totalEndpointMonitors = useDataTableStore(
+    (state) => state.totalEndpointMonitors,
+  )
 
   // Calculate page count locally to ensure it's consistent
-  const pageCount = Math.max(1, Math.ceil(totalEndpointMonitors / pagination.pageSize))
+  const pageCount = Math.max(
+    1,
+    Math.ceil(totalEndpointMonitors / pagination.pageSize),
+  )
 
   // Function to handle page changes directly with the store
   const changePage = React.useCallback(

@@ -1,7 +1,6 @@
 "use client"
 
 import {
-  IconActivityHeartbeat,
   IconAlertTriangle,
   IconBellCheck,
   IconBellExclamation,
@@ -64,7 +63,9 @@ export function EndpointMonitorSectionCards({
           <CardAction>
             <Badge
               variant={
-                endpointMonitor.consecutiveFailures > 0 ? "destructive" : "outline"
+                endpointMonitor.consecutiveFailures > 0
+                  ? "destructive"
+                  : "outline"
               }
             >
               {endpointMonitor.consecutiveFailures > 0 ? (
@@ -92,7 +93,9 @@ export function EndpointMonitorSectionCards({
             {endpointMonitor.activeAlert ? "Active" : "Inactive"}
           </CardTitle>
           <CardAction>
-            <Badge variant={endpointMonitor.activeAlert ? "destructive" : "outline"}>
+            <Badge
+              variant={endpointMonitor.activeAlert ? "destructive" : "outline"}
+            >
               {endpointMonitor.activeAlert ? (
                 <IconBellExclamation />
               ) : (

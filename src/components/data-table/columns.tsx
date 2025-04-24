@@ -12,7 +12,6 @@ import {
 } from "@tabler/icons-react"
 import type { ColumnDef } from "@tanstack/react-table"
 import Link from "next/link"
-import * as React from "react"
 import type { z } from "zod"
 import { DataTableColumnHeader } from "./column-header"
 import { EndpointMonitorDetailDrawer } from "./endpoint-monitor-detail-drawer"
@@ -22,7 +21,9 @@ export type AppColumnDef<TData> = ColumnDef<TData> & {
   headerLabel?: string
 }
 
-export const columns: AppColumnDef<z.infer<typeof endpointMonitorsSelectSchema>>[] = [
+export const columns: AppColumnDef<
+  z.infer<typeof endpointMonitorsSelectSchema>
+>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -56,7 +57,10 @@ export const columns: AppColumnDef<z.infer<typeof endpointMonitorsSelectSchema>>
     ),
     headerLabel: "Name",
     cell: ({ row }) => (
-      <Link href={`/endpoint-monitors/${row.original.id}`} className="hover:underline">
+      <Link
+        href={`/endpoint-monitors/${row.original.id}`}
+        className="hover:underline"
+      >
         {row.original.name.length > 32
           ? `${row.original.name.substring(0, 32)}...`
           : row.original.name}
@@ -220,7 +224,9 @@ export const columns: AppColumnDef<z.infer<typeof endpointMonitorsSelectSchema>>
             size="icon"
           >
             <IconLayoutSidebarRightExpand />
-            <span className="sr-only">Open endpoint monitor details drawer</span>
+            <span className="sr-only">
+              Open endpoint monitor details drawer
+            </span>
           </Button>
         }
       />

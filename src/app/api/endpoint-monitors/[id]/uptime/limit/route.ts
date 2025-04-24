@@ -6,7 +6,7 @@ import { idStringParamsSchema } from "@/lib/route-schemas"
 import { getCloudflareContext } from "@opennextjs/cloudflare"
 import { and, desc, eq, isNotNull } from "drizzle-orm"
 import { NextResponse } from "next/server"
-import * as HttpStatusCodes from "stoker/http-status-codes"
+import { INTERNAL_SERVER_ERROR, OK } from "stoker/http-status-codes"
 import { z } from "zod"
 
 const querySchema = z.object({
@@ -26,7 +26,7 @@ const querySchema = z.object({
 export const GET = createRoute
   .params(idStringParamsSchema)
   .query(querySchema)
-  .handler(async (request, context) => {
+  .handler(async (_request, context) => {
     const { env } = getCloudflareContext()
     const db = useDrizzle(env.DB)
     const { id: endpointMonitorId } = context.params
@@ -51,12 +51,12 @@ export const GET = createRoute
       console.log(
         `Uptime data for endpointMonitor [${endpointMonitorId}] with limit [${limit}]: ${results.length}`,
       )
-      return NextResponse.json(results, { status: HttpStatusCodes.OK })
+      return NextResponse.json(results, { status: OK })
     } catch (error) {
       console.error("Error fetching latency data: ", error)
       return NextResponse.json(
         { error: "Failed to fetch latency data" },
-        { status: HttpStatusCodes.INTERNAL_SERVER_ERROR },
+        { status: INTERNAL_SERVER_ERROR },
       )
     }
   })

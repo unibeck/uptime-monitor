@@ -16,18 +16,26 @@ const { createSelectSchema } = createSchemaFactory({
   },
 })
 
-export const endpointMonitorsInsertSchema = createInsertSchema(EndpointMonitorsTable, {
-  url: (schema) => schema.url(),
-  expectedStatusCode: z.number().positive().int().optional(),
-}).omit({
+export const endpointMonitorsInsertSchema = createInsertSchema(
+  EndpointMonitorsTable,
+  {
+    url: (schema) => schema.url(),
+    expectedStatusCode: z.number().positive().int().optional(),
+  },
+).omit({
   createdAt: true,
   updatedAt: true,
 })
-export const endpointMonitorsInsertDTOSchema = endpointMonitorsInsertSchema.omit({
-  id: true,
-})
-export const endpointMonitorsSelectSchema = createSelectSchema(EndpointMonitorsTable)
-export const endpointMonitorsPatchSchema = createInsertSchema(EndpointMonitorsTable).partial()
+export const endpointMonitorsInsertDTOSchema =
+  endpointMonitorsInsertSchema.omit({
+    id: true,
+  })
+export const endpointMonitorsSelectSchema = createSelectSchema(
+  EndpointMonitorsTable,
+)
+export const endpointMonitorsPatchSchema = createInsertSchema(
+  EndpointMonitorsTable,
+).partial()
 
 export const uptimeChecksInsertSchema = createInsertSchema(
   UptimeChecksTable,

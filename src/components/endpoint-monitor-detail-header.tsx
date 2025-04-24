@@ -51,7 +51,9 @@ export function EndpointMonitorDetailHeader({
     setIsLoading(true)
 
     try {
-      const response = await fetch(`/api/endpoint-monitors/${endpointMonitor.id}/execute-check`)
+      const response = await fetch(
+        `/api/endpoint-monitors/${endpointMonitor.id}/execute-check`,
+      )
       if (!response.ok) {
         throw new Error("Failed to execute check")
       }
@@ -74,9 +76,12 @@ export function EndpointMonitorDetailHeader({
   const pauseMonitoring = async () => {
     setIsLoading(true)
     try {
-      const response = await fetch(`/api/endpoint-monitors/${endpointMonitor.id}/pause`, {
-        method: "POST",
-      })
+      const response = await fetch(
+        `/api/endpoint-monitors/${endpointMonitor.id}/pause`,
+        {
+          method: "POST",
+        },
+      )
       if (!response.ok) {
         throw new Error("Failed to pause monitoring")
       }
@@ -99,9 +104,12 @@ export function EndpointMonitorDetailHeader({
   const resumeMonitoring = async () => {
     setIsLoading(true)
     try {
-      const response = await fetch(`/api/endpoint-monitors/${endpointMonitor.id}/resume`, {
-        method: "POST",
-      })
+      const response = await fetch(
+        `/api/endpoint-monitors/${endpointMonitor.id}/resume`,
+        {
+          method: "POST",
+        },
+      )
       console.log("response", response)
       if (!response.ok) {
         throw new Error("Failed to resume monitoring")

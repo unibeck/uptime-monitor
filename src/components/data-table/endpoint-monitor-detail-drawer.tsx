@@ -24,14 +24,10 @@ import { TooltipTrigger } from "@/registry/new-york-v4/ui/tooltip"
 import { TooltipProvider } from "@/registry/new-york-v4/ui/tooltip"
 import {
   IconAlertTriangle,
-  IconClockHour4,
-  IconHeart,
-  IconHeartFilled,
   IconLoader2,
   IconPlayerPauseFilled,
   IconPlayerPlayFilled,
   IconRosetteDiscountCheckFilled,
-  IconShieldCheckFilled,
   IconTrash,
 } from "@tabler/icons-react"
 import { formatDistance } from "date-fns"
@@ -72,7 +68,9 @@ export function EndpointMonitorDetailDrawer({
       setIsLoadingCheck(true)
       setCheckError(null)
       try {
-        const response = await fetch(`/api/endpoint-monitors/${endpointMonitor.id}/uptime`)
+        const response = await fetch(
+          `/api/endpoint-monitors/${endpointMonitor.id}/uptime`,
+        )
         if (!response.ok) {
           if (response.status === 404) {
             setLatestUptimeCheck(null) // No check found yet
@@ -155,7 +153,9 @@ export function EndpointMonitorDetailDrawer({
               </div>
               <div className="flex flex-col gap-1">
                 <span className="font-medium">Check Interval</span>
-                <span>{secsToHumanReadable(endpointMonitor.checkInterval)}</span>
+                <span>
+                  {secsToHumanReadable(endpointMonitor.checkInterval)}
+                </span>
               </div>
             </div>
 
@@ -163,7 +163,9 @@ export function EndpointMonitorDetailDrawer({
               <div className="flex flex-col gap-1">
                 <span className="font-medium">Alert Status</span>
                 <Badge
-                  variant={endpointMonitor.activeAlert ? "destructive" : "outline"}
+                  variant={
+                    endpointMonitor.activeAlert ? "destructive" : "outline"
+                  }
                   className="w-fit"
                 >
                   {endpointMonitor.activeAlert ? "Alert Active" : "No Alert"}
@@ -209,7 +211,9 @@ export function EndpointMonitorDetailDrawer({
                     <div className="flex items-center gap-1">
                       <Badge
                         variant={
-                          latestUptimeCheck.isExpectedStatus ? "outline" : "destructive"
+                          latestUptimeCheck.isExpectedStatus
+                            ? "outline"
+                            : "destructive"
                         }
                         className="w-fit text-xs px-1.5 py-0.5"
                       >
@@ -246,7 +250,9 @@ export function EndpointMonitorDetailDrawer({
                                 </span>
                               </TooltipTrigger>
                               <TooltipContent>
-                                <p>Expected: {endpointMonitor.expectedStatusCode}</p>
+                                <p>
+                                  Expected: {endpointMonitor.expectedStatusCode}
+                                </p>
                               </TooltipContent>
                             </Tooltip>
                           </TooltipProvider>

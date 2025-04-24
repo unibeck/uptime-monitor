@@ -1,13 +1,16 @@
-import { takeFirstOrNull, takeUniqueOrThrow, useDrizzle } from "@/db"
+import { takeUniqueOrThrow, useDrizzle } from "@/db"
 import { EndpointMonitorsTable } from "@/db/schema"
-import { endpointMonitorsPatchSchema, type endpointMonitorsSelectSchema } from "@/db/zod-schema"
+import {
+  endpointMonitorsPatchSchema,
+  type endpointMonitorsSelectSchema,
+} from "@/db/zod-schema"
 import { createRoute } from "@/lib/api-utils"
 import { idStringParamsSchema } from "@/lib/route-schemas"
 import { getCloudflareContext } from "@opennextjs/cloudflare"
 import { eq } from "drizzle-orm"
 import { NextResponse } from "next/server"
-import * as HttpStatusCodes from "stoker/http-status-codes"
-import * as HttpStatusPhrases from "stoker/http-status-phrases"
+import { INTERNAL_SERVER_ERROR, NOT_FOUND, OK } from "stoker/http-status-codes"
+import { NOT_FOUND as NOT_FOUND_PHRASE } from "stoker/http-status-phrases"
 import type { z } from "zod"
 
 /**
@@ -22,11 +25,13 @@ import type { z } from "zod"
  */
 export const GET = createRoute
   .params(idStringParamsSchema)
-  .handler(async (request, context) => {
+  .handler(async (_request, context) => {
     const { env } = getCloudflareContext()
     const db = useDrizzle(env.DB)
 
-    let endpointMonitor: z.infer<typeof endpointMonitorsSelectSchema> | undefined
+    let endpointMonitor:
+      | z.infer<typeof endpointMonitorsSelectSchema>
+      | undefined
     try {
       endpointMonitor = await db.query.EndpointMonitorsTable.findFirst({
         where: eq(EndpointMonitorsTable.id, context.params.id),
@@ -36,14 +41,14 @@ export const GET = createRoute
       // TODO: Use HttpStatusCodes.INTERNAL_SERVER_ERROR
       return NextResponse.json(
         { error: "Failed to fetch endpointMonitor" },
-        { status: HttpStatusCodes.INTERNAL_SERVER_ERROR },
+        { status: INTERNAL_SERVER_ERROR },
       )
     }
 
     if (!endpointMonitor) {
       return NextResponse.json(
-        { message: HttpStatusPhrases.NOT_FOUND },
-        { status: HttpStatusCodes.NOT_FOUND },
+        { message: NOT_FOUND_PHRASE },
+        { status: NOT_FOUND },
       )
     }
 
@@ -64,12 +69,16 @@ export const GET = createRoute
 export const PATCH = createRoute
   .params(idStringParamsSchema)
   .body(endpointMonitorsPatchSchema)
-  .handler(async (request, context) => {
+  .handler(async (_request, context) => {
     const { env } = getCloudflareContext()
     const db = useDrizzle(env.DB)
 
-    const endpointMonitor: z.infer<typeof endpointMonitorsPatchSchema> = context.body
-    let updatedWebsite: z.infer<typeof endpointMonitorsSelectSchema> | undefined | null
+    const endpointMonitor: z.infer<typeof endpointMonitorsPatchSchema> =
+      context.body
+    let updatedWebsite:
+      | z.infer<typeof endpointMonitorsSelectSchema>
+      | undefined
+      | null
     try {
       updatedWebsite = await db
         .update(EndpointMonitorsTable)
@@ -81,16 +90,16 @@ export const PATCH = createRoute
       console.error("Error updating endpointMonitor: ", error)
       return NextResponse.json(
         { error: "Failed to update endpointMonitor" },
-        { status: HttpStatusCodes.INTERNAL_SERVER_ERROR },
+        { status: INTERNAL_SERVER_ERROR },
       )
     }
 
     if (!updatedWebsite) {
       return NextResponse.json(
         {
-          message: HttpStatusPhrases.NOT_FOUND,
+          message: NOT_FOUND_PHRASE,
         },
-        { status: HttpStatusCodes.NOT_FOUND },
+        { status: NOT_FOUND },
       )
     }
 
@@ -102,7 +111,7 @@ export const PATCH = createRoute
       updatedWebsite.checkInterval,
     )
 
-    return NextResponse.json(updatedWebsite, { status: HttpStatusCodes.OK })
+    return NextResponse.json(updatedWebsite, { status: OK })
   })
 
 /**
@@ -116,7 +125,7 @@ export const PATCH = createRoute
  */
 export const DELETE = createRoute
   .params(idStringParamsSchema)
-  .handler(async (request, context) => {
+  .handler(async (_request, context) => {
     const { env } = getCloudflareContext()
     const db = useDrizzle(env.DB)
 
@@ -130,7 +139,7 @@ export const DELETE = createRoute
       console.error("Error deleting endpointMonitor: ", error)
       return NextResponse.json(
         { error: "Failed to delete endpointMonitor" },
-        { status: HttpStatusCodes.INTERNAL_SERVER_ERROR },
+        { status: INTERNAL_SERVER_ERROR },
       )
     }
 

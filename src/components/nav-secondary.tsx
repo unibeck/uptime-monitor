@@ -6,7 +6,7 @@ import {
   IconCirclePlusFilled,
 } from "@tabler/icons-react"
 import { useTheme } from "next-themes"
-import * as React from "react"
+import React from "react"
 
 import { AddEndpointMonitorDialog } from "@/components/add-endpoint-monitor-dialog"
 import {

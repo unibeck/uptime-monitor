@@ -1,4 +1,4 @@
-import { takeFirstOrNull, takeUniqueOrThrow, useDrizzle } from "@/db"
+import { takeUniqueOrThrow, useDrizzle } from "@/db"
 import { EndpointMonitorsTable } from "@/db/schema"
 import {
   endpointMonitorsInsertDTOSchema,
@@ -13,7 +13,7 @@ import { asc, desc } from "drizzle-orm"
 import { and, count, eq, like, sql } from "drizzle-orm"
 import type { SQLiteColumn } from "drizzle-orm/sqlite-core"
 import { NextResponse } from "next/server"
-import * as HttpStatusCodes from "stoker/http-status-codes"
+import { CONFLICT } from "stoker/http-status-codes"
 import { z } from "zod"
 
 /**
@@ -40,7 +40,7 @@ const extendedQuerySchema = paginationQuerySchema().extend({
 
 export const GET = createRoute
   .query(extendedQuerySchema)
-  .handler(async (request, context) => {
+  .handler(async (_request, context) => {
     const { env } = getCloudflareContext()
     const db = useDrizzle(env.DB)
 
@@ -123,15 +123,18 @@ export const GET = createRoute
  */
 export const POST = createRoute
   .body(endpointMonitorsInsertDTOSchema)
-  .handler(async (request, context) => {
-    const endpointMonitor: z.infer<typeof endpointMonitorsInsertDTOSchema> = context.body
+  .handler(async (_request, context) => {
+    const endpointMonitor: z.infer<typeof endpointMonitorsInsertDTOSchema> =
+      context.body
 
     const { env } = getCloudflareContext()
     const db = useDrizzle(env.DB)
 
     // Normalize the URL to remove the protocol
     const normalizedUrl = endpointMonitor.url.replace(/(^\w+:|^)\/\//, "")
-    const existingEndpointMonitors: z.infer<typeof endpointMonitorsSelectSchema>[] = await db
+    const existingEndpointMonitors: z.infer<
+      typeof endpointMonitorsSelectSchema
+    >[] = await db
       .select()
       .from(EndpointMonitorsTable)
       .where(sql.raw(`instr(url, '${normalizedUrl}') > 0`))
@@ -159,7 +162,7 @@ export const POST = createRoute
           matchingEndpointMonitor: matchingWebsite,
         } as const satisfies ConflictEndpointMonitorResponse,
         {
-          status: HttpStatusCodes.CONFLICT,
+          status: CONFLICT,
         },
       )
     }
@@ -185,5 +188,7 @@ function getOrderDirection(direction: "asc" | "desc") {
 }
 
 function getColumn(columnName: string): SQLiteColumn {
-  return EndpointMonitorsTable[columnName as keyof typeof EndpointMonitorsTable] as SQLiteColumn
+  return EndpointMonitorsTable[
+    columnName as keyof typeof EndpointMonitorsTable
+  ] as SQLiteColumn
 }

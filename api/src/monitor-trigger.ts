@@ -1,15 +1,12 @@
 import { DurableObject, WorkerEntrypoint } from "cloudflare:workers"
 import { takeUniqueOrThrow, useDrizzle } from "@/db"
 import { EndpointMonitorsTable } from "@/db/schema"
-import {
-  MonitorTriggerNotInitializedError,
-  getErrorMessage,
-} from "@/lib/errors"
+import { MonitorTriggerNotInitializedError } from "@/lib/errors"
 import { endpointSignature } from "@/lib/formatters"
-import { diffable, state } from "diffable-objects"
+import { diffable } from "diffable-objects"
 import { eq } from "drizzle-orm"
-import * as HttpStatusCodes from "stoker/http-status-codes"
-import * as HttpStatusPhrases from "stoker/http-status-phrases"
+import { OK } from "stoker/http-status-codes"
+import { OK as OK_PHRASE } from "stoker/http-status-phrases"
 
 /**
  * The Monitor class is a Durable Object that is used to trigger checks on a endpointMonitor.
@@ -107,7 +104,9 @@ export class MonitorTrigger extends DurableObject<CloudflareEnv> {
       .returning()
       .then(takeUniqueOrThrow)
 
-    console.log(`Paused MonitorTrigger DO for ${endpointSignature(endpointMonitor)}`)
+    console.log(
+      `Paused MonitorTrigger DO for ${endpointSignature(endpointMonitor)}`,
+    )
   }
 
   async resume() {
@@ -127,24 +126,30 @@ export class MonitorTrigger extends DurableObject<CloudflareEnv> {
       .returning()
       .then(takeUniqueOrThrow)
 
-    console.log(`Resumed MonitorTrigger DO for ${endpointSignature(endpointMonitor)}`)
+    console.log(
+      `Resumed MonitorTrigger DO for ${endpointSignature(endpointMonitor)}`,
+    )
   }
 
   async delete() {
-    console.log(`Deleting MonitorTrigger DO for [${this.#state.endpointMonitorId}]`)
+    console.log(
+      `Deleting MonitorTrigger DO for [${this.#state.endpointMonitorId}]`,
+    )
     await this.ctx.storage.deleteAlarm()
     await this.ctx.storage.deleteAll()
-    console.log(`Deleted MonitorTrigger DO for [${this.#state.endpointMonitorId}]`)
+    console.log(
+      `Deleted MonitorTrigger DO for [${this.#state.endpointMonitorId}]`,
+    )
   }
 }
 
 // Need service as RPC bindings do not work locally
 export default class MonitorTriggerRPC extends WorkerEntrypoint<CloudflareEnv> {
-  async fetch(request: Request) {
+  async fetch(_request: Request) {
     //Use service or RPC binding to work with the Monitor Durable Object
     return new Response(
-      `${HttpStatusPhrases.OK}\nMonitorTriggerRPC: Use service or RPC binding to work with the Monitor Durable Object`,
-      { status: HttpStatusCodes.OK },
+      `${OK_PHRASE}\nMonitorTriggerRPC: Use service or RPC binding to work with the Monitor Durable Object`,
+      { status: OK },
     )
   }
 

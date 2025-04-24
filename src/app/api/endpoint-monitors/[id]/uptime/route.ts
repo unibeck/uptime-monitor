@@ -1,13 +1,12 @@
-import { takeFirstOrNull, takeUniqueOrThrow, useDrizzle } from "@/db"
-import { EndpointMonitorsTable, UptimeChecksTable } from "@/db/schema"
+import { takeUniqueOrThrow, useDrizzle } from "@/db"
+import { UptimeChecksTable } from "@/db/schema"
 import type { uptimeChecksSelectSchema } from "@/db/zod-schema"
 import { createRoute } from "@/lib/api-utils"
-import { daysQuerySchema, idStringParamsSchema } from "@/lib/route-schemas"
+import { idStringParamsSchema } from "@/lib/route-schemas"
 import { getCloudflareContext } from "@opennextjs/cloudflare"
-import { and, desc, eq, gt, lt, sql } from "drizzle-orm"
+import { desc, eq } from "drizzle-orm"
 import { NextResponse } from "next/server"
-import * as HttpStatusCodes from "stoker/http-status-codes"
-import * as HttpStatusPhrases from "stoker/http-status-phrases"
+import { INTERNAL_SERVER_ERROR, OK } from "stoker/http-status-codes"
 import type { z } from "zod"
 
 /**
@@ -22,7 +21,7 @@ import type { z } from "zod"
  */
 export const GET = createRoute
   .params(idStringParamsSchema)
-  .handler(async (request, context) => {
+  .handler(async (_request, context) => {
     const { env } = getCloudflareContext()
     const db = useDrizzle(env.DB)
     const { id: endpointMonitorId } = context.params
@@ -36,14 +35,14 @@ export const GET = createRoute
         .limit(1)
         .then(takeUniqueOrThrow)
 
-      return NextResponse.json(result, { status: HttpStatusCodes.OK })
+      return NextResponse.json(result, { status: OK })
     } catch (error) {
       console.error(
         `Error getting latest uptime check for endpointMonitor [${endpointMonitorId}]: ${error}`,
       )
       return NextResponse.json(
         { error: "Failed to get latest uptime check" },
-        { status: HttpStatusCodes.INTERNAL_SERVER_ERROR },
+        { status: INTERNAL_SERVER_ERROR },
       )
     }
   })

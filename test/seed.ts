@@ -4,14 +4,10 @@ import { createId } from "@/lib/ids"
 import { PRE_ID } from "@/lib/ids"
 import { createClient } from "@libsql/client"
 import { drizzle } from "drizzle-orm/libsql"
-import { reset, seed } from "drizzle-seed"
+import { reset } from "drizzle-seed"
 import type { z } from "zod"
-import * as schema from "../src/db/schema"
-import { UptimeChecksTable } from "../src/db/schema"
-import type {
-  endpointMonitorsInsertSchema,
-  uptimeChecksInsertSchema,
-} from "../src/db/zod-schema"
+import { schema } from "../src/db/schema"
+import type { uptimeChecksInsertSchema } from "../src/db/zod-schema"
 
 // List of 23 predefined URLs for endpointMonitors
 const endpointMonitorUrls = [
@@ -82,7 +78,8 @@ const seedDatabase = async () => {
     for (const endpointMonitor of seedEndpointMonitors) {
       const checksToCreate = Math.floor(Math.random() * 201) + 100 // Random number between 100-300
       const timeSpan = now.getTime() - twoWeeksAgo.getTime()
-      const checksPerInterval = timeSpan / (endpointMonitor.checkInterval * 1000)
+      const checksPerInterval =
+        timeSpan / (endpointMonitor.checkInterval * 1000)
       const skipFactor = Math.floor(checksPerInterval / checksToCreate)
 
       const uptimeChecks: z.infer<typeof uptimeChecksInsertSchema>[] =
@@ -113,7 +110,7 @@ const seedDatabase = async () => {
       const chunkSize = 100
       for (let i = 0; i < uptimeChecks.length; i += chunkSize) {
         const chunk = uptimeChecks.slice(i, i + chunkSize)
-        await db.insert(UptimeChecksTable).values(chunk)
+        await db.insert(schema.UptimeChecksTable).values(chunk)
       }
     }
 

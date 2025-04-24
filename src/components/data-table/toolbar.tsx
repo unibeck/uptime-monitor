@@ -39,7 +39,9 @@ export function Toolbar({ table }: ToolbarProps) {
   const searchValue = useDataTableStore((state) => state.searchValue)
   const setSearchValue = useDataTableStore((state) => state.setSearchValue)
   const setPagination = useDataTableStore((state) => state.setPagination)
-  const fetchEndpointMonitors = useDataTableStore((state) => state.fetchEndpointMonitors)
+  const fetchEndpointMonitors = useDataTableStore(
+    (state) => state.fetchEndpointMonitors,
+  )
 
   // Debounce search updates to avoid too many requests
   const handleSearch = useDebouncedCallback((term: string) => {

@@ -60,9 +60,12 @@ export async function handleDeleteWebsite(endpointMonitorId: string) {
   }
 
   try {
-    const response = await fetch(`/api/endpoint-monitors/${endpointMonitorId}`, {
-      method: "DELETE",
-    })
+    const response = await fetch(
+      `/api/endpoint-monitors/${endpointMonitorId}`,
+      {
+        method: "DELETE",
+      },
+    )
 
     if (!response.ok) {
       throw new Error(`Received status code ${response.status}`)
