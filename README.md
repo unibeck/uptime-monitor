@@ -2,7 +2,7 @@
 
 A uptime monitoring service that is easy and cheap to run at scale. Create endpoint checks for uptime, latency, and status code. Supports OpsGenie, for alerts when there are two or more consecutive failures.
 
-[Demo](./docs/dashboard-demo.gif)
+![Demo dashboard](./docs/dashboard-demo.gif)
 
 TODO: expectations for cost
 
