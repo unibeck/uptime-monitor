@@ -1,5 +1,6 @@
 {
   "include-v-in-tag": true,
+  "tag-separator": "@",
   "draft": false,
   "prerelease": false,
   "packages": {
