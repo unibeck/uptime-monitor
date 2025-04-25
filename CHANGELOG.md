@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/unibeck/uptime-monitor/compare/uptime-monitor-v1.3.0...uptime-monitor-v1.4.0) (2025-04-25)
+
+
+### Features
+
+* display app version ([#35](https://github.com/unibeck/uptime-monitor/issues/35)) ([774efa9](https://github.com/unibeck/uptime-monitor/commit/774efa9bab2eac9bec64a51a2e42e3737c7d9456))
+
 ## [1.3.0](https://github.com/unibeck/uptime-monitor/compare/uptime-monitor-v1.2.0...uptime-monitor-v1.3.0) (2025-04-25)
 
 
