@@ -17,6 +17,4 @@ jobs:
     steps:
       - uses: googleapis/release-please-action@v4
         with:
-          release-type: node
-          # token: ${{ secrets.GITHUB_TOKEN }}
-          # config-file: release-please-config.json
+          config-file: release-please-config.json
