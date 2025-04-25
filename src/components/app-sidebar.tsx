@@ -4,6 +4,7 @@ import {
   IconBrandGithub,
   IconDashboard,
   IconDatabase,
+  IconDna,
   IconFileWord,
   IconReport,
   IconTimezone,
@@ -33,15 +34,13 @@ const data = {
   navSecondary: [
     {
       title: "GitHub",
-      url: "https://github.com/unibeck/uptime-monitor",
       icon: IconBrandGithub,
+      url: "https://github.com/unibeck/uptime-monitor",
       external: true,
     },
     {
-      title: "Get Help",
-      url: "https://github.com/unibeck/uptime-monitor/issues",
-      icon: IconBrandGithub,
-      external: true,
+      title: `${process.env.NEXT_PUBLIC_APP_VERSION}`,
+      icon: IconDna,
     },
   ],
   documents: [

@@ -4,7 +4,7 @@
   "name": "monitor-exec",
   "main": "src/monitor-exec.ts",
   // https://developers.cloudflare.com/workers/configuration/compatibility-flags/#flags-history
-  "compatibility_date": "2024-09-26",
+  "compatibility_date": "2025-04-01",
   "compatibility_flags": ["nodejs_compat"],
   "minify": true,
   "workers_dev": false,
@@ -12,7 +12,7 @@
     "enabled": true
   },
   "vars": {
-    "ENVIRONMENT": "development"
+    "APP_ENV": "development"
   },
   "d1_databases": [
     {
@@ -25,7 +25,7 @@
   "env": {
     "production": {
       "vars": {
-        "ENVIRONMENT": "production"
+        "APP_ENV": "production"
       },
       "d1_databases": [
         {

@@ -4,7 +4,7 @@ import { defineConfig } from "drizzle-kit"
 
 let dbConfig: ReturnType<typeof defineConfig>
 
-if (process.env.ENVIRONMENT === "production") {
+if (process.env.APP_ENV === "production") {
   dbConfig = defineConfig({
     schema: "./src/db/schema.ts",
     out: "./src/db/migrations",

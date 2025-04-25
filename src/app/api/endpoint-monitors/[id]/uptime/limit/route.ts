@@ -48,9 +48,6 @@ export const GET = createRoute
         // reverse the results put it back in chronological order
         .then((results) => results.reverse())
 
-      console.log(
-        `Uptime data for endpointMonitor [${endpointMonitorId}] with limit [${limit}]: ${results.length}`,
-      )
       return NextResponse.json(results, { status: OK })
     } catch (error) {
       console.error("Error fetching latency data: ", error)

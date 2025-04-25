@@ -2,14 +2,14 @@
 
 A uptime monitoring service that is easy and cheap to run at scale. Create endpoint checks for uptime, latency, and status code. Supports OpsGenie, for alerts when there are two or more consecutive failures.
 
+![Demo dashboard](./docs/dashboard-demo.gif)
+
 TODO: expectations for cost
 
 ## Quick Deploy
 
 0) Fork the repo
 1) Copy and fill out
-    - `.dev.vars.example` -> `.dev.vars`
-    - `.dev.vars.example` -> `.prod.vars`
     - `.env.example` -> `.env`
 2) Create production D1 database
     - run `pnpm db:create:prod`

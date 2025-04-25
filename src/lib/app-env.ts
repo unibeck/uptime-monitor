@@ -1,19 +1,19 @@
 import { PRE_FQDN, PROD_FQDN } from "@/lib/constants"
 
 const DEV: AppEnvMetadata = {
-  serverUrl: "http://localhost:8787",
+  appUrl: "http://localhost:8787",
 }
 
 const PRE: AppEnvMetadata = {
   ...DEV,
 
-  serverUrl: PRE_FQDN,
+  appUrl: PRE_FQDN,
 }
 
 const PROD: AppEnvMetadata = {
   ...PRE,
 
-  serverUrl: PROD_FQDN,
+  appUrl: PROD_FQDN,
 }
 
 export enum AppEnvID {
@@ -23,7 +23,7 @@ export enum AppEnvID {
 }
 
 export interface AppEnvMetadata {
-  serverUrl: string
+  appUrl: string
 }
 
 const AppEnvs: { [value in AppEnvID]: AppEnvMetadata } = {
@@ -32,9 +32,9 @@ const AppEnvs: { [value in AppEnvID]: AppEnvMetadata } = {
   [AppEnvID.PROD]: PROD,
 }
 
-export function getAppEnvID(cf: CloudflareEnv): AppEnvID {
-  console.log(`Getting app env ID for [${cf.ENVIRONMENT}]`)
-  return getAppEnvIDFromStr(cf.ENVIRONMENT) || AppEnvID.DEV
+export function getAppEnvID(): AppEnvID {
+  console.log(`Getting app env ID for [${process.env.NEXT_PUBLIC_APP_ENV}]`)
+  return getAppEnvIDFromStr(process.env.NEXT_PUBLIC_APP_ENV || "development")
 }
 
 export function getAppEnvIDFromStr(appEnvStr: string): AppEnvID {
@@ -50,6 +50,6 @@ export function getAppEnvIDFromStr(appEnvStr: string): AppEnvID {
   }
 }
 
-export function getAppEnvMetadata(appEnvId: AppEnvID): AppEnvMetadata {
+export function getAppEnvMetadata(appEnvId = getAppEnvID()): AppEnvMetadata {
   return AppEnvs[appEnvId]
 }

@@ -143,7 +143,7 @@ export default class MonitorExec extends WorkerEntrypoint<CloudflareEnv> {
     status: number,
     errorMessage: string,
   ) {
-    console.log(this.env.ENVIRONMENT)
+    console.log(this.env.APP_ENV)
     const db = useDrizzle(this.env.DB)
 
     const endpointMonitor = await db

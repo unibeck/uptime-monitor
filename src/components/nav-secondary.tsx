@@ -25,8 +25,8 @@ export function NavSecondary({
 }: {
   items: {
     title: string
-    url: string
     icon: Icon
+    url?: string
     external?: boolean
   }[]
 } & React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
@@ -59,17 +59,26 @@ export function NavSecondary({
         <SidebarMenu>
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton asChild>
-                <a
-                  href={item.url}
-                  {...(item.external
-                    ? { target: "_blank", rel: "noopener noreferrer" }
-                    : {})}
-                >
-                  <item.icon />
-                  <span>{item.title}</span>
-                </a>
-              </SidebarMenuButton>
+              {item.url ? (
+                <SidebarMenuButton asChild>
+                  <a
+                    href={item.url}
+                    {...(item.external
+                      ? { target: "_blank", rel: "noopener noreferrer" }
+                      : {})}
+                  >
+                    <item.icon />
+                    <span>{item.title}</span>
+                  </a>
+                </SidebarMenuButton>
+              ) : (
+                <SidebarMenuButton asChild disabled>
+                  <div>
+                    <item.icon />
+                    <span>{item.title}</span>
+                  </div>
+                </SidebarMenuButton>
+              )}
             </SidebarMenuItem>
           ))}
           <SidebarMenuItem className="group-data-[collapsible=icon]:hidden">
