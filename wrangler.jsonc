@@ -4,7 +4,7 @@
   "name": "uptime-monitor",
   "main": ".open-next/worker.js",
   // https://developers.cloudflare.com/workers/configuration/compatibility-flags/#flags-history
-  "compatibility_date": "2024-09-26",
+  "compatibility_date": "2025-04-01",
   "compatibility_flags": ["nodejs_compat"],
   "workers_dev": true,
   "minify": true,
@@ -12,7 +12,7 @@
     "enabled": true
   },
   "vars": {
-    "ENVIRONMENT": "development"
+    "APP_ENV": "development"
   },
   "assets": {
     "binding": "ASSETS",
@@ -54,7 +54,7 @@
         }
       ],
       "vars": {
-        "ENVIRONMENT": "production"
+        "APP_ENV": "production"
       },
       "d1_databases": [
         {
