@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.1](https://github.com/unibeck/uptime-monitor/compare/uptime-monitor-v1.4.0...uptime-monitor@v1.4.1) (2025-04-25)
+
+
+### Bug Fixes
+
+* add @ tag separator to release names ([04d3d17](https://github.com/unibeck/uptime-monitor/commit/04d3d17d5f961d21c67b754bc5a6e1404456c4c3))
+
 ## [1.4.0](https://github.com/unibeck/uptime-monitor/compare/uptime-monitor-v1.3.0...uptime-monitor-v1.4.0) (2025-04-25)
 
 
