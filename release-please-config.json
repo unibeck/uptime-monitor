@@ -7,8 +7,6 @@
       "release-type": "node"
     }
   },
-  "extra-files": [
-    "next.config.ts"
-  ],
+  "extra-files": ["next.config.ts"],
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json"
 }

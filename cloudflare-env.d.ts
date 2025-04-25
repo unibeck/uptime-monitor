@@ -10,5 +10,5 @@ interface CloudflareEnv extends CloudflareEnvGen {
   MONITOR_EXEC: Service<import("@uptime-monitor/api").MonitorExec>
 
   // Secrets
-  OPSGENIE_API_KEY: string;
+  OPSGENIE_API_KEY: string
 }
