@@ -32,6 +32,10 @@
       "service": "monitor-exec"
     },
     {
+      "binding": "MONITOR_EXEC_SYNTHETIC",
+      "service": "monitor-exec-synthetic"
+    },
+    {
       "binding": "MONITOR_TRIGGER_RPC",
       "service": "monitor-trigger"
     }
@@ -45,6 +49,12 @@
       }
     ]
   },
+  "r2_buckets": [
+    {
+      "binding": "SYNTHETIC_SCRIPTS",
+      "bucket_name": "synthetic-scripts-local"
+    }
+  ],
   "env": {
     "production": {
       "routes": [
@@ -70,6 +80,10 @@
           "service": "monitor-exec-production"
         },
         {
+          "binding": "MONITOR_EXEC_SYNTHETIC",
+          "service": "monitor-exec-synthetic-production"
+        },
+        {
           "binding": "MONITOR_TRIGGER_RPC",
           "service": "monitor-trigger-production"
         }
@@ -82,7 +96,13 @@
             "script_name": "monitor-trigger-production"
           }
         ]
-      }
+      },
+      "r2_buckets": [
+        {
+          "binding": "SYNTHETIC_SCRIPTS",
+          "bucket_name": "synthetic-scripts-production"
+        }
+      ]
     }
   }
 }
