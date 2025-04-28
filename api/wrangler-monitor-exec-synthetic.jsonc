@@ -1,0 +1,72 @@
+// https://developers.cloudflare.com/workers/wrangler/configuration/
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "monitor-exec-synthetic",
+  "main": "src/monitor-exec-synthetic.ts",
+  // https://developers.cloudflare.com/workers/configuration/compatibility-flags/#flags-history
+  "compatibility_date": "2025-04-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "minify": true,
+  "workers_dev": false,
+  "observability": {
+    "enabled": true
+  },
+  "vars": {
+    "ENVIRONMENT": "development"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "uptime-monitor-local",
+      "database_id": "uptime-monitor-local",
+      "migrations_dir": "src/db/migrations"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "SYNTHETIC_SCRIPTS",
+      "bucket_name": "uptime-monitor-synthetic-scripts-local"
+    }
+  ],
+  "browser": {
+     "binding": "BROWSER"
+  },
+  // Optional: Binding back to trigger RPC if needed for error handling
+  // "services": [
+  //   {
+  //     "binding": "MONITOR_TRIGGER_RPC",
+  //     "service": "monitor-trigger"
+  //   }
+  // ],
+  "env": {
+    "production": {
+      "vars": {
+        "ENVIRONMENT": "production"
+      },
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "uptime-monitor-prod",
+          "database_id": "UPDATE_ME_D1_ID", // Needs actual production ID
+          "migrations_dir": "src/db/migrations"
+        }
+      ],
+      "r2_buckets": [
+        {
+          "binding": "SYNTHETIC_SCRIPTS",
+          "bucket_name": "UPDATE_ME_R2_BUCKET_NAME" // Needs actual production bucket name
+        }
+      ],
+      "browser": {
+        "binding": "BROWSER" // Assumes same binding name in prod
+      },
+      // Optional: Binding back to trigger RPC if needed for error handling
+      // "services": [
+      //   {
+      //     "binding": "MONITOR_TRIGGER_RPC",
+      //     "service": "monitor-trigger-production"
+      //   }
+      // ]
+    }
+  }
+} 
