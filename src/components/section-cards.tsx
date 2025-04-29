@@ -10,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/registry/new-york-v4/ui/card"
+import { useStatsStore } from "@/store/dashboard-stats-store" // Corrected import path if necessary
 import {
   IconActivityHeartbeat,
   IconBellCheck,
@@ -22,48 +23,26 @@ import {
   IconTrendingUp,
 } from "@tabler/icons-react"
 import Link from "next/link"
-import { useEffect, useState } from "react"
-interface DashboardStats {
-  totalEndpointMonitors: number
-  sitesWithAlerts: number
-  highestResponseTime: number
-  highestResponseTimeWebsiteId: string | null
-  uptimePercentage: number
-}
+import { useEffect } from "react"
+
 
 export function SectionCards() {
-  const [stats, setStats] = useState<DashboardStats | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  // Select the state directly
+  const statsStore = useStatsStore();
 
+  // Destructure the needed values from the state object
+  const { stats, isLoading, error, fetchDashboardStats } = statsStore;
+
+  // Fetch stats on component mount
   useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        setLoading(true)
-        const response = await fetch("/api/endpoint-monitors/stats")
-        if (!response.ok) {
-          throw new Error("Failed to fetch dashboard statistics")
-        }
-        const data = await response.json()
-        setStats(data as DashboardStats)
-        setError(null)
-      } catch (err) {
-        console.error("Error fetching stats:", err)
-        setError("Failed to load dashboard statistics")
-      } finally {
-        setLoading(false)
-      }
-    }
+     fetchDashboardStats();
+     // Set up interval if needed
+     const intervalId = setInterval(fetchDashboardStats, 60 * 1000);
+     return () => clearInterval(intervalId);
+  }, [fetchDashboardStats]); // Dependency array is correct
 
-    fetchStats()
 
-    // Refresh stats every minute
-    const intervalId = setInterval(fetchStats, 60 * 1000)
-
-    return () => clearInterval(intervalId)
-  }, [])
-
-  if (loading && !stats) {
+  if (isLoading && !stats) {
     return (
       <div className="flex justify-center items-center p-8">
         <IconLoader2 className="animate-spin h-8 w-8" />
@@ -131,8 +110,8 @@ export function SectionCards() {
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
             {data.sitesWithAlerts > 0
-              ? `${data.sitesWithAlerts} site${data.sitesWithAlerts !== 1 ? "s" : ""} with active alerts`
-              : "No active alerts"}
+                ? `${data.sitesWithAlerts} site${data.sitesWithAlerts !== 1 ? "s" : ""} with active alerts`
+                : "No active alerts"}
           </div>
           <div className="text-muted-foreground">
             Endpoint Monitors requiring attention
