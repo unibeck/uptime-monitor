@@ -1,12 +1,18 @@
 "use client"
 
 import {
+  IconAppWindow,
   IconBrandGithub,
+  IconBulb,
   IconDashboard,
   IconDatabase,
   IconDna,
   IconFileWord,
+  IconHeartbeat,
+  IconPrismLight,
   IconReport,
+  IconSparkles,
+  IconTargetArrow,
   IconTimezone,
 } from "@tabler/icons-react"
 import type * as React from "react"
@@ -26,9 +32,45 @@ import {
 const data = {
   navMain: [
     {
-      title: "Dashboard",
-      url: "#",
+      title: "Monitors",
+      url: "/",
       icon: IconDashboard,
+      items: [
+        {
+          title: "Endpoint",
+          url: "/",
+          icon: IconTargetArrow,
+        },
+        {
+          title: "Synthetic",
+          url: "/synthetic-monitors",
+          icon: IconAppWindow,
+        },
+        {
+          title: "Agentic (soon)",
+          url: "https://github.com/unibeck/uptime-monitor/issues/39",
+          external: true,
+          icon: IconSparkles,
+        },
+        {
+          title: "Heartbeat (soon)",
+          url: "https://github.com/unibeck/uptime-monitor/issues/43",
+          external: true,
+          icon: IconHeartbeat,
+        },
+        {
+          title: "TCP (soon)",
+          url: "https://github.com/unibeck/uptime-monitor/issues/44",
+          external: true,
+          icon: IconPrismLight,
+        },
+        {
+          title: "Other? Let me know!",
+          url: "https://github.com/unibeck/uptime-monitor/issues",
+          external: true,
+          icon: IconBulb,
+        },
+      ],
     },
   ],
   navSecondary: [
