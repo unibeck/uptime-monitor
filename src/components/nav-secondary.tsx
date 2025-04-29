@@ -18,8 +18,8 @@ import {
 } from "@/registry/new-york-v4/ui/sidebar"
 import { Skeleton } from "@/registry/new-york-v4/ui/skeleton"
 import { Switch } from "@/registry/new-york-v4/ui/switch"
-import { useDataTableStore } from "@/store/data-table-store"
 import { useStatsStore } from "@/store/dashboard-stats-store"
+import { useDataTableStore } from "@/store/data-table-store"
 
 export function NavSecondary({
   items,
@@ -37,7 +37,9 @@ export function NavSecondary({
   const fetchEndpointMonitors = useDataTableStore(
     (state) => state.fetchEndpointMonitors,
   )
-  const fetchDashboardStats = useStatsStore((state) => state.fetchDashboardStats);
+  const fetchDashboardStats = useStatsStore(
+    (state) => state.fetchDashboardStats,
+  )
   React.useEffect(() => {
     setMounted(true)
   }, [])
@@ -47,10 +49,10 @@ export function NavSecondary({
       <SidebarGroupContent>
         <SidebarMenu className="my-4">
           <AddEndpointMonitorDialog
-          onSuccess={async () => {
-            await fetchEndpointMonitors()
-            await fetchDashboardStats()
-          }}
+            onSuccess={async () => {
+              await fetchEndpointMonitors()
+              await fetchDashboardStats()
+            }}
             trigger={
               <SidebarMenuItem className="flex items-center gap-2">
                 <SidebarMenuButton

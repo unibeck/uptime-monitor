@@ -1,15 +1,13 @@
-import { create } from "zustand"
-import { toast } from "sonner"
 import { DEFAULT_TOAST_OPTIONS } from "@/lib/toasts" // Assuming this path is correct
+import { toast } from "sonner"
+import { create } from "zustand"
 
 export interface DashboardStats {
- totalEndpointMonitors: number
+  totalEndpointMonitors: number
   sitesWithAlerts: number
   highestResponseTime: number
   highestResponseTimeWebsiteId: string | null
   uptimePercentage: number
-
-
 }
 
 interface StatsState {
@@ -22,7 +20,7 @@ interface StatsState {
   fetchDashboardStats: () => Promise<void>
 }
 
-export const useStatsStore = create<StatsState>((set, get) => ({
+export const useStatsStore = create<StatsState>((set, _get) => ({
   // Initial state
   stats: null,
   isLoading: true,
@@ -61,12 +59,4 @@ export const useStatsStore = create<StatsState>((set, get) => ({
       })
     }
   },
-
 }))
-
-// Optional: Trigger initial fetch when the store module is loaded
-// This can be useful if you want stats available immediately without
-// waiting for a component to mount and call fetchDashboardStats.
-// However, it might fetch even if the stats aren't needed yet.
-// Consider if fetching within a component's useEffect is better for your case.
-// useStatsStore.getState().fetchDashboardStats();

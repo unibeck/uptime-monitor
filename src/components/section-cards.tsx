@@ -25,22 +25,20 @@ import {
 import Link from "next/link"
 import { useEffect } from "react"
 
-
 export function SectionCards() {
   // Select the state directly
-  const statsStore = useStatsStore();
+  const statsStore = useStatsStore()
 
   // Destructure the needed values from the state object
-  const { stats, isLoading, error, fetchDashboardStats } = statsStore;
+  const { stats, isLoading, error, fetchDashboardStats } = statsStore
 
   // Fetch stats on component mount
   useEffect(() => {
-     fetchDashboardStats();
-     // Set up interval if needed
-     const intervalId = setInterval(fetchDashboardStats, 60 * 1000);
-     return () => clearInterval(intervalId);
-  }, [fetchDashboardStats]); // Dependency array is correct
-
+    fetchDashboardStats()
+    // Set up interval if needed
+    const intervalId = setInterval(fetchDashboardStats, 60 * 1000)
+    return () => clearInterval(intervalId)
+  }, [fetchDashboardStats]) // Dependency array is correct
 
   if (isLoading && !stats) {
     return (
@@ -110,8 +108,8 @@ export function SectionCards() {
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
             {data.sitesWithAlerts > 0
-                ? `${data.sitesWithAlerts} site${data.sitesWithAlerts !== 1 ? "s" : ""} with active alerts`
-                : "No active alerts"}
+              ? `${data.sitesWithAlerts} site${data.sitesWithAlerts !== 1 ? "s" : ""} with active alerts`
+              : "No active alerts"}
           </div>
           <div className="text-muted-foreground">
             Endpoint Monitors requiring attention
