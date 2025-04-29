@@ -1,14 +1,19 @@
-"use client";
+"use client"
 
-import { Skeleton } from "@/registry/new-york-v4/ui/skeleton";
+import { Skeleton } from "@/registry/new-york-v4/ui/skeleton"
 import {
-  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
-} from "@/registry/new-york-v4/ui/table";
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/registry/new-york-v4/ui/table"
 
 interface DataTableSkeletonProps {
-  columnCount?: number; // Use the count from synthetic columns
-  rowCount?: number;
-  showHeader?: boolean;
+  columnCount?: number // Use the count from synthetic columns
+  rowCount?: number
+  showHeader?: boolean
 }
 
 // Adapted for Synthetic Monitors Table
@@ -24,7 +29,7 @@ export function SyntheticDataTableSkeleton({
           <TableHeader className="bg-muted sticky top-0 z-10">
             <TableRow>
               {Array.from({ length: columnCount }).map((_, index) => (
-                <TableHead key={`skeleton-header-${index}`}>
+                <TableHead key={`skeleton-header-${index + 0}`}>
                   <Skeleton className="h-6 w-full max-w-[100px]" />
                 </TableHead>
               ))}
@@ -33,9 +38,9 @@ export function SyntheticDataTableSkeleton({
         )}
         <TableBody>
           {Array.from({ length: rowCount }).map((_, rowIndex) => (
-            <TableRow key={`skeleton-row-${rowIndex}`}>
+            <TableRow key={`skeleton-row-${rowIndex + 0}`}>
               {Array.from({ length: columnCount }).map((_, cellIndex) => (
-                <TableCell key={`skeleton-cell-${rowIndex}-${cellIndex}`}>
+                <TableCell key={`skeleton-cell-${rowIndex}-${cellIndex + 0}`}>
                   {/* Basic skeleton layout, adjust if needed based on column widths */}
                   {cellIndex === 0 ? (
                     <Skeleton className="h-5 w-full max-w-[150px]" /> // Name
@@ -53,5 +58,5 @@ export function SyntheticDataTableSkeleton({
         </TableBody>
       </Table>
     </div>
-  );
-} 
+  )
+}

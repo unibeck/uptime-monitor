@@ -1,13 +1,18 @@
-"use client";
+"use client"
 
 // Import necessary components and hooks
 import {
-  Table, TableBody, TableCell, TableHead, TableHeader, TableRow
-} from "@/registry/new-york-v4/ui/table";
-import { Tabs, TabsContent } from "@/registry/new-york-v4/ui/tabs";
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/registry/new-york-v4/ui/table"
+import { Tabs, TabsContent } from "@/registry/new-york-v4/ui/tabs"
 import {
-  useSyntheticDataTableStore // Use the SYNTHETIC store
-} from "@/store/synthetic-data-table-store"; 
+  useSyntheticDataTableStore, // Use the SYNTHETIC store
+} from "@/store/synthetic-data-table-store"
 import {
   type ColumnFiltersState,
   type OnChangeFn,
@@ -22,113 +27,120 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
-} from "@tanstack/react-table";
-import { flexRender } from "@tanstack/react-table";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import React from "react";
+} from "@tanstack/react-table"
+import { flexRender } from "@tanstack/react-table"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import React from "react"
 
-import { SyntheticPagination } from "@/components/synthetic-data-table/pagination";
-import { SyntheticDataRow } from "@/components/synthetic-data-table/synthetic-data-row";
-import { SyntheticDataTableLoadingOverlay } from "@/components/synthetic-data-table/synthetic-data-table-loading-overlay";
-import { SyntheticDataTableSkeleton } from "@/components/synthetic-data-table/synthetic-data-table-skeleton";
-import { columns } from "./columns";
-import { SyntheticToolbar } from "./synthetic-toolbar";
+import { SyntheticPagination } from "@/components/synthetic-data-table/pagination"
+import { SyntheticDataRow } from "@/components/synthetic-data-table/synthetic-data-row"
+import { SyntheticDataTableLoadingOverlay } from "@/components/synthetic-data-table/synthetic-data-table-loading-overlay"
+import { SyntheticDataTableSkeleton } from "@/components/synthetic-data-table/synthetic-data-table-skeleton"
+import { columns } from "./columns"
+import { SyntheticToolbar } from "./synthetic-toolbar"
 
 // Default pagination values
-const DEFAULT_PAGE_INDEX = 0;
-const DEFAULT_PAGE_SIZE = 10;
+const DEFAULT_PAGE_INDEX = 0
+const DEFAULT_PAGE_SIZE = 10
 
 export function SyntheticDataTable() {
-  "use no memo";
+  "use no memo"
 
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
 
   // Get state and actions from the SYNTHETIC store
-  const data = useSyntheticDataTableStore((state) => state.data);
-  const isLoading = useSyntheticDataTableStore((state) => state.isLoading);
+  const data = useSyntheticDataTableStore((state) => state.data)
+  const isLoading = useSyntheticDataTableStore((state) => state.isLoading)
   const totalSyntheticMonitors = useSyntheticDataTableStore(
-    (state) => state.totalSyntheticMonitors
-  );
+    (state) => state.totalSyntheticMonitors,
+  )
   // const rowSelection = useSyntheticDataTableStore((state) => state.rowSelection); // If using
-  const columnVisibility = useSyntheticDataTableStore((state) => state.columnVisibility);
-  const columnFilters = useSyntheticDataTableStore((state) => state.columnFilters);
-  const sorting = useSyntheticDataTableStore((state) => state.sorting);
-  const pagination = useSyntheticDataTableStore((state) => state.pagination);
+  const columnVisibility = useSyntheticDataTableStore(
+    (state) => state.columnVisibility,
+  )
+  const columnFilters = useSyntheticDataTableStore(
+    (state) => state.columnFilters,
+  )
+  const sorting = useSyntheticDataTableStore((state) => state.sorting)
+  const pagination = useSyntheticDataTableStore((state) => state.pagination)
 
   // Update URL with query params, omitting default values
   const updateUrlParams = React.useCallback(
     (params: {
-      page?: number;
-      pageSize?: number;
-      search?: string;
-      orderBy?: string;
-      order?: "asc" | "desc";
-      runtime?: string | null;
+      page?: number
+      pageSize?: number
+      search?: string
+      orderBy?: string
+      order?: "asc" | "desc"
+      runtime?: string | null
       // Add other filters here (e.g., isRunning)
     }) => {
-      const newParams = new URLSearchParams(searchParams.toString());
+      const newParams = new URLSearchParams(searchParams.toString())
 
       // Handle Pagination
       if (params.page === DEFAULT_PAGE_INDEX || params.page === undefined) {
-        newParams.delete("page");
+        newParams.delete("page")
       } else {
-        newParams.set("page", params.page.toString());
+        newParams.set("page", params.page.toString())
       }
-      if (params.pageSize === DEFAULT_PAGE_SIZE || params.pageSize === undefined) {
-        newParams.delete("pageSize");
+      if (
+        params.pageSize === DEFAULT_PAGE_SIZE ||
+        params.pageSize === undefined
+      ) {
+        newParams.delete("pageSize")
       } else {
-        newParams.set("pageSize", params.pageSize.toString());
+        newParams.set("pageSize", params.pageSize.toString())
       }
 
       // Handle Search
       if (!params.search) {
-        newParams.delete("search");
+        newParams.delete("search")
       } else {
-        newParams.set("search", params.search);
+        newParams.set("search", params.search)
       }
-      
+
       // Handle Runtime Filter
       if (!params.runtime) {
-         newParams.delete("runtime");
+        newParams.delete("runtime")
       } else {
-          newParams.set("runtime", params.runtime);
+        newParams.set("runtime", params.runtime)
       }
 
       // Handle Sorting (Similar logic to original DataTable, adjust default sort field if needed)
-      const defaultSortField = "name"; // Default sort for synthetics
-      const isDefaultSort = 
-        (!params.orderBy || params.orderBy === defaultSortField) && 
-        (!params.order || params.order === "asc");
+      const defaultSortField = "name" // Default sort for synthetics
+      const isDefaultSort =
+        (!params.orderBy || params.orderBy === defaultSortField) &&
+        (!params.order || params.order === "asc")
 
       if (params.orderBy === undefined && params.order === undefined) {
         // No sorting params passed
       } else if (isDefaultSort) {
-        newParams.delete("orderBy");
-        newParams.delete("order");
+        newParams.delete("orderBy")
+        newParams.delete("order")
       } else {
         if (params.orderBy) {
-          newParams.set("orderBy", params.orderBy);
+          newParams.set("orderBy", params.orderBy)
           if (params.order) {
-            newParams.set("order", params.order);
+            newParams.set("order", params.order)
           } else {
-            newParams.delete("order");
+            newParams.delete("order")
           }
         } else {
-          newParams.delete("orderBy");
-          newParams.delete("order");
+          newParams.delete("orderBy")
+          newParams.delete("order")
         }
       }
 
-      const queryString = newParams.toString();
-      const newUrl = queryString ? `${pathname}?${queryString}` : pathname;
+      const queryString = newParams.toString()
+      const newUrl = queryString ? `${pathname}?${queryString}` : pathname
 
       // @ts-ignore - Ignoring type error as pathname comes from usePathname and we know it's is a valid typed route
-      router.push(newUrl);
+      router.push(newUrl)
     },
-    [pathname, searchParams, router]
-  );
+    [pathname, searchParams, router],
+  )
 
   // Handle state changes
   /* // Uncomment and adapt if using row selection
@@ -143,111 +155,129 @@ export function SyntheticDataTable() {
   */
 
   const handleSortingChange: OnChangeFn<SortingState> = (updater) => {
-    const store = useSyntheticDataTableStore.getState();
-    let newSorting: SortingState;
+    const store = useSyntheticDataTableStore.getState()
+    let newSorting: SortingState
     if (typeof updater === "function") {
-      newSorting = updater(store.sorting);
+      newSorting = updater(store.sorting)
     } else {
-      newSorting = updater;
+      newSorting = updater
     }
-    store.setSorting(newSorting);
+    store.setSorting(newSorting)
     updateUrlParams({
       orderBy: newSorting[0]?.id,
       order: newSorting[0]?.desc ? "desc" : "asc",
-    });
-    store.fetchSyntheticMonitors(); // Fetch SYNTHETIC monitors
-  };
+    })
+    store.fetchSyntheticMonitors() // Fetch SYNTHETIC monitors
+  }
 
-  const handleColumnFiltersChange: OnChangeFn<ColumnFiltersState> = (updater) => {
-    const store = useSyntheticDataTableStore.getState();
+  const handleColumnFiltersChange: OnChangeFn<ColumnFiltersState> = (
+    updater,
+  ) => {
+    const store = useSyntheticDataTableStore.getState()
     if (typeof updater === "function") {
-      store.setColumnFilters(updater(store.columnFilters));
+      store.setColumnFilters(updater(store.columnFilters))
     } else {
-      store.setColumnFilters(updater);
+      store.setColumnFilters(updater)
     }
-  };
+  }
 
   const handleVisibilityChange: OnChangeFn<VisibilityState> = (updater) => {
-    const store = useSyntheticDataTableStore.getState();
+    const store = useSyntheticDataTableStore.getState()
     if (typeof updater === "function") {
-      store.setColumnVisibility(updater(store.columnVisibility));
+      store.setColumnVisibility(updater(store.columnVisibility))
     } else {
-      store.setColumnVisibility(updater);
+      store.setColumnVisibility(updater)
     }
-  };
+  }
 
   const handlePaginationChange: OnChangeFn<PaginationState> = (updater) => {
-    const store = useSyntheticDataTableStore.getState();
-    let newPagination: PaginationState;
+    const store = useSyntheticDataTableStore.getState()
+    let newPagination: PaginationState
     if (typeof updater === "function") {
-      newPagination = updater(store.pagination);
+      newPagination = updater(store.pagination)
     } else {
-      newPagination = updater;
+      newPagination = updater
     }
-    store.setPagination(newPagination);
+    store.setPagination(newPagination)
     updateUrlParams({
       page: newPagination.pageIndex,
       pageSize: newPagination.pageSize,
-    });
-    store.fetchSyntheticMonitors(); // Fetch SYNTHETIC monitors
-  };
+    })
+    store.fetchSyntheticMonitors() // Fetch SYNTHETIC monitors
+  }
 
   // Initialize from URL params on first load
   React.useEffect(() => {
-    const pageParam = searchParams.get("page");
-    const pageSizeParam = searchParams.get("pageSize");
-    const searchParam = searchParams.get("search");
-    const orderByParam = searchParams.get("orderBy");
-    const orderParam = searchParams.get("order");
-    const runtimeParam = searchParams.get("runtime");
+    const pageParam = searchParams.get("page")
+    const pageSizeParam = searchParams.get("pageSize")
+    const searchParam = searchParams.get("search")
+    const orderByParam = searchParams.get("orderBy")
+    const orderParam = searchParams.get("order")
+    const runtimeParam = searchParams.get("runtime")
 
-    const store = useSyntheticDataTableStore.getState();
-    let needsFetch = false; // Flag to trigger fetch
+    const store = useSyntheticDataTableStore.getState()
+    let needsFetch = false // Flag to trigger fetch
 
     // Update pagination
-    const targetPageIndex = pageParam ? Number.parseInt(pageParam, 10) : DEFAULT_PAGE_INDEX;
-    const targetPageSize = pageSizeParam ? Number.parseInt(pageSizeParam, 10) : DEFAULT_PAGE_SIZE;
-    if (targetPageIndex !== store.pagination.pageIndex || targetPageSize !== store.pagination.pageSize) {
-      store.setPagination({ pageIndex: targetPageIndex, pageSize: targetPageSize });
-      needsFetch = true;
+    const targetPageIndex = pageParam
+      ? Number.parseInt(pageParam, 10)
+      : DEFAULT_PAGE_INDEX
+    const targetPageSize = pageSizeParam
+      ? Number.parseInt(pageSizeParam, 10)
+      : DEFAULT_PAGE_SIZE
+    if (
+      targetPageIndex !== store.pagination.pageIndex ||
+      targetPageSize !== store.pagination.pageSize
+    ) {
+      store.setPagination({
+        pageIndex: targetPageIndex,
+        pageSize: targetPageSize,
+      })
+      needsFetch = true
     }
 
     // Update search
-    const targetSearchValue = searchParam ?? "";
+    const targetSearchValue = searchParam ?? ""
     if (targetSearchValue !== store.searchValue) {
-      store.setSearchValue(targetSearchValue);
-      needsFetch = true;
+      store.setSearchValue(targetSearchValue)
+      needsFetch = true
     }
-    
+
     // Update runtime filter
-    const targetRuntimeFilter = runtimeParam ?? null;
+    const targetRuntimeFilter = runtimeParam ?? null
     if (targetRuntimeFilter !== store.runtimeFilter) {
-        store.setRuntimeFilter(targetRuntimeFilter);
-        needsFetch = true;
+      store.setRuntimeFilter(targetRuntimeFilter)
+      needsFetch = true
     }
 
     // Update sorting
-    const defaultSortField = "name"; // Match default sort state
-    const targetSorting: SortingState = orderByParam ? [{ id: orderByParam, desc: orderParam === "desc" }] : [];
-    const currentSorting = store.sorting;
-    const currentSortString = currentSorting[0] ? `${currentSorting[0].id}-${currentSorting[0].desc}` : '-';
-    const targetSortString = targetSorting[0] ? `${targetSorting[0].id}-${targetSorting[0].desc}` : '-';
-    
+    const defaultSortField = "name" // Match default sort state
+    const targetSorting: SortingState = orderByParam
+      ? [{ id: orderByParam, desc: orderParam === "desc" }]
+      : []
+    const currentSorting = store.sorting
+    const currentSortString = currentSorting[0]
+      ? `${currentSorting[0].id}-${currentSorting[0].desc}`
+      : "-"
+    const targetSortString = targetSorting[0]
+      ? `${targetSorting[0].id}-${targetSorting[0].desc}`
+      : "-"
+
     if (!orderByParam && currentSorting[0]?.id !== defaultSortField) {
-       // No sort in URL, but store isn't default -> reset store to default
-       store.setSorting([{ id: defaultSortField, desc: false }]);
-       needsFetch = true;
+      // No sort in URL, but store isn't default -> reset store to default
+      store.setSorting([{ id: defaultSortField, desc: false }])
+      needsFetch = true
     } else if (orderByParam && currentSortString !== targetSortString) {
-        // Sort in URL is different from store -> update store
-        store.setSorting(targetSorting);
-        needsFetch = true;
+      // Sort in URL is different from store -> update store
+      store.setSorting(targetSorting)
+      needsFetch = true
     }
 
     // Fetch data only if state changed or data is initially empty
     if (needsFetch || store.data.length === 0) {
-      store.fetchSyntheticMonitors(); // Fetch SYNTHETIC monitors
+      store.fetchSyntheticMonitors() // Fetch SYNTHETIC monitors
     }
-  }, [searchParams]); // Depend only on searchParams
+  }, [searchParams]) // Depend only on searchParams
 
   const table = useReactTable({
     data,
@@ -275,16 +305,25 @@ export function SyntheticDataTable() {
     manualPagination: true,
     manualSorting: true,
     manualFiltering: true,
-    pageCount: Math.max(1, Math.ceil(totalSyntheticMonitors / pagination.pageSize)),
-  });
+    pageCount: Math.max(
+      1,
+      Math.ceil(totalSyntheticMonitors / pagination.pageSize),
+    ),
+  })
 
-  const hasData = data.length > 0;
+  const hasData = data.length > 0
 
   return (
     // Using Tabs structure for consistency, though only one tab for now
-    <Tabs defaultValue="syntheticMonitors" className="w-full flex-col justify-start gap-6">
-      <SyntheticToolbar table={table} totalSyntheticMonitors={totalSyntheticMonitors} />
-      <TabsContent value="syntheticMonitors" className="relative flex flex-col gap-4 overflow-auto">
+    <Tabs
+      defaultValue="syntheticMonitors"
+      className="w-full flex-col justify-start gap-6"
+    >
+      <SyntheticToolbar table={table} />
+      <TabsContent
+        value="syntheticMonitors"
+        className="relative flex flex-col gap-4 overflow-auto"
+      >
         {isLoading && !hasData ? (
           <SyntheticDataTableSkeleton />
         ) : (
@@ -296,10 +335,12 @@ export function SyntheticDataTable() {
                   <TableRow key={headerGroup.id}>
                     {headerGroup.headers.map((header) => (
                       <TableHead key={header.id} colSpan={header.colSpan}>
-                        {header.isPlaceholder ? null : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
                       </TableHead>
                     ))}
                   </TableRow>
@@ -312,7 +353,10 @@ export function SyntheticDataTable() {
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={columns.length} className="h-24 text-center">
+                    <TableCell
+                      colSpan={columns.length}
+                      className="h-24 text-center"
+                    >
                       No synthetic monitors found.
                     </TableCell>
                   </TableRow>
@@ -324,5 +368,5 @@ export function SyntheticDataTable() {
         <SyntheticPagination table={table} />
       </TabsContent>
     </Tabs>
-  );
-} 
+  )
+}

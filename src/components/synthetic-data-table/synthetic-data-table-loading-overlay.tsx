@@ -1,6 +1,6 @@
-"use client";
+"use client"
 
-import { IconLoader2 } from "@tabler/icons-react";
+import { IconLoader2 } from "@tabler/icons-react"
 
 // Adapted for Synthetic Monitors Table
 export function SyntheticDataTableLoadingOverlay() {
@@ -13,5 +13,5 @@ export function SyntheticDataTableLoadingOverlay() {
         </span>
       </div>
     </div>
-  );
-} 
+  )
+}

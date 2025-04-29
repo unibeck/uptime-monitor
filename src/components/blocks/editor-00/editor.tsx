@@ -1,20 +1,20 @@
-'use client'
+"use client"
 
 import {
-  InitialConfigType,
+  type InitialConfigType,
   LexicalComposer,
-} from '@lexical/react/LexicalComposer'
-import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin'
-import { EditorState, SerializedEditorState } from 'lexical'
+} from "@lexical/react/LexicalComposer"
+import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin"
+import type { EditorState, SerializedEditorState } from "lexical"
 
-import { editorTheme } from '@/components/editor/themes/editor-theme'
-import { TooltipProvider } from '@/registry/new-york-v4/ui/tooltip'
+import { editorTheme } from "@/components/editor/themes/editor-theme"
+import { TooltipProvider } from "@/registry/new-york-v4/ui/tooltip"
 
-import { nodes } from './nodes'
-import { Plugins } from './plugins'
+import { nodes } from "./nodes"
+import { Plugins } from "./plugins"
 
 const editorConfig: InitialConfigType = {
-  namespace: 'Editor',
+  namespace: "Editor",
   theme: editorTheme,
   nodes,
   onError: (error: Error) => {

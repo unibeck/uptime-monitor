@@ -1,19 +1,22 @@
-'use client'
+"use client"
 
-import { createContext, useContext, JSX } from 'react'
+import { type JSX, createContext, useContext } from "react"
 
-import { LexicalEditor } from 'lexical'
+import type { LexicalEditor } from "lexical"
 
 const Context = createContext<{
   activeEditor: LexicalEditor
   $updateToolbar: () => void
   blockType: string
   setBlockType: (blockType: string) => void
-  showModal: (title: string, showModal: (onClose: () => void) => JSX.Element) => void
+  showModal: (
+    title: string,
+    showModal: (onClose: () => void) => JSX.Element,
+  ) => void
 }>({
   activeEditor: {} as LexicalEditor,
   $updateToolbar: () => {},
-  blockType: 'paragraph',
+  blockType: "paragraph",
   setBlockType: () => {},
   showModal: () => {},
 })
@@ -30,12 +33,21 @@ export function ToolbarContext({
   $updateToolbar: () => void
   blockType: string
   setBlockType: (blockType: string) => void
-  showModal: (title: string, showModal: (onClose: () => void) => JSX.Element) => void
+  showModal: (
+    title: string,
+    showModal: (onClose: () => void) => JSX.Element,
+  ) => void
   children: React.ReactNode
 }) {
   return (
     <Context.Provider
-      value={{ activeEditor, $updateToolbar, blockType, setBlockType, showModal }}
+      value={{
+        activeEditor,
+        $updateToolbar,
+        blockType,
+        setBlockType,
+        showModal,
+      }}
     >
       {children}
     </Context.Provider>

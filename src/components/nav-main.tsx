@@ -51,10 +51,8 @@ export function NavMain({
                             ? { target: "_blank", rel: "noopener noreferrer" }
                             : {})}
                         >
-                        {/* <a href={item.url} target={item.external ? "_blank" : undefined}> */}
-                          
-                          {item.title}{" "}
-                          <item.icon className="ml-auto"/>
+                          {/* <a href={item.url} target={item.external ? "_blank" : undefined}> */}
+                          {item.title} <item.icon className="ml-auto" />
                         </a>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>

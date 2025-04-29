@@ -1,4 +1,9 @@
-import { EndpointMonitorsTable, SyntheticChecksTable, SyntheticMonitorsTable, UptimeChecksTable } from "@/db/schema"
+import {
+  EndpointMonitorsTable,
+  SyntheticChecksTable,
+  SyntheticMonitorsTable,
+  UptimeChecksTable,
+} from "@/db/schema"
 import { createSchemaFactory } from "drizzle-zod"
 import { z } from "zod"
 
@@ -68,7 +73,7 @@ export const syntheticMonitorsInsertSchema = createInsertSchema(
   isRunning: true,
   consecutiveFailures: true,
   activeAlert: true,
-});
+})
 
 // Schema for API Data Transfer Object (includes non-DB fields like scriptContent)
 export const syntheticMonitorsInsertDTOSchema = syntheticMonitorsInsertSchema
@@ -77,22 +82,29 @@ export const syntheticMonitorsInsertDTOSchema = syntheticMonitorsInsertSchema
   })
   .extend({
     type: z.literal("synthetic"), // Add type literal here for the DTO/Form
-    scriptContent: z.string().min(1, { message: "Script content cannot be empty" }), // Script content is required
+    scriptContent: z
+      .string()
+      .min(1, { message: "Script content cannot be empty" }), // Script content is required
   })
   // Refine to ensure checkInterval is >= timeoutSeconds + 5
   .refine(
     (data) => {
       // Ensure checkInterval is at least 5 seconds greater than timeoutSeconds
-      return data.checkInterval >= data.timeoutSeconds + 5;
+      return data.checkInterval >= data.timeoutSeconds + 5
     },
     {
-      message: "Check Interval must be at least 5 seconds longer than the Timeout",
+      message:
+        "Check Interval must be at least 5 seconds longer than the Timeout",
       path: ["checkInterval", "timeoutSeconds"], // Specify related fields
-    }
-  );
+    },
+  )
 
-export const syntheticMonitorsSelectSchema = createSelectSchema(SyntheticMonitorsTable);
-export const syntheticMonitorsPatchSchema = createInsertSchema(SyntheticMonitorsTable).partial();
+export const syntheticMonitorsSelectSchema = createSelectSchema(
+  SyntheticMonitorsTable,
+)
+export const syntheticMonitorsPatchSchema = createInsertSchema(
+  SyntheticMonitorsTable,
+).partial()
 
 ///////////////////////////////////////////////////////////////////////////////
 // Synthetic Checks Schemas
@@ -104,10 +116,12 @@ export const syntheticChecksInsertSchema = createInsertSchema(
     statusOutcome: z.enum(["success", "failure"]),
     durationMs: z.number().int().nonnegative(),
     errorMessage: z.string().optional(),
-  }
+  },
 ).omit({
   id: true,
-});
+})
 
-export const syntheticChecksSelectSchema = createSelectSchema(SyntheticChecksTable);
-export const syntheticChecksPatchSchema = createInsertSchema(SyntheticChecksTable).partial();
+export const syntheticChecksSelectSchema =
+  createSelectSchema(SyntheticChecksTable)
+export const syntheticChecksPatchSchema =
+  createInsertSchema(SyntheticChecksTable).partial()

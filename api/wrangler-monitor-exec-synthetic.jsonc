@@ -29,7 +29,7 @@
     }
   ],
   "browser": {
-     "binding": "BROWSER"
+    "binding": "BROWSER"
   },
   // Optional: Binding back to trigger RPC if needed for error handling
   // "services": [
@@ -59,7 +59,7 @@
       ],
       "browser": {
         "binding": "BROWSER" // Assumes same binding name in prod
-      },
+      }
       // Optional: Binding back to trigger RPC if needed for error handling
       // "services": [
       //   {
@@ -69,4 +69,4 @@
       // ]
     }
   }
-} 
+}

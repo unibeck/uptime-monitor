@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 /**
  * Copyright (c) Meta Platforms, Inc. and affiliates.
@@ -8,21 +8,16 @@
  *
  */
 // import './index.css';
-import { useEffect, useRef, useState, JSX } from 'react'
-import * as React from 'react'
+import { type JSX, useEffect, useRef, useState } from "react"
+import type * as React from "react"
 
-import {
-  $isCodeNode,
-  CodeNode,
-  getLanguageFriendlyName,
-  normalizeCodeLang,
-} from '@lexical/code'
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
-import { $getNearestNodeFromDOMNode } from 'lexical'
-import { createPortal } from 'react-dom'
+import { $isCodeNode, CodeNode, getLanguageFriendlyName } from "@lexical/code"
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext"
+import { $getNearestNodeFromDOMNode } from "lexical"
+import { createPortal } from "react-dom"
 
-import { useDebounce } from '@/components/editor/editor-hooks/use-debounce'
-import { CopyButton } from '@/components/editor/editor-ui/code-button'
+import { useDebounce } from "@/components/editor/editor-hooks/use-debounce"
+import { CopyButton } from "@/components/editor/editor-ui/code-button"
 
 const CODE_PADDING = 8
 
@@ -38,13 +33,13 @@ function CodeActionMenuContainer({
 }): JSX.Element {
   const [editor] = useLexicalComposerContext()
 
-  const [lang, setLang] = useState('')
+  const [lang, setLang] = useState("")
   const [isShown, setShown] = useState<boolean>(false)
   const [shouldListenMouseMove, setShouldListenMouseMove] =
     useState<boolean>(false)
   const [position, setPosition] = useState<Position>({
-    right: '0',
-    top: '0',
+    right: "0",
+    top: "0",
   })
   const codeSetRef = useRef<Set<string>>(new Set())
   const codeDOMNodeRef = useRef<HTMLElement | null>(null)
@@ -68,14 +63,14 @@ function CodeActionMenuContainer({
       codeDOMNodeRef.current = codeDOMNode
 
       let codeNode: CodeNode | null = null
-      let _lang = ''
+      let _lang = ""
 
       editor.update(() => {
         const maybeCodeNode = $getNearestNodeFromDOMNode(codeDOMNode)
 
         if ($isCodeNode(maybeCodeNode)) {
           codeNode = maybeCodeNode
-          _lang = codeNode.getLanguage() || ''
+          _lang = codeNode.getLanguage() || ""
         }
       })
 
@@ -92,7 +87,7 @@ function CodeActionMenuContainer({
       }
     },
     50,
-    1000
+    1000,
   )
 
   useEffect(() => {
@@ -100,12 +95,12 @@ function CodeActionMenuContainer({
       return
     }
 
-    document.addEventListener('mousemove', debouncedOnMouseMove)
+    document.addEventListener("mousemove", debouncedOnMouseMove)
 
     return () => {
       setShown(false)
       debouncedOnMouseMove.cancel()
-      document.removeEventListener('mousemove', debouncedOnMouseMove)
+      document.removeEventListener("mousemove", debouncedOnMouseMove)
     }
   }, [shouldListenMouseMove, debouncedOnMouseMove])
 
@@ -116,11 +111,11 @@ function CodeActionMenuContainer({
         editor.getEditorState().read(() => {
           for (const [key, type] of Array.from(mutations)) {
             switch (type) {
-              case 'created':
+              case "created":
                 codeSetRef.current.add(key)
                 break
 
-              case 'destroyed':
+              case "destroyed":
                 codeSetRef.current.delete(key)
                 break
 
@@ -131,11 +126,11 @@ function CodeActionMenuContainer({
         })
         setShouldListenMouseMove(codeSetRef.current.size > 0)
       },
-      { skipInitialization: false }
+      { skipInitialization: false },
     )
   }, [editor])
 
-  const normalizedLang = normalizeCodeLang(lang)
+  // const normalizedLang = normalizeCodeLang(lang)
   const codeFriendlyName = getLanguageFriendlyName(lang)
 
   return (
@@ -160,16 +155,16 @@ function getMouseInfo(event: MouseEvent): {
   const target = event.target
 
   if (target && target instanceof HTMLElement) {
-    const codeDOMNode = target.closest<HTMLElement>('code.EditorTheme__code')
+    const codeDOMNode = target.closest<HTMLElement>("code.EditorTheme__code")
     const isOutside = !(
       codeDOMNode ||
-      target.closest<HTMLElement>('div.code-action-menu-container')
+      target.closest<HTMLElement>("div.code-action-menu-container")
     )
 
     return { codeDOMNode, isOutside }
-  } else {
-    return { codeDOMNode: null, isOutside: true }
   }
+
+  return { codeDOMNode: null, isOutside: true }
 }
 
 export function CodeActionMenuPlugin({
@@ -183,6 +178,6 @@ export function CodeActionMenuPlugin({
 
   return createPortal(
     <CodeActionMenuContainer anchorElem={anchorElem} />,
-    anchorElem
+    anchorElem,
   )
 }

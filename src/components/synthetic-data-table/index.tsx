@@ -1,1 +1,1 @@
-export { SyntheticDataTable } from "./synthetic-data-table"; 
+export { SyntheticDataTable } from "./synthetic-data-table"

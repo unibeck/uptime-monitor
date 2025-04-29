@@ -42,7 +42,9 @@ export const SyntheticMonitorsTable = sqliteTable("syntheticMonitors", {
   name: text("name").notNull(),
   checkInterval: integer("checkInterval").notNull(), // In seconds
   timeoutSeconds: integer("timeoutSeconds").notNull(), // In seconds
-  runtime: text("runtime", { enum: ["playwright-cf-latest", "puppeteer-cf-latest"] }).notNull(),
+  runtime: text("runtime", {
+    enum: ["playwright-cf-latest", "puppeteer-cf-latest"],
+  }).notNull(),
   isRunning: integer("isRunning", { mode: "boolean" }).notNull().default(true),
   consecutiveFailures: integer("consecutiveFailures").notNull().default(0),
   activeAlert: integer("activeAlert", { mode: "boolean" })
@@ -59,7 +61,9 @@ export const SyntheticChecksTable = sqliteTable("syntheticChecks", {
     .notNull()
     .references(() => SyntheticMonitorsTable.id, { onDelete: "cascade" }),
   timestamp: integer("timestamp", { mode: "timestamp" }).notNull(),
-  statusOutcome: text("statusOutcome", { enum: ["success", "failure"] }).notNull(),
+  statusOutcome: text("statusOutcome", {
+    enum: ["success", "failure"],
+  }).notNull(),
   durationMs: integer("durationMs").notNull(), // Execution time
   errorMessage: text("errorMessage"), // Optional error message on failure
 })

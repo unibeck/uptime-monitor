@@ -69,7 +69,7 @@
   margin-bottom: 0.5rem;
 }
 
-.Collapsible__title{
+.Collapsible__title {
   padding: 0.25rem;
   padding-left: 1rem;
   position: relative;
@@ -80,12 +80,12 @@
   list-style-position: inside;
 }
 
-.Collapsible__title p{
+.Collapsible__title p {
   display: inline-flex;
 }
-.Collapsible__title::marker{
+.Collapsible__title::marker {
   color: lightgray;
 }
-.Collapsible__container[open] >.Collapsible__title {
+.Collapsible__container[open] > .Collapsible__title {
   list-style-type: disclosure-open;
 }

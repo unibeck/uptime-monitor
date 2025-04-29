@@ -1,61 +1,61 @@
-"use client";
+"use client"
 
-import type { syntheticMonitorsSelectSchema } from "@/db/zod-schema"; // Use synthetic schema
-import { Button } from "@/registry/new-york-v4/ui/button";
-import { Label } from "@/registry/new-york-v4/ui/label";
+import type { syntheticMonitorsSelectSchema } from "@/db/zod-schema" // Use synthetic schema
+import { Button } from "@/registry/new-york-v4/ui/button"
+import { Label } from "@/registry/new-york-v4/ui/label"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/registry/new-york-v4/ui/select";
+} from "@/registry/new-york-v4/ui/select"
 import {
-  useSyntheticDataTableStore // Use SYNTHETIC store
-} from "@/store/synthetic-data-table-store";
+  useSyntheticDataTableStore, // Use SYNTHETIC store
+} from "@/store/synthetic-data-table-store"
 import {
   IconChevronLeft,
   IconChevronRight,
   IconChevronsLeft,
   IconChevronsRight,
-} from "@tabler/icons-react";
-import type { Table } from "@tanstack/react-table";
-import React from "react";
-import type { z } from "zod";
+} from "@tabler/icons-react"
+import type { Table } from "@tanstack/react-table"
+import React from "react"
+import type { z } from "zod"
 
 // Interface for the props, using the synthetic schema type
 interface SyntheticPaginationProps {
-  table: Table<z.infer<typeof syntheticMonitorsSelectSchema>>;
+  table: Table<z.infer<typeof syntheticMonitorsSelectSchema>>
 }
 
 // Renamed component
 export function SyntheticPagination({ table }: SyntheticPaginationProps) {
-  "use no memo";
+  "use no memo"
 
   // Use the SYNTHETIC store
-  const pagination = useSyntheticDataTableStore((state) => state.pagination);
+  const pagination = useSyntheticDataTableStore((state) => state.pagination)
   const totalSyntheticMonitors = useSyntheticDataTableStore(
-    (state) => state.totalSyntheticMonitors
-  );
+    (state) => state.totalSyntheticMonitors,
+  )
 
   // Calculate page count locally
   const pageCount = Math.max(
     1,
-    Math.ceil(totalSyntheticMonitors / pagination.pageSize)
-  );
+    Math.ceil(totalSyntheticMonitors / pagination.pageSize),
+  )
 
   // Simplified handler: Let the table trigger the fetch via onPaginationChange
   const changePage = React.useCallback(
     (newPageIndex: number) => {
-      table.setPageIndex(newPageIndex);
+      table.setPageIndex(newPageIndex)
     },
-    [table]
-  );
+    [table],
+  )
 
   return (
     <div className="flex items-center justify-between px-4 py-2 border-t">
-       {/* Optional: Row selection count (if selection is enabled) */}
-       {/* 
+      {/* Optional: Row selection count (if selection is enabled) */}
+      {/* 
        <div> 
          <div className="text-muted-foreground hidden flex-1 text-sm lg:flex">
            {table.getFilteredSelectedRowModel().rows.length} of{" "}
@@ -63,10 +63,10 @@ export function SyntheticPagination({ table }: SyntheticPaginationProps) {
          </div>
        </div> 
        */}
-       {/* Using a spacer or keeping total count */}
-       <div className="text-sm text-muted-foreground">
-          Total Monitors: {totalSyntheticMonitors}
-       </div>
+      {/* Using a spacer or keeping total count */}
+      <div className="text-sm text-muted-foreground">
+        Total Monitors: {totalSyntheticMonitors}
+      </div>
 
       <div className="flex w-full items-center gap-8 lg:w-fit">
         {/* Rows per page selector */}
@@ -77,7 +77,7 @@ export function SyntheticPagination({ table }: SyntheticPaginationProps) {
           <Select
             value={`${pagination.pageSize}`}
             onValueChange={(value) => {
-              table.setPageSize(Number(value));
+              table.setPageSize(Number(value))
             }}
           >
             <SelectTrigger size="sm" className="w-20" id="rows-per-page-synth">
@@ -92,12 +92,12 @@ export function SyntheticPagination({ table }: SyntheticPaginationProps) {
             </SelectContent>
           </Select>
         </div>
-        
+
         {/* Page number display */}
         <div className="flex w-fit items-center justify-center text-sm font-medium">
           Page {pagination.pageIndex + 1} of {pageCount}
         </div>
-        
+
         {/* Navigation buttons */}
         <div className="ml-auto flex items-center gap-2 lg:ml-0">
           <Button
@@ -139,5 +139,5 @@ export function SyntheticPagination({ table }: SyntheticPaginationProps) {
         </div>
       </div>
     </div>
-  );
-} 
+  )
+}

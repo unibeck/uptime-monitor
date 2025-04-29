@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 /**
  * Copyright (c) Meta Platforms, Inc. and affiliates.
@@ -7,11 +7,10 @@
  * LICENSE file in the root directory of this source tree.
  *
  */
-import { useEffect, JSX } from 'react'
+import { type JSX, useEffect } from "react"
 
-import { registerCodeHighlighting } from '@lexical/code'
-import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
-
+import { registerCodeHighlighting } from "@lexical/code"
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext"
 
 export function CodeHighlightPlugin(): JSX.Element | null {
   const [editor] = useLexicalComposerContext()

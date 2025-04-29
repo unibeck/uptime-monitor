@@ -1,12 +1,11 @@
-import { useCallback, useMemo, useState, JSX } from 'react'
-import * as React from 'react'
+import { type JSX, useCallback, useMemo, useState } from "react"
 
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from '@/registry/new-york-v4/ui/dialog'
+} from "@/registry/new-york-v4/ui/dialog"
 
 export function useEditorModal(): [
   JSX.Element | null,
@@ -43,7 +42,7 @@ export function useEditorModal(): [
     (
       title: string,
       getContent: (onClose: () => void) => JSX.Element,
-      closeOnClickOutside = false
+      closeOnClickOutside = false,
     ) => {
       setModalContent({
         closeOnClickOutside,
@@ -51,7 +50,7 @@ export function useEditorModal(): [
         title,
       })
     },
-    [onClose]
+    [onClose],
   )
 
   return [modal, showModal]

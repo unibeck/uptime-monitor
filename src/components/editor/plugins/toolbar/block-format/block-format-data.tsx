@@ -8,46 +8,46 @@ import {
   ListTodoIcon,
   QuoteIcon,
   TextIcon,
-} from 'lucide-react'
+} from "lucide-react"
 
 export const blockTypeToBlockName: Record<
   string,
   { label: string; icon: React.ReactNode }
 > = {
   paragraph: {
-    label: 'Paragraph',
+    label: "Paragraph",
     icon: <TextIcon className="size-4" />,
   },
   h1: {
-    label: 'Heading 1',
+    label: "Heading 1",
     icon: <Heading1Icon className="size-4" />,
   },
   h2: {
-    label: 'Heading 2',
+    label: "Heading 2",
     icon: <Heading2Icon className="size-4" />,
   },
   h3: {
-    label: 'Heading 3',
+    label: "Heading 3",
     icon: <Heading3Icon className="size-4" />,
   },
   number: {
-    label: 'Numbered List',
+    label: "Numbered List",
     icon: <ListOrderedIcon className="size-4" />,
   },
   bullet: {
-    label: 'Bulleted List',
+    label: "Bulleted List",
     icon: <ListIcon className="size-4" />,
   },
   check: {
-    label: 'Check List',
+    label: "Check List",
     icon: <ListTodoIcon className="size-4" />,
   },
   code: {
-    label: 'Code Block',
+    label: "Code Block",
     icon: <CodeIcon className="size-4" />,
   },
   quote: {
-    label: 'Quote',
+    label: "Quote",
     icon: <QuoteIcon className="size-4" />,
   },
 }
