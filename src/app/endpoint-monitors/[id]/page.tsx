@@ -29,7 +29,7 @@ import { ArrowLeft } from "lucide-react"
 import type { Route } from "next"
 import Link from "next/link"
 import { useParams, useRouter, useSearchParams } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import type { z } from "zod"
 
 // Define the type for a single uptime check
@@ -65,31 +65,31 @@ export default function EndpointMonitorDetailPage() {
   const [isUptimeDataLoading, setIsUptimeDataLoading] = useState(true)
   const [uptimeDataError, setUptimeDataError] = useState<string | null>(null)
 
-  useEffect(() => {
-    const fetchWebsite = async () => {
-      setIsLoading(true)
-      try {
-        const response = await fetch(
-          `/api/endpoint-monitors/${endpointMonitorId}`,
-        )
-        if (!response.ok) {
-          if (response.status === 404) {
-            router.push("/")
-            return
-          }
-          throw new Error(
-            `Failed to fetch endpointMonitor: ${response.statusText}`,
-          )
+  const fetchWebsite = useCallback(async () => {
+    setIsLoading(true)
+    try {
+      const response = await fetch(
+        `/api/endpoint-monitors/${endpointMonitorId}`,
+      )
+      if (!response.ok) {
+        if (response.status === 404) {
+          router.push("/")
+          return
         }
-        const data = await response.json()
-        setEndpointMonitor(data as z.infer<typeof endpointMonitorsSelectSchema>)
-      } catch (error) {
-        console.error("Error fetching endpointMonitor:", error)
-      } finally {
-        setIsLoading(false)
+        throw new Error(
+          `Failed to fetch endpointMonitor: ${response.statusText}`,
+        )
       }
+      const data = await response.json()
+      setEndpointMonitor(data as z.infer<typeof endpointMonitorsSelectSchema>)
+    } catch (error) {
+      console.error("Error fetching endpointMonitor:", error)
+    } finally {
+      setIsLoading(false)
     }
+  }, [endpointMonitorId, router])
 
+  useEffect(() => {
     if (endpointMonitorId) {
       fetchWebsite()
     }
@@ -97,7 +97,7 @@ export default function EndpointMonitorDetailPage() {
     return () => {
       setHeaderContent(defaultHeaderContent)
     }
-  }, [endpointMonitorId, router, setHeaderContent])
+  }, [endpointMonitorId, setHeaderContent, fetchWebsite])
 
   useEffect(() => {
     if (endpointMonitor) {
@@ -317,7 +317,10 @@ export default function EndpointMonitorDetailPage() {
 
       <div className="@container/main flex flex-1 flex-col gap-2">
         <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6 px-4 lg:px-6">
-          <EndpointMonitorDetailHeader endpointMonitor={endpointMonitor} />
+          <EndpointMonitorDetailHeader
+            endpointMonitor={endpointMonitor}
+            onStatusChange={fetchWebsite}
+          />
 
           <Tabs
             value={timeRange} // Use value instead of defaultValue
