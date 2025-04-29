@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.5.0](https://github.com/unibeck/uptime-monitor/compare/uptime-monitor@v1.4.1...uptime-monitor@v1.5.0) (2025-04-29)
+
+
+### Features
+
+* **front:** call zustand store fetch functions on endpoint creation ([27109d1](https://github.com/unibeck/uptime-monitor/commit/27109d17ea55a24bbfcad72c3e3456406023cb42))
+* refresh endpoint monitor data after state change ([544fe02](https://github.com/unibeck/uptime-monitor/commit/544fe02ea2fb3349ca16c7e9f37335a31a582054))
+
 ## [1.4.1](https://github.com/unibeck/uptime-monitor/compare/uptime-monitor-v1.4.0...uptime-monitor@v1.4.1) (2025-04-25)
 
 
