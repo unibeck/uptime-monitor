@@ -31,7 +31,7 @@ interface SyntheticDataTableState {
   sorting: SortingState
   columnFilters: ColumnFiltersState
   columnVisibility: VisibilityState
-  // rowSelection: Record<string, boolean>; // Optional: Add if needed
+  rowSelection: Record<string, boolean>
   pagination: PaginationState
 
   // Search/Filter state
@@ -45,7 +45,7 @@ interface SyntheticDataTableState {
   setSorting: (sorting: SortingState) => void
   setColumnFilters: (columnFilters: ColumnFiltersState) => void
   setColumnVisibility: (columnVisibility: VisibilityState) => void
-  // setRowSelection: (rowSelection: Record<string, boolean>) => void; // Optional
+  setRowSelection: (rowSelection: Record<string, boolean>) => void
   setPagination: (pagination: PaginationState) => void
   setSearchValue: (searchValue: string) => void
   setRuntimeFilter: (runtime: string | null) => void
@@ -70,7 +70,7 @@ export const useSyntheticDataTableStore = create<SyntheticDataTableState>(
       activeAlert: false,
       id: false, // Example: hide ID by default
     },
-    // rowSelection: {}, // Optional
+    rowSelection: {},
     pagination: {
       pageIndex: DEFAULT_PAGE_INDEX,
       pageSize: DEFAULT_PAGE_SIZE,
@@ -86,7 +86,7 @@ export const useSyntheticDataTableStore = create<SyntheticDataTableState>(
     setSorting: (sorting) => set({ sorting }),
     setColumnFilters: (columnFilters) => set({ columnFilters }),
     setColumnVisibility: (columnVisibility) => set({ columnVisibility }),
-    // setRowSelection: (rowSelection) => set({ rowSelection }), // Optional
+    setRowSelection: (rowSelection) => set({ rowSelection }),
     setPagination: (pagination) => set({ pagination }),
     setSearchValue: (searchValue) => set({ searchValue }),
     setRuntimeFilter: (runtime) => set({ runtimeFilter: runtime }),

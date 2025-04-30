@@ -1,7 +1,5 @@
 "use client"
 
-// Import Checkbox only if select column is used, commented out for now
-// import { Checkbox } from "@/registry/new-york-v4/ui/checkbox";
 import { IconBellExclamation } from "@tabler/icons-react"
 import type { ColumnDef } from "@tanstack/react-table"
 import type { z } from "zod"
@@ -9,6 +7,8 @@ import { DataTableColumnHeader } from "@/components/data-table/column-header"
 import type { syntheticMonitorsSelectSchema } from "@/db/zod-schema"
 import { secsToHumanReadable } from "@/lib/formatters" // Import formatter
 import { Badge } from "@/registry/new-york-v4/ui/badge"
+// Import Checkbox only if select column is used, commented out for now
+import { Checkbox } from "@/registry/new-york-v4/ui/checkbox"
 
 // Helper function for date formatting
 const formatDate = (
@@ -35,13 +35,32 @@ export const columns: SyntheticMonitorColumnDef<
   z.infer<typeof syntheticMonitorsSelectSchema>
 >[] = [
   // Optional: Select column if needed later
-  // {
-  //   id: "select",
-  //   header: ({ table }) => <Checkbox ... />,
-  //   cell: ({ row }) => <Checkbox ... />,
-  //   enableSorting: false,
-  //   enableHiding: false
-  // },
+  {
+    id: "select",
+    header: ({ table }) => (
+      <div className="flex items-center justify-center">
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && "indeterminate")
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      </div>
+    ),
+    cell: ({ row }) => (
+      <div className="flex items-center justify-center">
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      </div>
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     accessorKey: "name",
     header: ({ column }) => (

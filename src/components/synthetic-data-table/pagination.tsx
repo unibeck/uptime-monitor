@@ -55,18 +55,17 @@ export function SyntheticPagination({ table }: SyntheticPaginationProps) {
   return (
     <div className="flex items-center justify-between px-4">
       {/* Optional: Row selection count (if selection is enabled) */}
-      {/* 
-       <div> 
-         <div className="text-muted-foreground hidden flex-1 text-sm lg:flex">
-           {table.getFilteredSelectedRowModel().rows.length} of{" "}
-           {table.getFilteredRowModel().rows.length} row(s) selected.
-         </div>
-       </div> 
-       */}
-      {/* Using a spacer or keeping total count */}
-      <div className="text-sm text-muted-foreground">
-        Total Monitors: {totalSyntheticMonitors}
+      <div>
+        <div className="text-muted-foreground hidden flex-1 text-sm lg:flex">
+          {table.getFilteredSelectedRowModel().rows.length} of{" "}
+          {table.getFilteredRowModel().rows.length} row(s) selected.
+        </div>
       </div>
+
+      {/* Using a spacer or keeping total count */}
+      {/* <div className="text-sm text-muted-foreground">
+        Total Monitors: {totalSyntheticMonitors}
+      </div> */}
 
       <div className="flex w-full items-center gap-8 lg:w-fit">
         {/* Rows per page selector */}

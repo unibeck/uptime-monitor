@@ -10,6 +10,7 @@ import {
   getSortedRowModel,
   type OnChangeFn,
   type PaginationState,
+  type RowSelectionState,
   type SortingState,
   useReactTable,
   type VisibilityState,
@@ -53,7 +54,7 @@ export function SyntheticDataTable() {
     (state) => state.totalSyntheticMonitors,
   )
   // const searchValue = useSyntheticDataTableStore((state) => state.searchValue) // Remove unused variable
-  // const rowSelection = useSyntheticDataTableStore((state) => state.rowSelection); // If using
+  const rowSelection = useSyntheticDataTableStore((state) => state.rowSelection) // Add rowSelection state
   const columnVisibility = useSyntheticDataTableStore(
     (state) => state.columnVisibility,
   )
@@ -150,16 +151,16 @@ export function SyntheticDataTable() {
   )
 
   // Handle state changes
-  /* // Uncomment and adapt if using row selection
   const handleRowSelectionChange: OnChangeFn<RowSelectionState> = (updater) => {
-    const store = useSyntheticDataTableStore.getState();
+    const store = useSyntheticDataTableStore.getState()
     if (typeof updater === "function") {
-      store.setRowSelection(updater(store.rowSelection) as Record<string, boolean>);
+      store.setRowSelection(
+        updater(store.rowSelection) as Record<string, boolean>,
+      )
     } else {
-      store.setRowSelection(updater as Record<string, boolean>);
+      store.setRowSelection(updater as Record<string, boolean>)
     }
-  };
-  */
+  }
 
   const handleSortingChange: OnChangeFn<SortingState> = (updater) => {
     const store = useSyntheticDataTableStore.getState()
@@ -302,13 +303,13 @@ export function SyntheticDataTable() {
     state: {
       sorting,
       columnVisibility,
-      // rowSelection, // Uncomment if using
+      rowSelection,
       columnFilters,
       pagination,
     },
-    // getRowId: (row) => row.id, // Ensure synthetic data has 'id'
-    // enableRowSelection: true, // Uncomment if using
-    // onRowSelectionChange: handleRowSelectionChange, // Uncomment if using
+    getRowId: (row) => row.id, // Ensure synthetic data has 'id'
+    enableRowSelection: true, // Enable row selection
+    onRowSelectionChange: handleRowSelectionChange,
     onSortingChange: handleSortingChange,
     onColumnFiltersChange: handleColumnFiltersChange,
     onColumnVisibilityChange: handleVisibilityChange,
@@ -363,7 +364,7 @@ export function SyntheticDataTable() {
                   </TableRow>
                 ))}
               </TableHeader>
-              <TableBody>
+              <TableBody className="**:data-[slot=table-cell]:first:w-8">
                 {table.getRowModel().rows?.length ? (
                   table.getRowModel().rows.map((row) => (
                     <SyntheticDataRow key={row.id} row={row} /> // Use specific row component
