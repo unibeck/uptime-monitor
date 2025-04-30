@@ -9,6 +9,8 @@ import { IconBellExclamation } from "@tabler/icons-react"
 import type { ColumnDef } from "@tanstack/react-table"
 import type { z } from "zod"
 
+import { secsToHumanReadable } from "@/lib/formatters" // Import formatter
+
 // Helper function for date formatting
 const formatDate = (
   value: string | number | Date | null | undefined,
@@ -77,7 +79,8 @@ export const columns: SyntheticMonitorColumnDef<
     ),
     headerLabel: "Interval (sec)",
     cell: ({ row }) => {
-      return <span>{row.getValue("checkInterval")}s</span>
+      const seconds = row.getValue("checkInterval") as number
+      return <span>{secsToHumanReadable(seconds)}</span>
     },
     enableHiding: true,
   },

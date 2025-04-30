@@ -1,12 +1,15 @@
 import { EndpointMonitorsTable, UptimeChecksTable } from "./endpointMonitor"
-import { SyntheticMonitorsTable, SyntheticChecksTable } from "./syntheticMonitor"
+import {
+  SyntheticChecksTable,
+  SyntheticMonitorsTable,
+} from "./syntheticMonitor"
 
 export * from "./endpointMonitor"
 export * from "./syntheticMonitor"
 
 export const schema = {
-    EndpointMonitorsTable,
-    UptimeChecksTable,
-    SyntheticMonitorsTable,
-    SyntheticChecksTable,
+  EndpointMonitorsTable,
+  UptimeChecksTable,
+  SyntheticMonitorsTable,
+  SyntheticChecksTable,
 }

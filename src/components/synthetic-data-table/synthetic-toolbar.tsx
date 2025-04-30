@@ -11,13 +11,6 @@ import {
   DropdownMenuTrigger,
 } from "@/registry/new-york-v4/ui/dropdown-menu"
 import { Input } from "@/registry/new-york-v4/ui/input"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/registry/new-york-v4/ui/select"
 import { useSyntheticDataTableStore } from "@/store/synthetic-data-table-store"
 import {
   IconChevronDown,
@@ -29,7 +22,7 @@ import type { Table } from "@tanstack/react-table"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useDebouncedCallback } from "use-debounce"
 import type { z } from "zod"
-import type { SyntheticMonitorColumnDef } from "./columns" // Use synthetic columns type definition
+import type { SyntheticMonitorColumnDef } from "./columns"
 
 interface SyntheticToolbarProps {
   table: Table<z.infer<typeof syntheticMonitorsSelectSchema>>
@@ -48,53 +41,59 @@ export function SyntheticToolbar({ table }: SyntheticToolbarProps) {
   const setSearchValue = useSyntheticDataTableStore(
     (state) => state.setSearchValue,
   )
+  const setPagination = useSyntheticDataTableStore(
+    (state) => state.setPagination,
+  )
   const fetchSyntheticMonitors = useSyntheticDataTableStore(
     (state) => state.fetchSyntheticMonitors,
   )
-  const runtimeFilter = useSyntheticDataTableStore(
-    (state) => state.runtimeFilter,
-  )
-  const setRuntimeFilter = useSyntheticDataTableStore(
-    (state) => state.setRuntimeFilter,
-  )
 
-  // Debounced search handler
-  const debouncedSearch = useDebouncedCallback((value: string) => {
+  // Update URL search params without triggering navigation
+  const updateUrlSearchParams = (term: string) => {
     const newParams = new URLSearchParams(searchParams.toString())
-    if (value) {
-      newParams.set("search", value)
-      newParams.set("page", "0") // Reset to first page on search
+
+    if (term) {
+      newParams.set("search", term)
     } else {
       newParams.delete("search")
     }
-    router.push(`${pathname}?${newParams.toString()}`, { scroll: false })
-    // No immediate fetch needed here, useEffect in main table handles it
-  }, 300)
+    // Always reset page to 0 when search term changes
+    newParams.delete("page")
+
+    const queryString = newParams.toString()
+    const newUrl = queryString ? `${pathname}?${queryString}` : pathname
+
+    // @ts-ignore - Ignoring type error as pathname comes from usePathname and we know it's is a valid typed route
+    router.push(newUrl, { scroll: false })
+  }
+
+  // Debounced search handler - Modified to align with endpoint toolbar
+  const handleSearch = useDebouncedCallback((term: string) => {
+    // Update the store with the new search value (already done in onSearchChange)
+    // setSearchValue(term); // No need to set here, set immediately in onSearchChange
+
+    // Reset to first page when searching
+    setPagination({
+      pageIndex: 0, // Use the constant if defined elsewhere
+      pageSize: table.getState().pagination.pageSize,
+    })
+
+    // Update URL search params
+    updateUrlSearchParams(term)
+
+    // Fetch data with new search term
+    fetchSyntheticMonitors()
+  }, 300) // Keep debounce delay or adjust as needed
 
   const onSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(event.target.value)
-    debouncedSearch(event.target.value)
+    const value = event.target.value
+    setSearchValue(value) // Set value immediately for input responsiveness
+    handleSearch(value) // Call debounced handler
   }
 
   const clearSearch = () => {
     setSearchValue("")
-    debouncedSearch("")
-  }
-
-  // Runtime filter handler
-  const onRuntimeChange = (value: string) => {
-    const newRuntime = value === "all" ? null : value
-    setRuntimeFilter(newRuntime)
-    // Update URL params
-    const newParams = new URLSearchParams(searchParams.toString())
-    if (newRuntime) {
-      newParams.set("runtime", newRuntime)
-    } else {
-      newParams.delete("runtime")
-    }
-    newParams.set("page", "0") // Reset page on filter change
-    router.push(`${pathname}?${newParams.toString()}`, { scroll: false })
-    fetchSyntheticMonitors() // Refetch data when filter changes
+    handleSearch("") // Use debounced handler to clear and fetch
   }
 
   return (
@@ -119,27 +118,21 @@ export function SyntheticToolbar({ table }: SyntheticToolbarProps) {
             </Button>
           )}
         </div>
-
-        {/* Runtime Filter Select */}
-        <Select value={runtimeFilter ?? "all"} onValueChange={onRuntimeChange}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Filter by Runtime" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Runtimes</SelectItem>
-            <SelectItem value="playwright-cf-latest">Playwright</SelectItem>
-            <SelectItem value="puppeteer-cf-latest">Puppeteer</SelectItem>
-          </SelectContent>
-        </Select>
+        {/* TODO: Add filters here if needed, similar to endpoint toolbar */}
       </div>
 
-      {/* Column Visibility Toggle */}
+      {/* Column Visibility Toggle - Align button with endpoint toolbar */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="sm">
-            <IconLayoutColumns className="mr-2 h-4 w-4" />
-            Columns
-            <IconChevronDown className="ml-2 h-4 w-4" />
+          <Button
+            variant="outline"
+            size="sm"
+            className="flex items-center gap-1"
+          >
+            <IconLayoutColumns className="h-4 w-4" />
+            <span className="hidden lg:inline">Customize Columns</span>
+            <span className="lg:hidden">Columns</span>
+            <IconChevronDown className="ml-1 h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
@@ -157,6 +150,7 @@ export function SyntheticToolbar({ table }: SyntheticToolbarProps) {
                 className="capitalize"
                 checked={column.getIsVisible()}
                 onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                onSelect={(e) => e.preventDefault()}
               >
                 {(
                   column.columnDef as SyntheticMonitorColumnDef<

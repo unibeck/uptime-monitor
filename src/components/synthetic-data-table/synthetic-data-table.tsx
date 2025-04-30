@@ -1,6 +1,5 @@
 "use client"
 
-// Import necessary components and hooks
 import {
   Table,
   TableBody,
@@ -10,14 +9,11 @@ import {
   TableRow,
 } from "@/registry/new-york-v4/ui/table"
 import { Tabs, TabsContent } from "@/registry/new-york-v4/ui/tabs"
-import {
-  useSyntheticDataTableStore, // Use the SYNTHETIC store
-} from "@/store/synthetic-data-table-store"
+import { useSyntheticDataTableStore } from "@/store/synthetic-data-table-store"
 import {
   type ColumnFiltersState,
   type OnChangeFn,
   type PaginationState,
-  // type RowSelectionState, // Uncomment if using row selection
   type SortingState,
   type VisibilityState,
   getCoreRowModel,
@@ -42,6 +38,8 @@ import { SyntheticToolbar } from "./synthetic-toolbar"
 // Default pagination values
 const DEFAULT_PAGE_INDEX = 0
 const DEFAULT_PAGE_SIZE = 10
+// Define default sort state for synthetics
+const DEFAULT_SORTING: SortingState = [{ id: "name", desc: false }] // Example: default sort by name ascending
 
 export function SyntheticDataTable() {
   "use no memo"
@@ -56,6 +54,7 @@ export function SyntheticDataTable() {
   const totalSyntheticMonitors = useSyntheticDataTableStore(
     (state) => state.totalSyntheticMonitors,
   )
+  // const searchValue = useSyntheticDataTableStore((state) => state.searchValue) // Remove unused variable
   // const rowSelection = useSyntheticDataTableStore((state) => state.rowSelection); // If using
   const columnVisibility = useSyntheticDataTableStore(
     (state) => state.columnVisibility,
@@ -75,59 +74,69 @@ export function SyntheticDataTable() {
       orderBy?: string
       order?: "asc" | "desc"
       runtime?: string | null
-      // Add other filters here (e.g., isRunning)
     }) => {
       const newParams = new URLSearchParams(searchParams.toString())
 
-      // Handle Pagination
-      if (params.page === DEFAULT_PAGE_INDEX || params.page === undefined) {
-        newParams.delete("page")
-      } else {
-        newParams.set("page", params.page.toString())
-      }
-      if (
-        params.pageSize === DEFAULT_PAGE_SIZE ||
-        params.pageSize === undefined
-      ) {
-        newParams.delete("pageSize")
-      } else {
-        newParams.set("pageSize", params.pageSize.toString())
+      // Handle page parameter - only include if not default (0)
+      if (params.page !== undefined) {
+        if (params.page === DEFAULT_PAGE_INDEX) {
+          newParams.delete("page")
+        } else {
+          newParams.set("page", params.page.toString())
+        }
       }
 
-      // Handle Search
-      if (!params.search) {
-        newParams.delete("search")
-      } else {
-        newParams.set("search", params.search)
+      // Handle pageSize parameter - only include if not default (10)
+      if (params.pageSize !== undefined) {
+        if (params.pageSize === DEFAULT_PAGE_SIZE) {
+          newParams.delete("pageSize")
+        } else {
+          newParams.set("pageSize", params.pageSize.toString())
+        }
       }
 
-      // Handle Runtime Filter
-      if (!params.runtime) {
-        newParams.delete("runtime")
-      } else {
-        newParams.set("runtime", params.runtime)
+      // Handle search parameter - only include if not empty
+      if (params.search !== undefined) {
+        if (params.search) {
+          newParams.set("search", params.search)
+        } else {
+          newParams.delete("search")
+        }
       }
 
-      // Handle Sorting (Similar logic to original DataTable, adjust default sort field if needed)
-      const defaultSortField = "name" // Default sort for synthetics
+      // Handle Runtime Filter - only include if not null/empty
+      if (params.runtime !== undefined) {
+        if (params.runtime) {
+          newParams.set("runtime", params.runtime)
+        } else {
+          newParams.delete("runtime")
+        }
+      }
+
+      // Handle Sorting (Align with data-table logic, using synthetic default sort)
       const isDefaultSort =
-        (!params.orderBy || params.orderBy === defaultSortField) &&
-        (!params.order || params.order === "asc")
+        params.orderBy === DEFAULT_SORTING[0]?.id &&
+        (params.order !== "asc") === DEFAULT_SORTING[0]?.desc // Simplified check: (isDesc) === (defaultIsDesc)
 
       if (params.orderBy === undefined && params.order === undefined) {
-        // No sorting params passed
+        // No sorting params passed in this update
       } else if (isDefaultSort) {
+        // If the intended sort IS the default, ensure the params are removed
         newParams.delete("orderBy")
         newParams.delete("order")
       } else {
+        // If the intended sort is NOT the default, set the params
         if (params.orderBy) {
           newParams.set("orderBy", params.orderBy)
+          // Set order; default to 'asc' if not provided explicitly
           if (params.order) {
             newParams.set("order", params.order)
           } else {
-            newParams.delete("order")
+            newParams.delete("order") // Explicit 'asc' is default, remove param
           }
         } else {
+          // Clearing sort explicitly (orderBy is '', null, or undefined)
+          // Revert to default by removing params.
           newParams.delete("orderBy")
           newParams.delete("order")
         }
@@ -137,9 +146,9 @@ export function SyntheticDataTable() {
       const newUrl = queryString ? `${pathname}?${queryString}` : pathname
 
       // @ts-ignore - Ignoring type error as pathname comes from usePathname and we know it's is a valid typed route
-      router.push(newUrl)
+      router.push(newUrl, { scroll: false }) // Add scroll: false
     },
-    [pathname, searchParams, router],
+    [pathname, searchParams, router], // Removed DEFAULT_SORTING dependency
   )
 
   // Handle state changes
@@ -162,11 +171,14 @@ export function SyntheticDataTable() {
     } else {
       newSorting = updater
     }
-    store.setSorting(newSorting)
+    store.setSorting(newSorting) // Update store first
+
+    // Update URL params based on new sorting state
     updateUrlParams({
       orderBy: newSorting[0]?.id,
       order: newSorting[0]?.desc ? "desc" : "asc",
     })
+
     store.fetchSyntheticMonitors() // Fetch SYNTHETIC monitors
   }
 
@@ -198,11 +210,14 @@ export function SyntheticDataTable() {
     } else {
       newPagination = updater
     }
-    store.setPagination(newPagination)
+    store.setPagination(newPagination) // Update store first
+
+    // Update URL with new pagination values
     updateUrlParams({
       page: newPagination.pageIndex,
       pageSize: newPagination.pageSize,
     })
+
     store.fetchSyntheticMonitors() // Fetch SYNTHETIC monitors
   }
 
@@ -218,7 +233,9 @@ export function SyntheticDataTable() {
     const store = useSyntheticDataTableStore.getState()
     let needsFetch = false // Flag to trigger fetch
 
-    // Update pagination
+    // Update pagination from URL if present and different from store
+    const currentPageIndex = store.pagination.pageIndex
+    const currentPageSize = store.pagination.pageSize
     const targetPageIndex = pageParam
       ? Number.parseInt(pageParam, 10)
       : DEFAULT_PAGE_INDEX
@@ -226,8 +243,8 @@ export function SyntheticDataTable() {
       ? Number.parseInt(pageSizeParam, 10)
       : DEFAULT_PAGE_SIZE
     if (
-      targetPageIndex !== store.pagination.pageIndex ||
-      targetPageSize !== store.pagination.pageSize
+      targetPageIndex !== currentPageIndex ||
+      targetPageSize !== currentPageSize
     ) {
       store.setPagination({
         pageIndex: targetPageIndex,
@@ -236,44 +253,46 @@ export function SyntheticDataTable() {
       needsFetch = true
     }
 
-    // Update search
+    // Update search from URL if present and different from store
+    const currentSearchValue = store.searchValue
     const targetSearchValue = searchParam ?? ""
-    if (targetSearchValue !== store.searchValue) {
+    if (targetSearchValue !== currentSearchValue) {
       store.setSearchValue(targetSearchValue)
       needsFetch = true
     }
 
-    // Update runtime filter
-    const targetRuntimeFilter = runtimeParam ?? null
-    if (targetRuntimeFilter !== store.runtimeFilter) {
+    // Update runtime filter from URL if present and different from store
+    const currentRuntimeFilter = store.runtimeFilter
+    const targetRuntimeFilter = runtimeParam ?? null // Use null for consistency if needed
+    if (targetRuntimeFilter !== currentRuntimeFilter) {
       store.setRuntimeFilter(targetRuntimeFilter)
       needsFetch = true
     }
 
-    // Update sorting
-    const defaultSortField = "name" // Match default sort state
-    const targetSorting: SortingState = orderByParam
-      ? [{ id: orderByParam, desc: orderParam === "desc" }]
-      : []
+    // Update sorting from URL if present and different from store
     const currentSorting = store.sorting
-    const currentSortString = currentSorting[0]
-      ? `${currentSorting[0].id}-${currentSorting[0].desc}`
-      : "-"
-    const targetSortString = targetSorting[0]
-      ? `${targetSorting[0].id}-${targetSorting[0].desc}`
-      : "-"
+    let targetSorting: SortingState = DEFAULT_SORTING // Start with default
 
-    if (!orderByParam && currentSorting[0]?.id !== defaultSortField) {
-      // No sort in URL, but store isn't default -> reset store to default
-      store.setSorting([{ id: defaultSortField, desc: false }])
-      needsFetch = true
-    } else if (orderByParam && currentSortString !== targetSortString) {
-      // Sort in URL is different from store -> update store
+    if (orderByParam) {
+      targetSorting = [
+        {
+          id: orderByParam,
+          desc: orderParam === "desc",
+        },
+      ]
+    }
+    // Check if targetSorting is different from currentSorting
+    const sortChanged =
+      currentSorting.length !== targetSorting.length ||
+      currentSorting[0]?.id !== targetSorting[0]?.id ||
+      currentSorting[0]?.desc !== targetSorting[0]?.desc
+
+    if (sortChanged) {
       store.setSorting(targetSorting)
       needsFetch = true
     }
 
-    // Fetch data only if state changed or data is initially empty
+    // Fetch data only if any state was updated or initially
     if (needsFetch || store.data.length === 0) {
       store.fetchSyntheticMonitors() // Fetch SYNTHETIC monitors
     }
@@ -302,7 +321,7 @@ export function SyntheticDataTable() {
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
-    manualPagination: true,
+    manualPagination: true, // Set manual flags
     manualSorting: true,
     manualFiltering: true,
     pageCount: Math.max(

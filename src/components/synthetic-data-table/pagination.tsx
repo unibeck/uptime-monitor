@@ -53,7 +53,7 @@ export function SyntheticPagination({ table }: SyntheticPaginationProps) {
   )
 
   return (
-    <div className="flex items-center justify-between px-4 py-2 border-t">
+    <div className="flex items-center justify-between px-4">
       {/* Optional: Row selection count (if selection is enabled) */}
       {/* 
        <div> 
@@ -111,7 +111,7 @@ export function SyntheticPagination({ table }: SyntheticPaginationProps) {
           </Button>
           <Button
             variant="outline"
-            className="h-8 w-8 p-0"
+            className="size-8"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
@@ -120,7 +120,7 @@ export function SyntheticPagination({ table }: SyntheticPaginationProps) {
           </Button>
           <Button
             variant="outline"
-            className="h-8 w-8 p-0"
+            className="size-8"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
