@@ -33,7 +33,7 @@ export default function Page() {
             variant="primary"
           >
             <IconCirclePlusFilled />
-            <span>Add Endpoint Monitor</span>
+            <span>Create Endpoint Monitor</span>
           </Button>
         }
       />

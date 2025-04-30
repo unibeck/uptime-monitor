@@ -1,15 +1,29 @@
 "use client"
 
+import { IconCirclePlusFilled } from "@tabler/icons-react"
+import type { Route } from "next"
+import Link from "next/link"
 import { useEffect } from "react"
 import { SyntheticDataTable } from "@/components/synthetic-data-table/synthetic-data-table"
 import { useHeaderContext } from "@/context/header-context"
+import { Button } from "@/registry/new-york-v4/ui/button"
 
 export default function SyntheticMonitorsPage() {
   const { setHeaderLeftContent, setHeaderRightContent } = useHeaderContext()
 
   useEffect(() => {
     setHeaderLeftContent("Synthetic Monitors")
-    setHeaderRightContent(null)
+    setHeaderRightContent(
+      <Button
+        variant="primary"
+        asChild
+      >
+        <Link href={"/synthetic-monitors/new" as Route}>
+          <IconCirclePlusFilled />
+          <span>Create Synthetic Monitor</span>
+        </Link>
+      </Button>
+    )
   }, [setHeaderLeftContent, setHeaderRightContent])
 
   return (
