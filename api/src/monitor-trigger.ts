@@ -1,15 +1,15 @@
 import { DurableObject, WorkerEntrypoint } from "cloudflare:workers"
-import { takeUniqueOrThrow, useDrizzle } from "@/db"
-import { EndpointMonitorsTable, SyntheticMonitorsTable } from "@/db/schema"
-import { MonitorTriggerNotInitializedError } from "@/lib/errors"
-import { endpointSignature } from "@/lib/formatters"
 import { diffable } from "diffable-objects"
 import { eq } from "drizzle-orm"
 import { OK } from "stoker/http-status-codes"
 import { OK as OK_PHRASE } from "stoker/http-status-phrases"
+import { takeUniqueOrThrow, useDrizzle } from "@/db"
+import { EndpointMonitorsTable, SyntheticMonitorsTable } from "@/db/schema"
+import { MonitorTriggerNotInitializedError } from "@/lib/errors"
+import { endpointSignature } from "@/lib/formatters"
 
 // Define types for state and init payload
-type MonitorType = "http" | "synthetic"
+type MonitorType = "endpoint" | "synthetic"
 type Runtime = "playwright-cf-latest" | "puppeteer-cf-latest"
 
 interface MonitorState {
@@ -20,7 +20,7 @@ interface MonitorState {
   runtime?: Runtime | null // Only for synthetic
 }
 
-interface InitPayload {
+export interface InitPayload {
   monitorId: string
   monitorType: MonitorType
   checkInterval: number
@@ -29,7 +29,7 @@ interface InitPayload {
 }
 
 /**
- * Durable Object that triggers checks for both HTTP Endpoint Monitors and Synthetic Monitors.
+ * Durable Object that triggers checks for both Endpoint Monitors and Synthetic Monitors.
  */
 export class MonitorTrigger extends DurableObject<CloudflareEnv> {
   @diffable
@@ -183,7 +183,7 @@ export class MonitorTrigger extends DurableObject<CloudflareEnv> {
           timeoutSeconds: timeoutSeconds,
         })
       } else {
-        // Delegate http check
+        // Delegate endpoint check
         await this.env.MONITOR_EXEC.executeCheck(monitorId)
       }
     } catch (error) {

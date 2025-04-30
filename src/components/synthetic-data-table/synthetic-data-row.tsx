@@ -1,10 +1,10 @@
 "use client"
 
-import type { syntheticMonitorsSelectSchema } from "@/db/zod-schema" // Use synthetic schema
-import { TableCell, TableRow } from "@/registry/new-york-v4/ui/table"
 import type { Row } from "@tanstack/react-table"
 import { flexRender } from "@tanstack/react-table"
 import type { z } from "zod"
+import type { syntheticMonitorsSelectSchema } from "@/db/zod-schema" // Use synthetic schema
+import { TableCell, TableRow } from "@/registry/new-york-v4/ui/table"
 
 interface SyntheticDataRowProps {
   row: Row<z.infer<typeof syntheticMonitorsSelectSchema>> // Use synthetic schema type

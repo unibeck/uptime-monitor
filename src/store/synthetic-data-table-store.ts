@@ -1,5 +1,3 @@
-import type { syntheticMonitorsSelectSchema } from "@/db/zod-schema" // Use synthetic schema
-import { DEFAULT_TOAST_OPTIONS } from "@/lib/toasts"
 import type {
   ColumnFiltersState,
   PaginationState,
@@ -9,6 +7,8 @@ import type {
 import { toast } from "sonner"
 import type { z } from "zod"
 import { create } from "zustand"
+import type { syntheticMonitorsSelectSchema } from "@/db/zod-schema" // Use synthetic schema
+import { DEFAULT_TOAST_OPTIONS } from "@/lib/toasts"
 
 // Default pagination values
 const DEFAULT_PAGE_INDEX = 0

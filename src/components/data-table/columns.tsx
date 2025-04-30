@@ -1,11 +1,5 @@
 "use client"
 
-import { LatencyLimitChart } from "@/components/latency-limit-chart"
-import type { endpointMonitorsSelectSchema } from "@/db/zod-schema"
-import { secsToHumanReadable } from "@/lib/formatters"
-import { Badge } from "@/registry/new-york-v4/ui/badge"
-import { Button } from "@/registry/new-york-v4/ui/button"
-import { Checkbox } from "@/registry/new-york-v4/ui/checkbox"
 import {
   IconBellExclamation,
   IconLayoutSidebarRightExpand,
@@ -13,6 +7,12 @@ import {
 import type { ColumnDef } from "@tanstack/react-table"
 import Link from "next/link"
 import type { z } from "zod"
+import { LatencyLimitChart } from "@/components/latency-limit-chart"
+import type { endpointMonitorsSelectSchema } from "@/db/zod-schema"
+import { secsToHumanReadable } from "@/lib/formatters"
+import { Badge } from "@/registry/new-york-v4/ui/badge"
+import { Button } from "@/registry/new-york-v4/ui/button"
+import { Checkbox } from "@/registry/new-york-v4/ui/checkbox"
 import { DataTableColumnHeader } from "./column-header"
 import { EndpointMonitorDetailDrawer } from "./endpoint-monitor-detail-drawer"
 

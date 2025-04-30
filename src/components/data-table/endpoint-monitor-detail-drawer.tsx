@@ -1,9 +1,23 @@
 "use client"
 
-import type { endpointMonitorsSelectSchema } from "@/db/zod-schema"
-import type { uptimeChecksSelectSchema } from "@/db/zod-schema"
-import { secsToHumanReadable } from "@/lib/formatters"
-import { msToHumanReadable } from "@/lib/formatters"
+import {
+  IconAlertTriangle,
+  IconLoader2,
+  IconPlayerPauseFilled,
+  IconPlayerPlayFilled,
+  IconRosetteDiscountCheckFilled,
+  IconTrash,
+} from "@tabler/icons-react"
+import { formatDistance } from "date-fns"
+import Link from "next/link"
+import type * as React from "react"
+import { useEffect, useState } from "react"
+import type { z } from "zod"
+import type {
+  endpointMonitorsSelectSchema,
+  uptimeChecksSelectSchema,
+} from "@/db/zod-schema"
+import { msToHumanReadable, secsToHumanReadable } from "@/lib/formatters"
 import { useIsMobile } from "@/registry/new-york-v4/hooks/use-mobile"
 import { Badge } from "@/registry/new-york-v4/ui/badge"
 import { Button } from "@/registry/new-york-v4/ui/button"
@@ -18,23 +32,12 @@ import {
   DrawerTrigger,
 } from "@/registry/new-york-v4/ui/drawer"
 import { Separator } from "@/registry/new-york-v4/ui/separator"
-import { TooltipContent } from "@/registry/new-york-v4/ui/tooltip"
-import { Tooltip } from "@/registry/new-york-v4/ui/tooltip"
-import { TooltipTrigger } from "@/registry/new-york-v4/ui/tooltip"
-import { TooltipProvider } from "@/registry/new-york-v4/ui/tooltip"
 import {
-  IconAlertTriangle,
-  IconLoader2,
-  IconPlayerPauseFilled,
-  IconPlayerPlayFilled,
-  IconRosetteDiscountCheckFilled,
-  IconTrash,
-} from "@tabler/icons-react"
-import { formatDistance } from "date-fns"
-import Link from "next/link"
-import type * as React from "react"
-import { useEffect, useState } from "react"
-import type { z } from "zod"
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/registry/new-york-v4/ui/tooltip"
 import {
   handleDeleteWebsite,
   handlePauseMonitoring,

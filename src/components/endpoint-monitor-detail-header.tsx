@@ -1,5 +1,21 @@
 "use client"
-
+import {
+  IconActivity,
+  IconLogs,
+  IconMetronome,
+  IconPencil,
+  IconShieldCheckFilled,
+} from "@tabler/icons-react"
+import {
+  ExternalLink,
+  MoreVertical,
+  Pause,
+  Play,
+  RefreshCw,
+} from "lucide-react"
+import { useCallback, useState } from "react"
+import { toast } from "sonner"
+import type { z } from "zod"
 import type { endpointMonitorsSelectSchema } from "@/db/zod-schema"
 import { DEFAULT_TOAST_OPTIONS } from "@/lib/toasts"
 import { Badge } from "@/registry/new-york-v4/ui/badge"
@@ -11,23 +27,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/registry/new-york-v4/ui/dropdown-menu"
-import {
-  IconActivity,
-  IconLogs,
-  IconMetronome,
-  IconPencil,
-} from "@tabler/icons-react"
-import { IconShieldCheckFilled } from "@tabler/icons-react"
-import {
-  ExternalLink,
-  MoreVertical,
-  Pause,
-  Play,
-  RefreshCw,
-} from "lucide-react"
-import { useCallback, useState } from "react"
-import { toast } from "sonner"
-import type { z } from "zod"
 import { AddEndpointMonitorDialog } from "./add-endpoint-monitor-dialog"
 
 interface WebsiteDetailHeaderProps {

@@ -1,5 +1,5 @@
-import { timestamps } from "@/db/schema/utils"
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core"
+import { timestamps } from "@/db/schema/utils"
 
 export const EndpointMonitorsTable = sqliteTable("endpointMonitors", {
   id: text("id").primaryKey(),

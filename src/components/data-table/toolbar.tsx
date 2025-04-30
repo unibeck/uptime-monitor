@@ -1,16 +1,5 @@
 "use client"
 
-import type { AppColumnDef } from "@/components/data-table/columns"
-import type { endpointMonitorsSelectSchema } from "@/db/zod-schema"
-import { Button } from "@/registry/new-york-v4/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/registry/new-york-v4/ui/dropdown-menu"
-import { Input } from "@/registry/new-york-v4/ui/input"
-import { useDataTableStore } from "@/store/data-table-store"
 import {
   IconChevronDown,
   IconLayoutColumns,
@@ -22,6 +11,17 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import type * as React from "react"
 import { useDebouncedCallback } from "use-debounce"
 import type { z } from "zod"
+import type { AppColumnDef } from "@/components/data-table/columns"
+import type { endpointMonitorsSelectSchema } from "@/db/zod-schema"
+import { Button } from "@/registry/new-york-v4/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/registry/new-york-v4/ui/dropdown-menu"
+import { Input } from "@/registry/new-york-v4/ui/input"
+import { useDataTableStore } from "@/store/data-table-store"
 
 interface ToolbarProps {
   table: Table<z.infer<typeof endpointMonitorsSelectSchema>>

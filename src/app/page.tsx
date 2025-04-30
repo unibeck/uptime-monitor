@@ -1,10 +1,9 @@
 "use client"
 
+import { useEffect } from "react"
 import { DataTable } from "@/components/data-table"
-
 import { SectionCards } from "@/components/section-cards"
 import { useHeaderContext } from "@/context/header-context"
-import { useEffect } from "react"
 
 export default function Page() {
   const { setHeaderContent } = useHeaderContext()

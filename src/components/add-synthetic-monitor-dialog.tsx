@@ -1,5 +1,13 @@
 "use client"
 
+import { zodResolver } from "@hookform/resolvers/zod"
+import { IconLoader2, IconPlayerPlay, IconPlus } from "@tabler/icons-react"
+import type { SerializedEditorState } from "lexical"
+import { useState } from "react"
+import { type ControllerRenderProps, useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { CREATED } from "stoker/http-status-codes"
+import type { z } from "zod"
 import { Editor } from "@/components/blocks/editor-00/editor"
 import { syntheticMonitorsInsertDTOSchema } from "@/db/zod-schema"
 import { DEFAULT_TOAST_OPTIONS } from "@/lib/toasts"
@@ -31,14 +39,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/registry/new-york-v4/ui/select"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { IconLoader2, IconPlayerPlay, IconPlus } from "@tabler/icons-react"
-import type { SerializedEditorState } from "lexical"
-import { useState } from "react"
-import { type ControllerRenderProps, useForm } from "react-hook-form"
-import { toast } from "sonner"
-import { CREATED } from "stoker/http-status-codes"
-import type { z } from "zod"
 
 type SyntheticMonitorFormData = z.infer<typeof syntheticMonitorsInsertDTOSchema>
 

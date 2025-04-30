@@ -11,7 +11,7 @@ import {
   IconTrendingDown,
   IconTrendingUp,
 } from "@tabler/icons-react"
-
+import type { z } from "zod"
 import type { endpointMonitorsSelectSchema } from "@/db/zod-schema"
 import { msToHumanReadable } from "@/lib/formatters"
 import { Badge } from "@/registry/new-york-v4/ui/badge"
@@ -23,7 +23,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/registry/new-york-v4/ui/card"
-import type { z } from "zod"
 
 interface WebsiteSectionCardsProps {
   endpointMonitor: z.infer<typeof endpointMonitorsSelectSchema>

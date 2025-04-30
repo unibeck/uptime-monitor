@@ -1,5 +1,14 @@
 "use client"
 
+import {
+  IconChevronLeft,
+  IconChevronRight,
+  IconChevronsLeft,
+  IconChevronsRight,
+} from "@tabler/icons-react"
+import type { Table } from "@tanstack/react-table"
+import React from "react"
+import type { z } from "zod"
 import type { syntheticMonitorsSelectSchema } from "@/db/zod-schema" // Use synthetic schema
 import { Button } from "@/registry/new-york-v4/ui/button"
 import { Label } from "@/registry/new-york-v4/ui/label"
@@ -13,15 +22,6 @@ import {
 import {
   useSyntheticDataTableStore, // Use SYNTHETIC store
 } from "@/store/synthetic-data-table-store"
-import {
-  IconChevronLeft,
-  IconChevronRight,
-  IconChevronsLeft,
-  IconChevronsRight,
-} from "@tabler/icons-react"
-import type { Table } from "@tanstack/react-table"
-import React from "react"
-import type { z } from "zod"
 
 // Interface for the props, using the synthetic schema type
 interface SyntheticPaginationProps {

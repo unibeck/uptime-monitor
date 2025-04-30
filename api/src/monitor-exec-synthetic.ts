@@ -1,16 +1,15 @@
 import { WorkerEntrypoint } from "cloudflare:workers"
-import { takeFirstOrNull, useDrizzle } from "@/db"
-import { SyntheticChecksTable, SyntheticMonitorsTable } from "@/db/schema"
 import { eq } from "drizzle-orm"
-import { OK } from "stoker/http-status-codes"
-import { OK as OK_PHRASE } from "stoker/http-status-phrases"
-
 // Import Lexical types needed for parsing
 import type {
   SerializedEditorState,
   SerializedLexicalNode,
   SerializedTextNode,
 } from "lexical"
+import { OK } from "stoker/http-status-codes"
+import { OK as OK_PHRASE } from "stoker/http-status-phrases"
+import { takeFirstOrNull, useDrizzle } from "@/db"
+import { SyntheticChecksTable, SyntheticMonitorsTable } from "@/db/schema"
 
 interface SyntheticExecPayload {
   monitorId: string

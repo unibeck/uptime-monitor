@@ -3,9 +3,8 @@ import { $setBlocksType } from "@lexical/selection"
 import { $getSelection, $isRangeSelection } from "lexical"
 
 import { useToolbarContext } from "@/components/editor/context/toolbar-context"
-import { SelectItem } from "@/registry/new-york-v4/ui/select"
-
 import { blockTypeToBlockName } from "@/components/editor/plugins/toolbar/block-format/block-format-data"
+import { SelectItem } from "@/registry/new-york-v4/ui/select"
 
 const BLOCK_FORMAT_VALUE = "code"
 

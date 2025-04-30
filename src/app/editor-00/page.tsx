@@ -1,8 +1,8 @@
 "use client"
 
-import { Editor } from "@/components/blocks/editor-00/editor"
 import type { SerializedEditorState } from "lexical"
 import { useState } from "react"
+import { Editor } from "@/components/blocks/editor-00/editor"
 
 export const initialValue = {
   root: {

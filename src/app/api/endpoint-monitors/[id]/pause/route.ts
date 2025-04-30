@@ -1,8 +1,8 @@
-import { createRoute } from "@/lib/api-utils"
-import { idStringParamsSchema } from "@/lib/route-schemas"
 import { getCloudflareContext } from "@opennextjs/cloudflare"
 import { NextResponse } from "next/server"
 import { OK } from "stoker/http-status-codes"
+import { createRoute } from "@/lib/api-utils"
+import { idStringParamsSchema } from "@/lib/route-schemas"
 
 /**
  * POST /api/endpoint-monitors/[id]/pause

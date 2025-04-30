@@ -1,15 +1,14 @@
 "use client"
 
-import { DataTableColumnHeader } from "@/components/data-table/column-header"
-import type { syntheticMonitorsSelectSchema } from "@/db/zod-schema"
-import { Badge } from "@/registry/new-york-v4/ui/badge"
 // Import Checkbox only if select column is used, commented out for now
 // import { Checkbox } from "@/registry/new-york-v4/ui/checkbox";
 import { IconBellExclamation } from "@tabler/icons-react"
 import type { ColumnDef } from "@tanstack/react-table"
 import type { z } from "zod"
-
+import { DataTableColumnHeader } from "@/components/data-table/column-header"
+import type { syntheticMonitorsSelectSchema } from "@/db/zod-schema"
 import { secsToHumanReadable } from "@/lib/formatters" // Import formatter
+import { Badge } from "@/registry/new-york-v4/ui/badge"
 
 // Helper function for date formatting
 const formatDate = (

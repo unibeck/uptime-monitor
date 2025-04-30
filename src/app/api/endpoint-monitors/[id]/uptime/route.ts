@@ -1,13 +1,13 @@
-import { takeUniqueOrThrow, useDrizzle } from "@/db"
-import { UptimeChecksTable } from "@/db/schema"
-import type { uptimeChecksSelectSchema } from "@/db/zod-schema"
-import { createRoute } from "@/lib/api-utils"
-import { idStringParamsSchema } from "@/lib/route-schemas"
 import { getCloudflareContext } from "@opennextjs/cloudflare"
 import { desc, eq } from "drizzle-orm"
 import { NextResponse } from "next/server"
 import { INTERNAL_SERVER_ERROR, OK } from "stoker/http-status-codes"
 import type { z } from "zod"
+import { takeUniqueOrThrow, useDrizzle } from "@/db"
+import { UptimeChecksTable } from "@/db/schema"
+import type { uptimeChecksSelectSchema } from "@/db/zod-schema"
+import { createRoute } from "@/lib/api-utils"
+import { idStringParamsSchema } from "@/lib/route-schemas"
 
 /**
  * GET /api/endpoint-monitors/[id]/uptime

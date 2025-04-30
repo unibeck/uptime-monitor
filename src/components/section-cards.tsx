@@ -1,16 +1,5 @@
 "use client"
 
-import { msToHumanReadable } from "@/lib/formatters"
-import { Badge } from "@/registry/new-york-v4/ui/badge"
-import {
-  Card,
-  CardAction,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/registry/new-york-v4/ui/card"
-import { useStatsStore } from "@/store/dashboard-stats-store" // Corrected import path if necessary
 import {
   IconActivityHeartbeat,
   IconBellCheck,
@@ -24,6 +13,17 @@ import {
 } from "@tabler/icons-react"
 import Link from "next/link"
 import { useEffect } from "react"
+import { msToHumanReadable } from "@/lib/formatters"
+import { Badge } from "@/registry/new-york-v4/ui/badge"
+import {
+  Card,
+  CardAction,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/registry/new-york-v4/ui/card"
+import { useStatsStore } from "@/store/dashboard-stats-store" // Corrected import path if necessary
 
 export function SectionCards() {
   // Select the state directly

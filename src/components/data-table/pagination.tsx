@@ -1,5 +1,14 @@
 "use client"
 
+import {
+  IconChevronLeft,
+  IconChevronRight,
+  IconChevronsLeft,
+  IconChevronsRight,
+} from "@tabler/icons-react"
+import type { Table } from "@tanstack/react-table"
+import React from "react"
+import type { z } from "zod"
 import type { endpointMonitorsSelectSchema } from "@/db/zod-schema"
 import { Button } from "@/registry/new-york-v4/ui/button"
 import { Label } from "@/registry/new-york-v4/ui/label"
@@ -11,15 +20,6 @@ import {
   SelectValue,
 } from "@/registry/new-york-v4/ui/select"
 import { useDataTableStore } from "@/store/data-table-store"
-import {
-  IconChevronLeft,
-  IconChevronRight,
-  IconChevronsLeft,
-  IconChevronsRight,
-} from "@tabler/icons-react"
-import type { Table } from "@tanstack/react-table"
-import React from "react"
-import type { z } from "zod"
 
 interface PaginationProps {
   table: Table<z.infer<typeof endpointMonitorsSelectSchema>>

@@ -1,11 +1,10 @@
 import fs from "node:fs"
 import path from "node:path"
-import { createId } from "@/lib/ids"
-import { PRE_ID } from "@/lib/ids"
 import { createClient } from "@libsql/client"
 import { drizzle } from "drizzle-orm/libsql"
 import { reset } from "drizzle-seed"
 import type { z } from "zod"
+import { createId, PRE_ID } from "@/lib/ids"
 import { schema } from "../src/db/schema"
 import type { uptimeChecksInsertSchema } from "../src/db/zod-schema"
 

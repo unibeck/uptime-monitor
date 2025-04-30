@@ -1,11 +1,11 @@
+import { createSchemaFactory } from "drizzle-zod"
+import { z } from "zod"
 import {
   EndpointMonitorsTable,
   SyntheticChecksTable,
   SyntheticMonitorsTable,
   UptimeChecksTable,
 } from "@/db/schema"
-import { createSchemaFactory } from "drizzle-zod"
-import { z } from "zod"
 
 const { createInsertSchema } = createSchemaFactory({
   // This configuration will only coerce dates. Set `coerce` to `true` to coerce all data types or specify others

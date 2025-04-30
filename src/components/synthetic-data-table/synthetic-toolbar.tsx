@@ -1,5 +1,15 @@
 "use client"
 
+import {
+  IconChevronDown,
+  IconLayoutColumns,
+  IconSearch,
+  IconX,
+} from "@tabler/icons-react"
+import type { Table } from "@tanstack/react-table"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import { useDebouncedCallback } from "use-debounce"
+import type { z } from "zod"
 import type { syntheticMonitorsSelectSchema } from "@/db/zod-schema"
 import { Button } from "@/registry/new-york-v4/ui/button"
 import {
@@ -12,16 +22,6 @@ import {
 } from "@/registry/new-york-v4/ui/dropdown-menu"
 import { Input } from "@/registry/new-york-v4/ui/input"
 import { useSyntheticDataTableStore } from "@/store/synthetic-data-table-store"
-import {
-  IconChevronDown,
-  IconLayoutColumns,
-  IconSearch,
-  IconX,
-} from "@tabler/icons-react"
-import type { Table } from "@tanstack/react-table"
-import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { useDebouncedCallback } from "use-debounce"
-import type { z } from "zod"
 import type { SyntheticMonitorColumnDef } from "./columns"
 
 interface SyntheticToolbarProps {

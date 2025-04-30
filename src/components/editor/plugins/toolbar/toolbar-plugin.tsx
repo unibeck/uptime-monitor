@@ -1,10 +1,8 @@
 "use client"
 
-import { useEffect } from "react"
-import { useState } from "react"
-
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext"
 import { COMMAND_PRIORITY_CRITICAL, SELECTION_CHANGE_COMMAND } from "lexical"
+import { useEffect, useState } from "react"
 
 import { ToolbarContext } from "@/components/editor/context/toolbar-context"
 
@@ -13,9 +11,7 @@ import { useEditorModal } from "@/components/editor/editor-hooks/use-modal"
 export function ToolbarPlugin({
   children,
 }: {
-  children: (props: {
-    blockType: string
-  }) => React.ReactNode
+  children: (props: { blockType: string }) => React.ReactNode
 }) {
   const [editor] = useLexicalComposerContext()
 

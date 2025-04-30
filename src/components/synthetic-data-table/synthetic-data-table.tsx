@@ -1,5 +1,25 @@
 "use client"
-
+import {
+  type ColumnFiltersState,
+  flexRender,
+  getCoreRowModel,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  type OnChangeFn,
+  type PaginationState,
+  type SortingState,
+  useReactTable,
+  type VisibilityState,
+} from "@tanstack/react-table"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import React from "react"
+import { SyntheticPagination } from "@/components/synthetic-data-table/pagination"
+import { SyntheticDataRow } from "@/components/synthetic-data-table/synthetic-data-row"
+import { SyntheticDataTableLoadingOverlay } from "@/components/synthetic-data-table/synthetic-data-table-loading-overlay"
+import { SyntheticDataTableSkeleton } from "@/components/synthetic-data-table/synthetic-data-table-skeleton"
 import {
   Table,
   TableBody,
@@ -10,28 +30,6 @@ import {
 } from "@/registry/new-york-v4/ui/table"
 import { Tabs, TabsContent } from "@/registry/new-york-v4/ui/tabs"
 import { useSyntheticDataTableStore } from "@/store/synthetic-data-table-store"
-import {
-  type ColumnFiltersState,
-  type OnChangeFn,
-  type PaginationState,
-  type SortingState,
-  type VisibilityState,
-  getCoreRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table"
-import { flexRender } from "@tanstack/react-table"
-import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import React from "react"
-
-import { SyntheticPagination } from "@/components/synthetic-data-table/pagination"
-import { SyntheticDataRow } from "@/components/synthetic-data-table/synthetic-data-row"
-import { SyntheticDataTableLoadingOverlay } from "@/components/synthetic-data-table/synthetic-data-table-loading-overlay"
-import { SyntheticDataTableSkeleton } from "@/components/synthetic-data-table/synthetic-data-table-skeleton"
 import { columns } from "./columns"
 import { SyntheticToolbar } from "./synthetic-toolbar"
 

@@ -1,17 +1,14 @@
+import type { Metadata, Viewport } from "next"
 import { cookies } from "next/headers"
-
+import { siteConfig } from "@/app/site"
 import { AppSidebar } from "@/components/app-sidebar"
 import { SiteHeader } from "@/components/site-header"
+import { ThemeProvider } from "@/components/theme-provider"
+import { fontVariables } from "@/lib/fonts"
 import {
   SidebarInset,
   SidebarProvider,
 } from "@/registry/new-york-v4/ui/sidebar"
-
-import type { Metadata, Viewport } from "next"
-
-import { siteConfig } from "@/app/site"
-import { ThemeProvider } from "@/components/theme-provider"
-import { fontVariables } from "@/lib/fonts"
 import { Toaster } from "@/registry/new-york-v4/ui/sonner"
 
 import "@/app/globals.css"
@@ -21,6 +18,7 @@ import { ActiveThemeProvider } from "@/components/active-theme"
 import { HeaderProvider } from "@/context/header-context"
 import { PROD_FQDN } from "@/lib/constants"
 import { cn } from "@/lib/utils"
+
 const META_THEME_COLORS = {
   light: "#ffffff",
   dark: "#09090b",
