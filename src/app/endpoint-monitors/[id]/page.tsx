@@ -39,7 +39,7 @@ export default function EndpointMonitorDetailPage() {
   const params = useParams()
   const router = useRouter()
   const endpointMonitorId = params.id as string
-  const { setHeaderContent } = useHeaderContext()
+  const { setHeaderLeftContent, setHeaderRightContent } = useHeaderContext()
   const searchParams = useSearchParams() // Get search params
 
   const [endpointMonitor, setEndpointMonitor] = useState<z.infer<
@@ -95,13 +95,15 @@ export default function EndpointMonitorDetailPage() {
     }
 
     return () => {
-      setHeaderContent(defaultHeaderContent)
+      setHeaderLeftContent(null)
+      setHeaderRightContent(defaultHeaderContent)
     }
-  }, [endpointMonitorId, setHeaderContent, fetchWebsite])
+  }, [endpointMonitorId, setHeaderLeftContent, setHeaderRightContent, fetchWebsite])
 
   useEffect(() => {
     if (endpointMonitor) {
-      setHeaderContent(
+      setHeaderLeftContent(endpointMonitor.name)
+      setHeaderRightContent(
         endpointMonitor.isRunning ? (
           <div className="flex items-center gap-2">
             {latestUptimeCheck && (
@@ -162,7 +164,12 @@ export default function EndpointMonitorDetailPage() {
         ),
       )
     }
-  }, [endpointMonitor, latestUptimeCheck, setHeaderContent])
+  }, [
+    endpointMonitor,
+    latestUptimeCheck,
+    setHeaderLeftContent,
+    setHeaderRightContent,
+  ])
 
   useEffect(() => {
     if (!endpointMonitorId) {
