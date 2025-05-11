@@ -1,17 +1,18 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { LexicalComposer } from "@lexical/react/LexicalComposer"
-import { ContentEditable } from "@lexical/react/LexicalContentEditable"
-import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary"
-import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin"
-import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin"
-import { PlainTextPlugin } from "@lexical/react/LexicalPlainTextPlugin"
-import { $getRoot, type EditorState } from "lexical"
+import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight"
+import Document from '@tiptap/extension-document'
+// import Paragraph from '@tiptap/extension-paragraph'
+import Text from '@tiptap/extension-text'
+import { EditorContent, useEditor } from "@tiptap/react"
+import javascript from "highlight.js/lib/languages/javascript"
+import { all, createLowlight } from 'lowlight'
+import "highlight.js/styles/github-dark.css"
+
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { Button } from "@/registry/new-york-v4/ui/button"
-
 import {
   Form,
   FormControl,
@@ -30,7 +31,11 @@ import {
   SelectValue,
 } from "@/registry/new-york-v4/ui/select"
 
-// --- Zod Schema ---
+// Register the languages you need
+const lowlight = createLowlight(all)
+lowlight.register('javascript', javascript)
+
+
 const baseSchema = z.object({
   name: z.string().min(1, "Name is required."),
   checkInterval: z.coerce
@@ -57,53 +62,65 @@ export type SyntheticMonitorFormValues = z.infer<
   typeof syntheticMonitorFormSchema
 >
 
-// --- Lexical Editor Setup ---
-const editorConfig = {
-  namespace: "SyntheticMonitorEditor",
-  theme: {},
-  onError(error: Error) {
-    console.error("Lexical Editor Error:", error)
-    throw error
-  },
-}
-
-function Editor({
+// --- Tiptap Editor Setup ---
+function TiptapEditor({
   onChange,
   initialValue,
+  placeholder,
 }: {
   onChange: (value: string) => void;
   initialValue?: string;
+  placeholder?: string;
 }) {
-  function handleLexicalChange(editorState: EditorState) {
-    editorState.read(() => {
-      const root = $getRoot()
-      const text = root.getTextContent()
-      onChange(text)
-    })
-  }
+  const editor = useEditor({
+    extensions: [
+        Document,
+        // Paragraph,
+        // Heading,
+        Text,
+        // Bold,
+        // Italic,
+        // ListItem,
+    //   StarterKit.configure({
+    //     // Disable history extension to avoid conflicts if you add it separately
+    //     history: false,
+    //     // Disable default code block to use CodeBlockLowlight
+    //     codeBlock: false,
+    //   }),
+      CodeBlockLowlight.configure({
+        lowlight,
+        defaultLanguage: 'javascript',
+      }),
+    ],
+    content: initialValue ? `<pre><code class="language-javascript">${initialValue}</code></pre>` : '<pre><code class="language-javascript"></code></pre>',
+    onUpdate: ({ editor }) => {
+      // Extract text content specifically from code blocks
+      let textContent = '';
+      editor.state.doc.descendants((node) => {
+        if (node.type.name === 'codeBlock') {
+          textContent += `${node.textContent}\n`; // Add newline between blocks if multiple
+        }
+      });
+      onChange(textContent.trim()); // Trim trailing newline
+    },
+    editorProps: {
+        attributes: {
+          // Add Tailwind classes for styling the editor content area
+          class: 'prose dark:prose-invert prose-sm sm:prose-base lg:prose-lg xl:prose-2xl focus:outline-none min-h-[200px] p-2 w-full',
+        },
+      },
+  });
+
+  // Optional: Add a toolbar here if needed
 
   return (
-    <LexicalComposer initialConfig={editorConfig}>
-      <div className="relative border rounded-md">
-        <PlainTextPlugin
-          contentEditable={
-            <ContentEditable className="min-h-[200px] p-2 focus:outline-none resize-y" />
-          }
-          placeholder={
-            <div className="absolute top-2 left-2 text-muted-foreground pointer-events-none">
-              Enter your Playwright/Puppeteer script here...
-            </div>
-          }
-          ErrorBoundary={LexicalErrorBoundary}
-        />
-        <HistoryPlugin />
-        <OnChangePlugin onChange={handleLexicalChange} />
-      </div>
-    </LexicalComposer>
-  )
+    <div className="border rounded-md overflow-hidden">
+      {/* Render the editor content area */}
+      <EditorContent editor={editor} />
+    </div>
+  );
 }
 
-// --- Form Component ---
 export function SyntheticMonitorForm() {
   const form = useForm<SyntheticMonitorFormValues>({
     resolver: zodResolver(syntheticMonitorFormSchema),
@@ -240,7 +257,11 @@ export function SyntheticMonitorForm() {
             <FormItem>
               <FormLabel>Script</FormLabel>
               <FormControl>
-                <Editor onChange={field.onChange} initialValue={field.value} />
+                <TiptapEditor
+                  onChange={field.onChange}
+                  initialValue={field.value ?? ''}
+                  placeholder="Enter your Playwright/Puppeteer script here..."
+                />
               </FormControl>
               <FormDescription>
                 Write your browser automation script here (JavaScript).
