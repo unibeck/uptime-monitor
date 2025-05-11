@@ -2,16 +2,19 @@
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight"
-import Document from '@tiptap/extension-document'
-// import Paragraph from '@tiptap/extension-paragraph'
-import Text from '@tiptap/extension-text'
-import { EditorContent, useEditor } from "@tiptap/react"
-import javascript from "highlight.js/lib/languages/javascript"
-import { all, createLowlight } from 'lowlight'
+import Document from "@tiptap/extension-document"
+import Paragraph from "@tiptap/extension-paragraph"
+import Text from "@tiptap/extension-text"
+import { EditorContent, ReactNodeViewRenderer, useEditor } from "@tiptap/react"
+import js from "highlight.js/lib/languages/javascript"
+import ts from "highlight.js/lib/languages/typescript"
+
+import { all, createLowlight } from "lowlight"
 import "highlight.js/styles/github-dark.css"
 
 import { useForm } from "react-hook-form"
 import { z } from "zod"
+import CodeBlock from "@/components/editor/code-block"
 import { Button } from "@/registry/new-york-v4/ui/button"
 import {
   Form,
@@ -33,19 +36,13 @@ import {
 
 // Register the languages you need
 const lowlight = createLowlight(all)
-lowlight.register('javascript', javascript)
-
+lowlight.register("javascript", js)
+lowlight.register("typescript", ts)
 
 const baseSchema = z.object({
   name: z.string().min(1, "Name is required."),
-  checkInterval: z.coerce
-    .number()
-    .int()
-    .positive("Interval must be positive."),
-  timeoutSeconds: z.coerce
-    .number()
-    .int()
-    .positive("Timeout must be positive."),
+  checkInterval: z.coerce.number().int().positive("Interval must be positive."),
+  timeoutSeconds: z.coerce.number().int().positive("Timeout must be positive."),
   runtime: z.enum(["playwright-cf-latest", "puppeteer-cf-latest"]),
   scriptContent: z.string().min(1, "Script content cannot be empty."),
 })
@@ -62,63 +59,69 @@ export type SyntheticMonitorFormValues = z.infer<
   typeof syntheticMonitorFormSchema
 >
 
-// --- Tiptap Editor Setup ---
 function TiptapEditor({
   onChange,
   initialValue,
   placeholder,
 }: {
-  onChange: (value: string) => void;
-  initialValue?: string;
-  placeholder?: string;
+  onChange: (value: string) => void
+  initialValue: string
+  placeholder?: string
 }) {
   const editor = useEditor({
     extensions: [
-        Document,
-        // Paragraph,
-        // Heading,
-        Text,
-        // Bold,
-        // Italic,
-        // ListItem,
-    //   StarterKit.configure({
-    //     // Disable history extension to avoid conflicts if you add it separately
-    //     history: false,
-    //     // Disable default code block to use CodeBlockLowlight
-    //     codeBlock: false,
-    //   }),
-      CodeBlockLowlight.configure({
-        lowlight,
-        defaultLanguage: 'javascript',
-      }),
+      Document,
+      Text,
+      Paragraph,
+      CodeBlockLowlight
+        .extend({
+          addNodeView() {
+            return ReactNodeViewRenderer(CodeBlock)
+          },
+          isolating: true,
+        })
+        .configure({ lowlight, defaultLanguage: "typescript" }),
     ],
-    content: initialValue ? `<pre><code class="language-javascript">${initialValue}</code></pre>` : '<pre><code class="language-javascript"></code></pre>',
+    content: {
+      type: 'doc',
+      content: [
+        {
+          type: 'codeBlock',
+          attrs: { language: 'typescript' },
+          content: initialValue ? [{ type: 'text', text: initialValue }] : [],
+        },
+      ],
+    },
     onUpdate: ({ editor }) => {
       // Extract text content specifically from code blocks
-      let textContent = '';
+      let textContent = ""
       editor.state.doc.descendants((node) => {
-        if (node.type.name === 'codeBlock') {
-          textContent += `${node.textContent}\n`; // Add newline between blocks if multiple
+        if (node.type.name === "codeBlock") {
+          textContent += `${node.textContent}\n` // Add newline between blocks if multiple
         }
-      });
-      onChange(textContent.trim()); // Trim trailing newline
+      })
+      onChange(textContent.trim()) // Trim trailing newline
     },
-    editorProps: {
-        attributes: {
-          // Add Tailwind classes for styling the editor content area
-          class: 'prose dark:prose-invert prose-sm sm:prose-base lg:prose-lg xl:prose-2xl focus:outline-none min-h-[200px] p-2 w-full',
-        },
-      },
-  });
+    // editorProps: {
+    //   attributes: {
+    //     // Add Tailwind classes for styling the editor content area
+    //     class:
+    //       "prose dark:prose-invert prose-sm sm:prose-base lg:prose-lg xl:prose-2xl focus:outline-none min-h-[200px] p-2 w-full",
+    //   },
+    // },
+  })
 
-  // Optional: Add a toolbar here if needed
+  // useEffect(() => {
+  //   if (editor?.isEmpty) {
+  //     editor.commands.setContent('<pre><code class="language-typescript"></code></pre>')
+  //   }
+  // }, [editor])
 
   return (
     <div className="border rounded-md overflow-hidden">
-      {/* Render the editor content area */}
       <EditorContent editor={editor} />
     </div>
-  );
+  )
 }
 
 export function SyntheticMonitorForm() {
@@ -208,7 +211,7 @@ export function SyntheticMonitorForm() {
                     value={field.value ?? ""}
                     onChange={field.onChange}
                     min="1"
-                 />
+                  />
                 </FormControl>
                 <FormDescription>
                   Maximum execution time allowed.
@@ -259,12 +262,13 @@ export function SyntheticMonitorForm() {
               <FormControl>
                 <TiptapEditor
                   onChange={field.onChange}
-                  initialValue={field.value ?? ''}
+                  initialValue={field.value ?? ""}
                   placeholder="Enter your Playwright/Puppeteer script here..."
                 />
               </FormControl>
               <FormDescription>
-                Write your browser automation script here (JavaScript).
+                Write your browser automation script here (JavaScript or
+                TypeScript).
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -280,4 +284,4 @@ export function SyntheticMonitorForm() {
       </form>
     </Form>
   )
-} 
+}
