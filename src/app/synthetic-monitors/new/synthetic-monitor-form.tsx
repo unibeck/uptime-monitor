@@ -1,20 +1,12 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight"
-import Document from "@tiptap/extension-document"
-import Paragraph from "@tiptap/extension-paragraph"
-import Text from "@tiptap/extension-text"
-import { EditorContent, ReactNodeViewRenderer, useEditor } from "@tiptap/react"
-import js from "highlight.js/lib/languages/javascript"
-import ts from "highlight.js/lib/languages/typescript"
-
-import { all, createLowlight } from "lowlight"
-import "highlight.js/styles/github-dark.css"
-
+import { Editor } from 'codice'
+import { useState } from "react"
 import { useForm } from "react-hook-form"
+
 import { z } from "zod"
-import CodeBlock from "@/components/editor/code-block"
+import LiveEditor from "@/components/editor/live-editor"
 import { Button } from "@/registry/new-york-v4/ui/button"
 import {
   Form,
@@ -33,11 +25,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/registry/new-york-v4/ui/select"
-
-// Register the languages you need
-const lowlight = createLowlight(all)
-lowlight.register("javascript", js)
-lowlight.register("typescript", ts)
 
 const baseSchema = z.object({
   name: z.string().min(1, "Name is required."),
@@ -59,7 +46,7 @@ export type SyntheticMonitorFormValues = z.infer<
   typeof syntheticMonitorFormSchema
 >
 
-function TiptapEditor({
+function SugarHighEditor({
   onChange,
   initialValue,
   placeholder,
@@ -68,59 +55,43 @@ function TiptapEditor({
   initialValue: string
   placeholder?: string
 }) {
-  const editor = useEditor({
-    extensions: [
-      Document,
-      Text,
-      Paragraph,
-      CodeBlockLowlight
-        .extend({
-          addNodeView() {
-            return ReactNodeViewRenderer(CodeBlock)
-          },
-          isolating: true,
-        })
-        .configure({ lowlight, defaultLanguage: "typescript" }),
-    ],
-    content: {
-      type: 'doc',
-      content: [
-        {
-          type: 'codeBlock',
-          attrs: { language: 'typescript' },
-          content: initialValue ? [{ type: 'text', text: initialValue }] : [],
-        },
-      ],
-    },
-    onUpdate: ({ editor }) => {
-      // Extract text content specifically from code blocks
-      let textContent = ""
-      editor.state.doc.descendants((node) => {
-        if (node.type.name === "codeBlock") {
-          textContent += `${node.textContent}\n` // Add newline between blocks if multiple
-        }
-      })
-      onChange(textContent.trim()) // Trim trailing newline
-    },
-    // editorProps: {
-    //   attributes: {
-    //     // Add Tailwind classes for styling the editor content area
-    //     class:
-    //       "prose dark:prose-invert prose-sm sm:prose-base lg:prose-lg xl:prose-2xl focus:outline-none min-h-[200px] p-2 w-full",
-    //   },
-    // },
-  })
+  const [code, setCode] = useState(initialValue || "let asdf = 0;")
+  // const [highlightedCode, setHighlightedCode] = useState("")
 
   // useEffect(() => {
-  //   if (editor?.isEmpty) {
-  //     editor.commands.setContent('<pre><code class="language-typescript"></code></pre>')
-  //   }
-  // }, [editor])
+  //   const initialContent = initialValue || ""
+  //   setCode(initialContent)
+  //   setHighlightedCode(highlight(initialContent))
+  // }, [initialValue])
+
+  // const handleCodeChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+  //   const newCode = event.target.value
+  //   setCode(newCode)
+  //   setHighlightedCode(highlight(newCode))
+  //   onChange(newCode)
+  // }
 
   return (
-    <div className="border rounded-md overflow-hidden">
-      <EditorContent editor={editor} />
-    </div>
+    <Editor
+      title="index.js"
+      value={code}
+      onChange={(text) => setCode(text.toString())}
+    />
+    // <div className="relative border rounded-md">
+    //   {/* <Textarea
+    //     value={code}
+    //     onChange={handleCodeChange}
+    //     placeholder={placeholder}
+    //     className="absolute inset-0 w-full h-full p-2 bg-transparent text-transparent caret-white font-mono text-sm resize-none !outline-none !ring-0 !border-0 z-10"
+    //     spellCheck="false"
+    //   /> */}
+    //   {/* <pre className="min-h-[200px] p-2 w-full overflow-auto whitespace-pre-wrap break-all">
+    //     <code
+    //       dangerouslySetInnerHTML={{ __html: highlightedCode }}
+    //       className="font-mono text-sm"
+    //     />
+    //   </pre> */}
+    // </div>
   )
 }
 
@@ -260,11 +231,7 @@ export function SyntheticMonitorForm() {
             <FormItem>
               <FormLabel>Script</FormLabel>
               <FormControl>
-                <TiptapEditor
-                  onChange={field.onChange}
-                  initialValue={field.value ?? ""}
-                  placeholder="Enter your Playwright/Puppeteer script here..."
-                />
+                <LiveEditor />
               </FormControl>
               <FormDescription>
                 Write your browser automation script here (JavaScript or

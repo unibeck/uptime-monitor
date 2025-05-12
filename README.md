@@ -137,3 +137,12 @@ pnpm run db:studio:prod
 
 ## CI/CD
 TODO
+
+
+## TODO
+- [] make syntex highlighting theme agnostic
+- [] add vertical expand/collapse to editor
+- [] move test button and copy button to top right of editor
+- [] Move create monitor button to header right
+- [] clean up dependencies
+- [] connect editor to form
