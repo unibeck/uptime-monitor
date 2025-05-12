@@ -140,9 +140,12 @@ TODO
 
 
 ## TODO
-- [] make syntex highlighting theme agnostic
-- [] add vertical expand/collapse to editor
+- [] make syntax highlighting theme agnostic
+- [] fix missing cursor in editor
+- [x] add vertical expand/collapse to editor
 - [] move test button and copy button to top right of editor
 - [] Move create monitor button to header right
 - [] clean up dependencies
 - [] connect editor to form
+- [] do I need `setDefaultLiveCode`?
+- [] make min and make values responsive

@@ -1,7 +1,7 @@
 "use client"
 
 import { Editor } from "codice"
-import { useEffect, useRef, useState, } from "react"
+import { useEffect, useState, } from "react"
 
 const defaultColorPlateColors = {
   class: "#8d85ff",
@@ -50,14 +50,13 @@ function useDefaultLiveCode(defaultCodeText: string) {
 export default function LiveEditor({
   defaultCode = DEFAULT_LIVE_CODE,
 }) {
-  const editorRef = useRef(null)
   const { defaultLiveCode, setDefaultLiveCode } =
     useDefaultLiveCode(defaultCode)
 
   const [liveCode, setLiveCode] = useState(defaultLiveCode)
 
   return (
-    <div className={"live-editor-section prose dark:prose-invert prose-sm sm:prose-base lg:prose-lg xl:prose-2xl focus:outline-none min-h-[200px] p-2 w-full"}>
+    <div className={"live-editor-section border"}>
       <style>{`
         ${`
         .live-editor-section {
@@ -73,14 +72,11 @@ export default function LiveEditor({
         }
         `}`}</style>
 
-      <div className="flex live-editor">
+      <div className="live-editor border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 flex field-sizing-content w-full rounded-md border bg-transparent text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm">
         <Editor
-          ref={editorRef}
-          className="codice editor flex-1"
+          className="resize-y prose dark:prose-invert prose-sm sm:prose-base lg:prose-lg xl:prose-2xl focus:outline-none min-h-[200px] max-h-[500px] w-full"
           controls={false}
           value={liveCode}
-          fontSize={14}
-          lineNumbersWidth="2rem"
           onChange={(newCode) => {
             setLiveCode(newCode.toString())
             setDefaultLiveCode(newCode.toString())

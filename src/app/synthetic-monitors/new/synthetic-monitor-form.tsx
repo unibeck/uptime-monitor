@@ -6,7 +6,6 @@ import { useState } from "react"
 import { useForm } from "react-hook-form"
 
 import { z } from "zod"
-import LiveEditor from "@/components/editor/live-editor"
 import { Button } from "@/registry/new-york-v4/ui/button"
 import {
   Form,
@@ -25,6 +24,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/registry/new-york-v4/ui/select"
+import { Textarea } from "@/registry/new-york-v4/ui/textarea"
+import LiveEditor from "@/components/editor/live-editor"
 
 const baseSchema = z.object({
   name: z.string().min(1, "Name is required."),
