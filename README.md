@@ -141,8 +141,9 @@ TODO
 
 ## TODO
 - [] make syntax highlighting theme agnostic
-- [] fix missing cursor in editor
+- [x] fix missing cursor in editor
 - [x] add vertical expand/collapse to editor
+- [] improve editor border outline to behave like other input on focus
 - [] move test button and copy button to top right of editor
 - [] Move create monitor button to header right
 - [] clean up dependencies

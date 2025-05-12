@@ -60,6 +60,7 @@ export default function LiveEditor({
       <style>{`
         ${`
         .live-editor-section {
+          --codice-caret-color: var(--foreground);
           --sh-class: ${defaultColorPlateColors.class};
           --sh-identifier: ${defaultColorPlateColors.identifier};
           --sh-sign: ${defaultColorPlateColors.sign};
@@ -72,7 +73,7 @@ export default function LiveEditor({
         }
         `}`}</style>
 
-      <div className="live-editor border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 flex field-sizing-content w-full rounded-md border bg-transparent text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm">
+      <div className="border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 flex field-sizing-content w-full rounded-md border bg-transparent text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm">
         <Editor
           className="resize-y prose dark:prose-invert prose-sm sm:prose-base lg:prose-lg xl:prose-2xl focus:outline-none min-h-[200px] max-h-[500px] w-full"
           controls={false}
