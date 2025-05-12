@@ -142,7 +142,7 @@ TODO
 ## TODO
 - [x] implement prism-code-editor
 - [x] hook editor into form
-- [] update editor theme based on mode (light/dark)
+- [x] update editor theme based on mode (light/dark)
 - [] improve editor border outline to behave like other input on focus
     - see https://github.com/FIameCaster/prism-code-editor/releases/tag/4.0.0 for "pce-textarea" class that we can hook into
 - [] move test button and copy button to top right of editor
