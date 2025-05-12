@@ -140,7 +140,7 @@ TODO
 
 
 ## TODO
-- [] make syntax highlighting theme agnostic
+- [x] make syntax highlighting theme agnostic
 - [x] fix missing cursor in editor
 - [x] add vertical expand/collapse to editor
 - [] improve editor border outline to behave like other input on focus

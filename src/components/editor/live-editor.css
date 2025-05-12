@@ -1,0 +1,25 @@
+.live-editor-section {
+  --codice-caret-color: var(--foreground);
+  --sh-identifier: var(--foreground);
+
+  --sh-class: #8d85ff;
+  --sh-sign: #8996a3;
+  --sh-property: #4e8fdf;
+  --sh-entity: #6eafad;
+  --sh-string: #00a99a;
+  --sh-keyword: #f47067;
+  --sh-comment: #a19595;
+  --sh-jsxliterals: #bf7db6;
+}
+
+.dark .live-editor-section {
+  --sh-identifier: #9CDCFE;
+  --sh-class: #ffa657;
+  --sh-sign: #569cd6;
+  --sh-property: #4FC1FF;
+  --sh-entity: #bf7db6;
+  --sh-string: #ce9178;
+  --sh-keyword: #ff7b72;
+  --sh-comment: #8b949e;
+  --sh-jsxliterals: #79c0ff;
+}
