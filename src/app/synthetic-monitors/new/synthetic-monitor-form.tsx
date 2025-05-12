@@ -1,11 +1,10 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Editor } from 'codice'
-import { useState } from "react"
 import { useForm } from "react-hook-form"
 
 import { z } from "zod"
+import LiveEditor from "@/components/editor/live-editor"
 import { Button } from "@/registry/new-york-v4/ui/button"
 import {
   Form,
@@ -24,8 +23,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/registry/new-york-v4/ui/select"
-import { Textarea } from "@/registry/new-york-v4/ui/textarea"
-import LiveEditor from "@/components/editor/live-editor"
 
 const baseSchema = z.object({
   name: z.string().min(1, "Name is required."),
@@ -46,55 +43,6 @@ const syntheticMonitorFormSchema = baseSchema.refine(
 export type SyntheticMonitorFormValues = z.infer<
   typeof syntheticMonitorFormSchema
 >
-
-function SugarHighEditor({
-  onChange,
-  initialValue,
-  placeholder,
-}: {
-  onChange: (value: string) => void
-  initialValue: string
-  placeholder?: string
-}) {
-  const [code, setCode] = useState(initialValue || "let asdf = 0;")
-  // const [highlightedCode, setHighlightedCode] = useState("")
-
-  // useEffect(() => {
-  //   const initialContent = initialValue || ""
-  //   setCode(initialContent)
-  //   setHighlightedCode(highlight(initialContent))
-  // }, [initialValue])
-
-  // const handleCodeChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-  //   const newCode = event.target.value
-  //   setCode(newCode)
-  //   setHighlightedCode(highlight(newCode))
-  //   onChange(newCode)
-  // }
-
-  return (
-    <Editor
-      title="index.js"
-      value={code}
-      onChange={(text) => setCode(text.toString())}
-    />
-    // <div className="relative border rounded-md">
-    //   {/* <Textarea
-    //     value={code}
-    //     onChange={handleCodeChange}
-    //     placeholder={placeholder}
-    //     className="absolute inset-0 w-full h-full p-2 bg-transparent text-transparent caret-white font-mono text-sm resize-none !outline-none !ring-0 !border-0 z-10"
-    //     spellCheck="false"
-    //   /> */}
-    //   {/* <pre className="min-h-[200px] p-2 w-full overflow-auto whitespace-pre-wrap break-all">
-    //     <code
-    //       dangerouslySetInnerHTML={{ __html: highlightedCode }}
-    //       className="font-mono text-sm"
-    //     />
-    //   </pre> */}
-    // </div>
-  )
-}
 
 export function SyntheticMonitorForm() {
   const form = useForm<SyntheticMonitorFormValues>({
@@ -232,7 +180,9 @@ export function SyntheticMonitorForm() {
             <FormItem>
               <FormLabel>Script</FormLabel>
               <FormControl>
-                <LiveEditor />
+                <LiveEditor
+                  onChange={field.onChange}
+                />
               </FormControl>
               <FormDescription>
                 Write your browser automation script here (JavaScript or
