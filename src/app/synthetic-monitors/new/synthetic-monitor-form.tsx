@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 
 import { z } from "zod"
-import LiveEditor from "@/components/editor/live-editor"
+import CodeEditor from "@/components/editor/code-editor"
 import { Button } from "@/registry/new-york-v4/ui/button"
 import {
   Form,
@@ -180,7 +180,7 @@ export function SyntheticMonitorForm() {
             <FormItem>
               <FormLabel>Script</FormLabel>
               <FormControl>
-                <LiveEditor
+                <CodeEditor
                   onChange={field.onChange}
                 />
               </FormControl>
