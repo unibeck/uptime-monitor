@@ -146,6 +146,7 @@ TODO
 - [x] improve editor border outline to behave like other input on focus
     - see https://github.com/FIameCaster/prism-code-editor/releases/tag/4.0.0 for "pce-textarea" class that we can hook into
 - [x] move copy button to top right of editor
-- [] Move create monitor button to header right
+- [x] Move create monitor button to header right
 - [x] clean up dependencies
+- [] disable create button if form is invalid
 - [] make min and make values responsive

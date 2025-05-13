@@ -1,11 +1,8 @@
 "use client"
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-
+import type { UseFormReturn } from "react-hook-form"
 import { z } from "zod"
 import CodeEditor from "@/components/editor/code-editor"
-import { Button } from "@/registry/new-york-v4/ui/button"
 import {
   Form,
   FormControl,
@@ -13,7 +10,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
+  FormMessage
 } from "@/registry/new-york-v4/ui/form"
 import { Input } from "@/registry/new-york-v4/ui/input"
 import {
@@ -44,23 +41,12 @@ export type SyntheticMonitorFormValues = z.infer<
   typeof syntheticMonitorFormSchema
 >
 
-export function SyntheticMonitorForm() {
-  const form = useForm<SyntheticMonitorFormValues>({
-    resolver: zodResolver(syntheticMonitorFormSchema),
-    defaultValues: {
-      name: "",
-      checkInterval: 300,
-      timeoutSeconds: 30,
-      runtime: "playwright-cf-latest",
-      scriptContent: "",
-    },
-  })
+interface SyntheticMonitorFormProps {
+  form: UseFormReturn<SyntheticMonitorFormValues>
+  onSubmit: (values: SyntheticMonitorFormValues) => void
+}
 
-  function onSubmit(values: SyntheticMonitorFormValues) {
-    console.log("Form Submitted:", values)
-    // TODO: Implement API call to POST /api/synthetic-monitors
-  }
-
+export function SyntheticMonitorForm({ form, onSubmit }: SyntheticMonitorFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -173,7 +159,8 @@ export function SyntheticMonitorForm() {
               <FormLabel>Script</FormLabel>
               <FormControl>
                 <CodeEditor
-                  onChange={field.onChange}
+                  editorName="scriptContent"
+                  onContentChange={field.onChange}
                 />
               </FormControl>
               <FormDescription>
@@ -184,10 +171,6 @@ export function SyntheticMonitorForm() {
             </FormItem>
           )}
         />
-
-        <div className="flex justify-between items-center">
-          <Button type="submit">Create Monitor</Button>
-        </div>
       </form>
     </Form>
   )

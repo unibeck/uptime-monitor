@@ -19,14 +19,17 @@ async ({ page, context }) => {
 }
 `
 
-interface CodeEditorProps {
+interface CodeEditorProps extends React.HTMLAttributes<HTMLDivElement> {
   initialValue?: string
-  onChange?: (value: string) => void
+  onContentChange?: (value: string) => void
+  editorName?: string
 }
 
 export default function CodeEditor({
   initialValue = DEFAULT_LIVE_CODE,
-  onChange,
+  onContentChange,
+  editorName = "editor",
+  ...props
 }: CodeEditorProps) {
   const { resolvedTheme } = useTheme()
   const cssEditorTheme = useEditorTheme(
@@ -46,11 +49,14 @@ export default function CodeEditor({
 
   const handleUpdate = (value: string) => {
     setEditorContent(value)
-    onChange?.(value)
+    onContentChange?.(value)
   }
 
   return (
-    <div className="focus-within:border-ring focus-within:ring-ring/50 focus-within:ring-[3px] text-base md:text-md border-input placeholder:text-muted-foreground aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 field-sizing-content w-full border bg-transparent shadow-xs transition-[color,box-shadow] outline-none disabled:cursor-not-allowed disabled:opacity-50">
+    <div
+      className="focus-within:border-ring focus-within:ring-ring/50 focus-within:ring-[3px] text-base md:text-md border-input placeholder:text-muted-foreground aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 field-sizing-content w-full border bg-transparent shadow-xs transition-[color,box-shadow] outline-none disabled:cursor-not-allowed disabled:opacity-50"
+      {...props}
+    >
       {cssEditorTheme && (
         <div className="relative">
           <div className="absolute right-0.5 top-0.5 z-10 opacity-65 hover:opacity-100 transition-opacity duration-200">
@@ -69,7 +75,7 @@ export default function CodeEditor({
               value={initialValue}
               className="resize-y min-h-[160px] max-h-[500px] w-full"
               textareaProps={{
-                name: "editor",
+                name: editorName,
                 "aria-label": "Code editor",
               }}
               onUpdate={handleUpdate}
