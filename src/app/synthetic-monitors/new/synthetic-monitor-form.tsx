@@ -61,14 +61,6 @@ export function SyntheticMonitorForm() {
     // TODO: Implement API call to POST /api/synthetic-monitors
   }
 
-  function handleTestScript() {
-    const scriptContent = form.getValues("scriptContent")
-    const runtime = form.getValues("runtime")
-    const timeout = form.getValues("timeoutSeconds")
-    console.log("Testing script:", { scriptContent, runtime, timeout })
-    // TODO: Implement API call to POST /api/monitors/synthetic/test
-  }
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -195,9 +187,6 @@ export function SyntheticMonitorForm() {
 
         <div className="flex justify-between items-center">
           <Button type="submit">Create Monitor</Button>
-          <Button type="button" variant="outline" onClick={handleTestScript}>
-            Test Script
-          </Button>
         </div>
       </form>
     </Form>
