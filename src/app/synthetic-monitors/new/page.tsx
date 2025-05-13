@@ -1,14 +1,15 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
+import { MoreVertical } from "lucide-react"
 import { useCallback, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { useHeaderContext } from "@/context/header-context"
 import { Button } from "@/registry/new-york-v4/ui/button"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/registry/new-york-v4/ui/dropdown-menu"
 import {
   SyntheticMonitorForm,
-  type SyntheticMonitorFormValues,
 } from "./synthetic-monitor-form"
 
 const baseSchema = z.object({
@@ -19,13 +20,17 @@ const baseSchema = z.object({
   scriptContent: z.string().min(1, "Script content cannot be empty."),
 })
 
-const syntheticMonitorFormSchema = baseSchema.refine(
+export const syntheticMonitorFormSchema = baseSchema.refine(
   (data) => data.checkInterval >= data.timeoutSeconds + 5,
   {
     message: "Check Interval must be at least 5 seconds greater than Timeout.",
     path: ["checkInterval"],
   },
 )
+
+export type SyntheticMonitorFormValues = z.infer<
+  typeof syntheticMonitorFormSchema
+>
 
 export default function CreateSyntheticMonitorPage() {
   const { setHeaderLeftContent, setHeaderRightContent } = useHeaderContext()
@@ -54,14 +59,45 @@ export default function CreateSyntheticMonitorPage() {
   useEffect(() => {
     setHeaderLeftContent("New Synthetic Monitor")
     setHeaderRightContent(
-      <div className="flex gap-3">
-        <Button type="button" variant="secondary" onClick={form.handleSubmit(onTestScript)}>
-          Test Script
-        </Button>
-        <Button type="button" variant="primary" onClick={form.handleSubmit(onSubmit)}>
-          Create Monitor
-        </Button>
-      </div>,
+      <>
+        {/* Desktop: Two separate buttons */}
+        <div className="hidden lg:flex gap-3">
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={form.handleSubmit(onTestScript)}
+          >
+            Test Script
+          </Button>
+          <Button
+            type="button"
+            variant="primary"
+            onClick={form.handleSubmit(onSubmit)}
+          >
+            Create Monitor
+          </Button>
+        </div>
+
+        {/* Mobile: Dropdown menu */}
+        <div className="lg:hidden">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="primary" size="icon" type="button">
+                <MoreVertical className="h-5 w-5" />
+                <span className="sr-only">Actions</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={form.handleSubmit(onTestScript)}>
+                Test Script
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={form.handleSubmit(onSubmit)}>
+                Create Monitor
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </>
     )
     return () => {
       setHeaderRightContent(null)

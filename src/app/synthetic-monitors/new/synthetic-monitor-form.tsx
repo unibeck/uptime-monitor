@@ -1,7 +1,6 @@
 "use client"
 
 import type { UseFormReturn } from "react-hook-form"
-import { z } from "zod"
 import CodeEditor from "@/components/editor/code-editor"
 import {
   Form,
@@ -10,7 +9,7 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
+  FormMessage,
 } from "@/registry/new-york-v4/ui/form"
 import { Input } from "@/registry/new-york-v4/ui/input"
 import {
@@ -20,33 +19,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/registry/new-york-v4/ui/select"
-
-const baseSchema = z.object({
-  name: z.string().min(1, "Name is required."),
-  checkInterval: z.coerce.number().int().positive("Interval must be positive."),
-  timeoutSeconds: z.coerce.number().int().positive("Timeout must be positive."),
-  runtime: z.enum(["playwright-cf-latest", "puppeteer-cf-latest"]),
-  scriptContent: z.string().min(1, "Script content cannot be empty."),
-})
-
-const syntheticMonitorFormSchema = baseSchema.refine(
-  (data) => data.checkInterval >= data.timeoutSeconds + 5,
-  {
-    message: "Check Interval must be at least 5 seconds greater than Timeout.",
-    path: ["checkInterval"],
-  },
-)
-
-export type SyntheticMonitorFormValues = z.infer<
-  typeof syntheticMonitorFormSchema
->
+import type { SyntheticMonitorFormValues } from "./page"
 
 interface SyntheticMonitorFormProps {
   form: UseFormReturn<SyntheticMonitorFormValues>
   onSubmit: (values: SyntheticMonitorFormValues) => void
 }
 
-export function SyntheticMonitorForm({ form, onSubmit }: SyntheticMonitorFormProps) {
+export function SyntheticMonitorForm({
+  form,
+  onSubmit,
+}: SyntheticMonitorFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
