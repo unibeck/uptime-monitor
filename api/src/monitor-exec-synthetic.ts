@@ -1,11 +1,7 @@
 import { WorkerEntrypoint } from "cloudflare:workers"
+import { Browser, launch, type BrowserWorker } from '@cloudflare/playwright';
+
 import { eq } from "drizzle-orm"
-// Import Lexical types needed for parsing
-import type {
-  SerializedEditorState,
-  SerializedLexicalNode,
-  SerializedTextNode,
-} from "lexical"
 import { OK } from "stoker/http-status-codes"
 import { OK as OK_PHRASE } from "stoker/http-status-phrases"
 import { takeFirstOrNull, useDrizzle } from "@/db"
@@ -17,45 +13,21 @@ interface SyntheticExecPayload {
   timeoutSeconds: number
 }
 
-// Helper function to extract text from Lexical JSON state
-function extractCodeFromLexicalState(
-  serializedState: SerializedEditorState,
-): string {
-  let code = ""
-  function traverse(node: SerializedLexicalNode) {
-    if (node.type === "code" || node.type === "code-highlight") {
-      // Handle code blocks specifically if needed
-      // Lexical code blocks might structure text differently, adjust as needed
-      // This basic version assumes text content is directly within child text nodes
-      if ("children" in node && Array.isArray(node.children)) {
-        node.children.forEach(traverse)
-      }
-    } else if (node.type === "text" && "text" in node) {
-      code += (node as SerializedTextNode).text
-    } else if (
-      node.type === "paragraph" ||
-      node.type === "root" ||
-      node.type === "line-break"
-    ) {
-      if (
-        node.type === "paragraph" &&
-        code.length > 0 &&
-        !code.endsWith("\n")
-      ) {
-        code += "\n" // Add newline after paragraphs if not already present
-      }
-      if (node.type === "line-break") {
-        code += "\n"
-      }
-      // Traverse children
-      if ("children" in node && Array.isArray(node.children)) {
-        node.children.forEach(traverse)
-      }
-    }
-    // Add handling for other node types if necessary (e.g., list items)
-  }
-  traverse(serializedState.root)
-  return code.trim() // Trim leading/trailing whitespace
+interface TestScriptPayload {
+  scriptContent: string;
+  runtime: "playwright-cf-latest" | "puppeteer-cf-latest";
+  timeoutSeconds: number;
+}
+
+interface TestScriptInternalResult {
+  success: boolean;
+  logs: string[];
+  error?: string;
+  durationMs?: number;
+}
+
+interface CfConsoleMessage {
+  text: () => string;
 }
 
 export default class MonitorExecSynthetic extends WorkerEntrypoint<CloudflareEnv> {
@@ -67,7 +39,6 @@ export default class MonitorExecSynthetic extends WorkerEntrypoint<CloudflareEnv
     )
   }
 
-  // Called via service binding from monitor-trigger DO
   async executeCheck(payload: SyntheticExecPayload) {
     // Use waitUntil to allow the DO to return quickly
     this.ctx.waitUntil(this._executeCheck(payload))
@@ -98,9 +69,7 @@ export default class MonitorExecSynthetic extends WorkerEntrypoint<CloudflareEnv
 
     // 2. Fetch script STATE from R2
     const scriptStateKey = `scripts/synthetic/${monitorId}.js` // Keep naming convention for now
-    let rawScriptState: string | null = null
-    let parsedState: SerializedEditorState | null = null
-    let executableCode: string | null = null
+    let script: string | null = null
 
     try {
       const scriptObject = await this.env.SYNTHETIC_SCRIPTS.get(scriptStateKey)
@@ -109,16 +78,10 @@ export default class MonitorExecSynthetic extends WorkerEntrypoint<CloudflareEnv
           `Script state object not found in R2 for key: ${scriptStateKey}`,
         )
       }
-      rawScriptState = await scriptObject.text()
-      parsedState = JSON.parse(rawScriptState) as SerializedEditorState
-      executableCode = extractCodeFromLexicalState(parsedState) // Extract code
+      script = await scriptObject.text()
       console.log(
         `Fetched and parsed script state [${scriptStateKey}] for monitor [${monitorId}]`,
       )
-
-      if (!executableCode) {
-        throw new Error("Extracted executable code is empty.")
-      }
     } catch (error) {
       console.error(
         `Failed to fetch or parse script state for [${monitorId}]:`,
@@ -134,17 +97,16 @@ export default class MonitorExecSynthetic extends WorkerEntrypoint<CloudflareEnv
       return
     }
 
-    // Ensure executableCode is not null (already handled by catch, but for TS)
-    if (!executableCode) {
+    if (!script) {
       console.error(
-        `Executable code is unexpectedly null for [${monitorId}] after parsing.`,
+        `Script is unexpectedly null for [${monitorId}] after parsing.`,
       )
       await this.recordCheckResult(
         db,
         monitorId,
         "failure",
         0,
-        "Internal error: Executable code null after parsing.",
+        "Internal error: Script null after parsing.",
       )
       return
     }
@@ -175,7 +137,7 @@ export default class MonitorExecSynthetic extends WorkerEntrypoint<CloudflareEnv
         "page",
         "context",
         "browser",
-        executableCode,
+        script,
       )
       await userScriptFunction(page, browserContext, browser)
 
@@ -225,6 +187,76 @@ export default class MonitorExecSynthetic extends WorkerEntrypoint<CloudflareEnv
     console.log(
       `Synthetic check finished for [${monitorId}]. Outcome: ${checkResult.statusOutcome}`,
     )
+  }
+
+  // --- Test Script Execution Method ---
+  public async testScript(
+    payload: TestScriptPayload,
+  ): Promise<TestScriptInternalResult> {
+    const { scriptContent, runtime, timeoutSeconds } = payload;
+    const logs: string[] = [];
+    // The BROWSER binding itself (this.env.BROWSER) is what we call .launch() on.
+    // The result of launch is the actual browser instance to be closed.
+    let browser: Browser | undefined = undefined;
+
+    logs.push(
+      `[TestScript] Initiating test with runtime: ${runtime}, timeout: ${timeoutSeconds}s.`,
+    );
+    const startTime = Date.now();
+
+    try {
+      logs.push(`[TestScript] Launching browser runtime: ${runtime}`);
+      browser = await launch(this.env.BROWSER);
+      logs.push("[TestScript] Browser launched.");
+      const page = await browser.newPage();
+      logs.push("[TestScript] New page created.");
+
+      page.on("console", (msg: CfConsoleMessage) => { 
+        const msgText = msg.text();
+        logs.push(`[Script CONSOLE] ${msgText}`);
+      });
+
+      logs.push("[TestScript] Executing user script...");
+
+      //BLOCKED: https://x.com/SolBeckman_/status/1922447497156317546
+      // const userScriptFunction = new Function(
+      //   "page",
+      //   "context",
+      //   "browser",
+      //   scriptContent,
+      // );
+      // await userScriptFunction(page, context, launchedBrowser);
+
+      const durationMs = Date.now() - startTime;
+      logs.push(
+        `[TestScript] Script completed successfully in ${durationMs}ms.`,
+      );
+      return { success: true, durationMs, logs };
+    } catch (error) {
+      const durationMs = Date.now() - startTime;
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      logs.push(`[TestScript] Script execution failed after ${durationMs}ms.`);
+      logs.push(`[TestScript] Error: ${errorMsg}`);
+      // Include stack trace if available
+      if (error instanceof Error && error.stack) {
+        logs.push(`[TestScript] Stack: ${error.stack}`);
+      }
+      return { success: false, durationMs, error: errorMsg, logs };
+    } finally {
+      if (browser) {
+        try {
+          logs.push("[TestScript] Closing browser.");
+          await browser.close();
+          logs.push("[TestScript] Browser closed.");
+        } catch (closeError) {
+          const closeMsg =
+            closeError instanceof Error
+              ? closeError.message
+              : String(closeError);
+          logs.push(`[TestScript] Error closing browser: ${closeMsg}`);
+        }
+      }
+    }
   }
 
   private async recordCheckResult(
