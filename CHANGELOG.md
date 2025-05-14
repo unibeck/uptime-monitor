@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.1](https://github.com/unibeck/uptime-monitor/compare/uptime-monitor@v1.5.0...uptime-monitor@v1.5.1) (2025-05-14)
+
+
+### Bug Fixes
+
+* improved layout and updated dependencies ([55ad0fe](https://github.com/unibeck/uptime-monitor/commit/55ad0fe3842620bd45116aa91225224ceeb8d34c))
+
 ## [1.5.0](https://github.com/unibeck/uptime-monitor/compare/uptime-monitor@v1.4.1...uptime-monitor@v1.5.0) (2025-04-29)
 
 
