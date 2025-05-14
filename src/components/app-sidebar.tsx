@@ -2,6 +2,7 @@
 
 import {
   IconAppWindow,
+  IconBell,
   IconBrandGithub,
   IconBulb,
   IconDashboard,
@@ -9,6 +10,7 @@ import {
   IconDna,
   IconFileWord,
   IconHeartbeat,
+  IconMail,
   IconPrismLight,
   IconReport,
   IconSparkles,
@@ -42,8 +44,9 @@ const data = {
           icon: IconTargetArrow,
         },
         {
-          title: "Synthetic",
-          url: "/synthetic-monitors",
+          title: "Synthetic (blocked)",
+          url: "https://github.com/unibeck/uptime-monitor/issues/19#issuecomment-2878393426",
+          external: true,
           icon: IconAppWindow,
         },
         {
@@ -69,6 +72,25 @@ const data = {
           url: "https://github.com/unibeck/uptime-monitor/issues",
           external: true,
           icon: IconBulb,
+        },
+      ],
+    },
+
+    {
+      title: "Notifications",
+      url: "/",
+      icon: IconBell,
+      items: [
+        {
+          title: "Opsgenie",
+          url: "/",
+          icon: IconBell,
+        },
+        {
+          title: "Email (soon)",
+          url: "https://github.com/unibeck/uptime-monitor/issues/47",
+          external: true,
+          icon: IconMail,
         },
       ],
     },

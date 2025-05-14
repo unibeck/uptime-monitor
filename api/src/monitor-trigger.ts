@@ -4,7 +4,7 @@ import { eq } from "drizzle-orm"
 import { OK } from "stoker/http-status-codes"
 import { OK as OK_PHRASE } from "stoker/http-status-phrases"
 import { takeUniqueOrThrow, useDrizzle } from "@/db"
-import { EndpointMonitorsTable, SyntheticMonitorsTable } from "@/db/schema"
+import { EndpointMonitorsTable } from "@/db/schema"
 import { MonitorTriggerNotInitializedError } from "@/lib/errors"
 import { endpointSignature } from "@/lib/formatters"
 
@@ -171,17 +171,9 @@ export class MonitorTrigger extends DurableObject<CloudflareEnv> {
 
     try {
       if (monitorType === "synthetic") {
-        if (!timeoutSeconds || !runtime) {
-          throw new Error(
-            "Missing timeout or runtime for synthetic check trigger.",
-          )
-        }
-        // Delegate synthetic check
-        await this.env.MONITOR_EXEC_SYNTHETIC.executeCheck({
-          monitorId: monitorId,
-          runtime: runtime,
-          timeoutSeconds: timeoutSeconds,
-        })
+        console.error(
+          "Synthetic monitors are not supported yet. Skipping check.",
+        )
       } else {
         // Delegate endpoint check
         await this.env.MONITOR_EXEC.executeCheck(monitorId)
@@ -226,13 +218,9 @@ export class MonitorTrigger extends DurableObject<CloudflareEnv> {
     const db = useDrizzle(this.env.DB)
     try {
       if (monitorType === "synthetic") {
-        await db
-          .update(SyntheticMonitorsTable)
-          .set({ isRunning: false })
-          .where(eq(SyntheticMonitorsTable.id, monitorId))
-          .returning({ id: SyntheticMonitorsTable.id })
-          .then(takeUniqueOrThrow)
-        console.log(`Paused Synthetic Monitor [${monitorId}] in DB`)
+        console.error(
+          "Synthetic monitors are not supported yet. Skipping pause.",
+        )
       } else {
         const endpointMonitor = await db
           .update(EndpointMonitorsTable)
@@ -268,13 +256,9 @@ export class MonitorTrigger extends DurableObject<CloudflareEnv> {
     const db = useDrizzle(this.env.DB)
     try {
       if (monitorType === "synthetic") {
-        await db
-          .update(SyntheticMonitorsTable)
-          .set({ isRunning: true })
-          .where(eq(SyntheticMonitorsTable.id, monitorId))
-          .returning({ id: SyntheticMonitorsTable.id })
-          .then(takeUniqueOrThrow)
-        console.log(`Resumed Synthetic Monitor [${monitorId}] in DB`)
+        console.error(
+          "Synthetic monitors are not supported yet. Skipping resume.",
+        )
       } else {
         const endpointMonitor = await db
           .update(EndpointMonitorsTable)

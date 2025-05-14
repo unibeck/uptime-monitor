@@ -10,11 +10,6 @@ interface CloudflareEnv extends CloudflareEnvGen {
     import("@uptime-monitor/api/src").MonitorTriggerRPC
   >
   MONITOR_EXEC: Service<import("@uptime-monitor/api/src").MonitorExec>
-  MONITOR_EXEC_SYNTHETIC: Service<
-    import("@uptime-monitor/api/src").MonitorExecSynthetic
-  >
-
-  BROWSER: BrowserWorker
 
   // Secrets
   OPSGENIE_API_KEY: string
