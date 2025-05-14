@@ -16,10 +16,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/registry/new-york-v4/ui/dialog"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/registry/new-york-v4/ui/dropdown-menu"
 import {
-  SyntheticMonitorForm,
-} from "./synthetic-monitor-form"
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/registry/new-york-v4/ui/dropdown-menu"
+import { SyntheticMonitorForm } from "./synthetic-monitor-form"
 
 const baseSchema = z.object({
   name: z.string().min(1, "Name is required."),
@@ -43,12 +46,12 @@ export type SyntheticMonitorFormValues = z.infer<
 
 // Define a type for the test script results
 interface TestScriptResult {
-  success: boolean;
-  logs?: string[];
-  error?: string;
-  durationMs?: number;
+  success: boolean
+  logs?: string[]
+  error?: string
+  durationMs?: number
   // Assuming the API might return other details, like screenshotUrl or videoUrl in future
-  [key: string]: unknown; // Changed any to unknown to satisfy linter
+  [key: string]: unknown // Changed any to unknown to satisfy linter
 }
 
 export default function CreateSyntheticMonitorPage() {
@@ -60,9 +63,9 @@ export default function CreateSyntheticMonitorPage() {
   const [testResult, setTestResult] = useState<TestScriptResult | null>(null)
 
   const handleCloseDialog = (): void => {
-    setIsTestDialogOpen(false);
-    return; // Explicit void return
-  };
+    setIsTestDialogOpen(false)
+    return // Explicit void return
+  }
 
   const form = useForm<SyntheticMonitorFormValues>({
     resolver: zodResolver(syntheticMonitorFormSchema),
@@ -164,12 +167,18 @@ export default function CreateSyntheticMonitorPage() {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-      </>
+      </>,
     )
     return () => {
       setHeaderRightContent(null)
     }
-  }, [setHeaderLeftContent, setHeaderRightContent, form, onSubmit, onTestScript])
+  }, [
+    setHeaderLeftContent,
+    setHeaderRightContent,
+    form,
+    onSubmit,
+    onTestScript,
+  ])
 
   return (
     <div className="container mx-auto py-8 px-4 max-w-4xl">
@@ -228,25 +237,33 @@ export default function CreateSyntheticMonitorPage() {
                   </pre>
                 </div>
               )}
-              
+
               {/* Placeholder for other potential results like screenshots/videos */}
               {Object.entries(testResult).map(([key, value]) => {
-                if (['success', 'logs', 'error', 'durationMs'].includes(key)) { return null; }
+                if (["success", "logs", "error", "durationMs"].includes(key)) {
+                  return null
+                }
                 return (
                   <div key={key}>
-                    <h4 className="font-semibold">{key.charAt(0).toUpperCase() + key.slice(1)}:</h4>
+                    <h4 className="font-semibold">
+                      {key.charAt(0).toUpperCase() + key.slice(1)}:
+                    </h4>
                     <pre className="mt-1 p-2 bg-muted rounded-md text-sm whitespace-pre-wrap break-all">
-                      {typeof value === 'object' ? JSON.stringify(value, null, 2) : String(value)}
+                      {typeof value === "object"
+                        ? JSON.stringify(value, null, 2)
+                        : String(value)}
                     </pre>
                   </div>
-                );
+                )
               })}
             </div>
           )}
 
           <DialogFooter className="mt-6">
             <DialogClose asChild>
-              <Button variant="outline" onClick={handleCloseDialog}>Close</Button>
+              <Button variant="outline" onClick={handleCloseDialog}>
+                Close
+              </Button>
             </DialogClose>
           </DialogFooter>
         </DialogContent>

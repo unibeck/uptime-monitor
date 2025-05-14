@@ -98,7 +98,12 @@ export default function EndpointMonitorDetailPage() {
       setHeaderLeftContent(null)
       setHeaderRightContent(defaultHeaderContent)
     }
-  }, [endpointMonitorId, setHeaderLeftContent, setHeaderRightContent, fetchWebsite])
+  }, [
+    endpointMonitorId,
+    setHeaderLeftContent,
+    setHeaderRightContent,
+    fetchWebsite,
+  ])
 
   useEffect(() => {
     if (endpointMonitor) {

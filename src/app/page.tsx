@@ -29,16 +29,19 @@ export default function Page() {
           await fetchDashboardStats()
         }}
         trigger={
-          <Button
-            variant="primary"
-          >
+          <Button variant="primary">
             <IconCirclePlusFilled />
             <span>Create Endpoint Monitor</span>
           </Button>
         }
-      />
+      />,
     )
-  }, [setHeaderLeftContent, setHeaderRightContent, fetchEndpointMonitors, fetchDashboardStats])
+  }, [
+    setHeaderLeftContent,
+    setHeaderRightContent,
+    fetchEndpointMonitors,
+    fetchDashboardStats,
+  ])
 
   return (
     <div className="@container/main flex flex-1 flex-col gap-2">

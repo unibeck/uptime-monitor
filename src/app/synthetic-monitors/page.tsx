@@ -14,15 +14,12 @@ export default function SyntheticMonitorsPage() {
   useEffect(() => {
     setHeaderLeftContent("Synthetic Monitors")
     setHeaderRightContent(
-      <Button
-        variant="primary"
-        asChild
-      >
+      <Button variant="primary" asChild>
         <Link href={"/synthetic-monitors/new" as Route}>
           <IconCirclePlusFilled />
           <span>Create Synthetic Monitor</span>
         </Link>
-      </Button>
+      </Button>,
     )
   }, [setHeaderLeftContent, setHeaderRightContent])
 

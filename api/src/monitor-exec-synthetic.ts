@@ -1,5 +1,5 @@
 import { WorkerEntrypoint } from "cloudflare:workers"
-import { Browser, launch, type BrowserWorker } from '@cloudflare/playwright';
+import { type Browser, launch } from "@cloudflare/playwright"
 
 import { eq } from "drizzle-orm"
 import { OK } from "stoker/http-status-codes"
@@ -14,20 +14,20 @@ interface SyntheticExecPayload {
 }
 
 interface TestScriptPayload {
-  scriptContent: string;
-  runtime: "playwright-cf-latest" | "puppeteer-cf-latest";
-  timeoutSeconds: number;
+  scriptContent: string
+  runtime: "playwright-cf-latest" | "puppeteer-cf-latest"
+  timeoutSeconds: number
 }
 
 interface TestScriptInternalResult {
-  success: boolean;
-  logs: string[];
-  error?: string;
-  durationMs?: number;
+  success: boolean
+  logs: string[]
+  error?: string
+  durationMs?: number
 }
 
 interface CfConsoleMessage {
-  text: () => string;
+  text: () => string
 }
 
 export default class MonitorExecSynthetic extends WorkerEntrypoint<CloudflareEnv> {
@@ -193,30 +193,31 @@ export default class MonitorExecSynthetic extends WorkerEntrypoint<CloudflareEnv
   public async testScript(
     payload: TestScriptPayload,
   ): Promise<TestScriptInternalResult> {
-    const { scriptContent, runtime, timeoutSeconds } = payload;
-    const logs: string[] = [];
+    // biome-ignore lint/correctness/noUnusedVariables: Not implemented yet
+    const { scriptContent, runtime, timeoutSeconds } = payload
+    const logs: string[] = []
     // The BROWSER binding itself (this.env.BROWSER) is what we call .launch() on.
     // The result of launch is the actual browser instance to be closed.
-    let browser: Browser | undefined = undefined;
+    let browser: Browser | undefined = undefined
 
     logs.push(
       `[TestScript] Initiating test with runtime: ${runtime}, timeout: ${timeoutSeconds}s.`,
-    );
-    const startTime = Date.now();
+    )
+    const startTime = Date.now()
 
     try {
-      logs.push(`[TestScript] Launching browser runtime: ${runtime}`);
-      browser = await launch(this.env.BROWSER);
-      logs.push("[TestScript] Browser launched.");
-      const page = await browser.newPage();
-      logs.push("[TestScript] New page created.");
+      logs.push(`[TestScript] Launching browser runtime: ${runtime}`)
+      browser = await launch(this.env.BROWSER)
+      logs.push("[TestScript] Browser launched.")
+      const page = await browser.newPage()
+      logs.push("[TestScript] New page created.")
 
-      page.on("console", (msg: CfConsoleMessage) => { 
-        const msgText = msg.text();
-        logs.push(`[Script CONSOLE] ${msgText}`);
-      });
+      page.on("console", (msg: CfConsoleMessage) => {
+        const msgText = msg.text()
+        logs.push(`[Script CONSOLE] ${msgText}`)
+      })
 
-      logs.push("[TestScript] Executing user script...");
+      logs.push("[TestScript] Executing user script...")
 
       //BLOCKED: https://x.com/SolBeckman_/status/1922447497156317546
       // const userScriptFunction = new Function(
@@ -227,33 +228,33 @@ export default class MonitorExecSynthetic extends WorkerEntrypoint<CloudflareEnv
       // );
       // await userScriptFunction(page, context, launchedBrowser);
 
-      const durationMs = Date.now() - startTime;
+      const durationMs = Date.now() - startTime
       logs.push(
         `[TestScript] Script completed successfully in ${durationMs}ms.`,
-      );
-      return { success: true, durationMs, logs };
+      )
+      return { success: true, durationMs, logs }
     } catch (error) {
-      const durationMs = Date.now() - startTime;
-      const errorMsg = error instanceof Error ? error.message : String(error);
-      logs.push(`[TestScript] Script execution failed after ${durationMs}ms.`);
-      logs.push(`[TestScript] Error: ${errorMsg}`);
+      const durationMs = Date.now() - startTime
+      const errorMsg = error instanceof Error ? error.message : String(error)
+      logs.push(`[TestScript] Script execution failed after ${durationMs}ms.`)
+      logs.push(`[TestScript] Error: ${errorMsg}`)
       // Include stack trace if available
       if (error instanceof Error && error.stack) {
-        logs.push(`[TestScript] Stack: ${error.stack}`);
+        logs.push(`[TestScript] Stack: ${error.stack}`)
       }
-      return { success: false, durationMs, error: errorMsg, logs };
+      return { success: false, durationMs, error: errorMsg, logs }
     } finally {
       if (browser) {
         try {
-          logs.push("[TestScript] Closing browser.");
-          await browser.close();
-          logs.push("[TestScript] Browser closed.");
+          logs.push("[TestScript] Closing browser.")
+          await browser.close()
+          logs.push("[TestScript] Browser closed.")
         } catch (closeError) {
           const closeMsg =
             closeError instanceof Error
               ? closeError.message
-              : String(closeError);
-          logs.push(`[TestScript] Error closing browser: ${closeMsg}`);
+              : String(closeError)
+          logs.push(`[TestScript] Error closing browser: ${closeMsg}`)
         }
       }
     }

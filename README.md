@@ -137,8 +137,3 @@ pnpm run db:studio:prod
 
 ## CI/CD
 TODO
-
-
-## TODO
-- [] implement test script
-- [] implement create monitor
