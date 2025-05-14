@@ -1,11 +1,10 @@
-import { takeUniqueOrThrow, useDrizzle } from "@/db"
-import { takeFirstOrNull } from "@/db"
-import { EndpointMonitorsTable, UptimeChecksTable } from "@/db/schema"
-import { createRoute } from "@/lib/api-utils"
 import { getCloudflareContext } from "@opennextjs/cloudflare"
 import { and, count, desc, eq, gt, isNotNull } from "drizzle-orm"
 import { NextResponse } from "next/server"
 import { INTERNAL_SERVER_ERROR, OK } from "stoker/http-status-codes"
+import { takeFirstOrNull, takeUniqueOrThrow, useDrizzle } from "@/db"
+import { EndpointMonitorsTable, UptimeChecksTable } from "@/db/schema"
+import { createRoute } from "@/lib/api-utils"
 
 // Cache duration in seconds
 export const revalidate = 120

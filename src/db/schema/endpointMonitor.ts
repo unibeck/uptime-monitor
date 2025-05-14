@@ -1,14 +1,5 @@
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core"
-
-const timestamps = {
-  createdAt: integer("createdAt", { mode: "timestamp" })
-    .notNull()
-    .$default(() => new Date()),
-  updatedAt: integer("updatedAt", { mode: "timestamp" })
-    .notNull()
-    .$default(() => new Date())
-    .$onUpdate(() => new Date()),
-}
+import { timestamps } from "@/db/schema/utils"
 
 export const EndpointMonitorsTable = sqliteTable("endpointMonitors", {
   id: text("id").primaryKey(),
@@ -35,5 +26,3 @@ export const UptimeChecksTable = sqliteTable("uptimeChecks", {
   responseTime: integer("responseTime"),
   isExpectedStatus: integer("isExpectedStatus", { mode: "boolean" }).notNull(),
 })
-
-export const schema = { EndpointMonitorsTable, UptimeChecksTable }

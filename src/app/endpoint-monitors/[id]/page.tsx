@@ -1,5 +1,12 @@
 "use client"
 
+import { IconPointFilled } from "@tabler/icons-react"
+import { ArrowLeft } from "lucide-react"
+import type { Route } from "next"
+import Link from "next/link"
+import { useParams, useRouter, useSearchParams } from "next/navigation"
+import { useCallback, useEffect, useState } from "react"
+import type { z } from "zod"
 import { EndpointMonitorDetailHeader } from "@/components/endpoint-monitor-detail-header"
 import { EndpointMonitorSectionCards } from "@/components/endpoint-monitor-section-cards"
 import LatencyRangeChart from "@/components/latency-range-chart"
@@ -17,20 +24,13 @@ import { Badge } from "@/registry/new-york-v4/ui/badge"
 import { Button } from "@/registry/new-york-v4/ui/button"
 import { Card, CardContent } from "@/registry/new-york-v4/ui/card"
 import { Tabs, TabsList, TabsTrigger } from "@/registry/new-york-v4/ui/tabs"
-import { TooltipContent } from "@/registry/new-york-v4/ui/tooltip"
 import {
+  Tooltip,
+  TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/registry/new-york-v4/ui/tooltip"
-import { Tooltip } from "@/registry/new-york-v4/ui/tooltip"
 import type { TimeRange } from "@/types/endpointMonitor"
-import { IconPointFilled } from "@tabler/icons-react"
-import { ArrowLeft } from "lucide-react"
-import type { Route } from "next"
-import Link from "next/link"
-import { useParams, useRouter, useSearchParams } from "next/navigation"
-import { useCallback, useEffect, useState } from "react"
-import type { z } from "zod"
 
 // Define the type for a single uptime check
 type LatestUptimeCheck = z.infer<typeof uptimeChecksSelectSchema>
@@ -39,7 +39,7 @@ export default function EndpointMonitorDetailPage() {
   const params = useParams()
   const router = useRouter()
   const endpointMonitorId = params.id as string
-  const { setHeaderContent } = useHeaderContext()
+  const { setHeaderLeftContent, setHeaderRightContent } = useHeaderContext()
   const searchParams = useSearchParams() // Get search params
 
   const [endpointMonitor, setEndpointMonitor] = useState<z.infer<
@@ -95,13 +95,20 @@ export default function EndpointMonitorDetailPage() {
     }
 
     return () => {
-      setHeaderContent(defaultHeaderContent)
+      setHeaderLeftContent(null)
+      setHeaderRightContent(defaultHeaderContent)
     }
-  }, [endpointMonitorId, setHeaderContent, fetchWebsite])
+  }, [
+    endpointMonitorId,
+    setHeaderLeftContent,
+    setHeaderRightContent,
+    fetchWebsite,
+  ])
 
   useEffect(() => {
     if (endpointMonitor) {
-      setHeaderContent(
+      setHeaderLeftContent(endpointMonitor.name)
+      setHeaderRightContent(
         endpointMonitor.isRunning ? (
           <div className="flex items-center gap-2">
             {latestUptimeCheck && (
@@ -162,7 +169,12 @@ export default function EndpointMonitorDetailPage() {
         ),
       )
     }
-  }, [endpointMonitor, latestUptimeCheck, setHeaderContent])
+  }, [
+    endpointMonitor,
+    latestUptimeCheck,
+    setHeaderLeftContent,
+    setHeaderRightContent,
+  ])
 
   useEffect(() => {
     if (!endpointMonitorId) {

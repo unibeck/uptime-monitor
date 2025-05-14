@@ -1,6 +1,6 @@
-import { EndpointMonitorsTable, UptimeChecksTable } from "@/db/schema"
 import { createSchemaFactory } from "drizzle-zod"
 import { z } from "zod"
+import { EndpointMonitorsTable, UptimeChecksTable } from "@/db/schema"
 
 const { createInsertSchema } = createSchemaFactory({
   // This configuration will only coerce dates. Set `coerce` to `true` to coerce all data types or specify others
@@ -26,13 +26,16 @@ export const endpointMonitorsInsertSchema = createInsertSchema(
   createdAt: true,
   updatedAt: true,
 })
+
 export const endpointMonitorsInsertDTOSchema =
   endpointMonitorsInsertSchema.omit({
     id: true,
   })
+
 export const endpointMonitorsSelectSchema = createSelectSchema(
   EndpointMonitorsTable,
 )
+
 export const endpointMonitorsPatchSchema = createInsertSchema(
   EndpointMonitorsTable,
 ).partial()
@@ -42,6 +45,8 @@ export const uptimeChecksInsertSchema = createInsertSchema(
 ).omit({
   id: true,
 })
+
 export const uptimeChecksSelectSchema = createSelectSchema(UptimeChecksTable)
+
 export const uptimeChecksPatchSchema =
   createInsertSchema(UptimeChecksTable).partial()

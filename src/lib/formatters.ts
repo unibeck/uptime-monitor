@@ -1,5 +1,5 @@
-import type { endpointMonitorsSelectSchema } from "@/db/zod-schema"
 import type { z } from "zod"
+import type { endpointMonitorsSelectSchema } from "@/db/zod-schema"
 
 export function msToHumanReadable(
   ms: number,

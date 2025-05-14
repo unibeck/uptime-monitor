@@ -1,6 +1,6 @@
-import { DEFAULT_TOAST_OPTIONS } from "@/lib/toasts" // Assuming this path is correct
 import { toast } from "sonner"
 import { create } from "zustand"
+import { DEFAULT_TOAST_OPTIONS } from "@/lib/toasts" // Assuming this path is correct
 
 export interface DashboardStats {
   totalEndpointMonitors: number

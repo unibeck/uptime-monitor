@@ -1,14 +1,14 @@
-import { useDrizzle } from "@/db"
-import { UptimeChecksTable } from "@/db/schema"
-import type { uptimeChecksSelectSchema } from "@/db/zod-schema"
-import { createRoute } from "@/lib/api-utils"
-import { idStringParamsSchema } from "@/lib/route-schemas"
 import { getCloudflareContext } from "@opennextjs/cloudflare"
 import { subDays, subHours, subWeeks } from "date-fns"
 import { and, eq, gt } from "drizzle-orm"
 import { NextResponse } from "next/server"
 import { INTERNAL_SERVER_ERROR, OK } from "stoker/http-status-codes"
 import { z } from "zod"
+import { useDrizzle } from "@/db"
+import { UptimeChecksTable } from "@/db/schema"
+import type { uptimeChecksSelectSchema } from "@/db/zod-schema"
+import { createRoute } from "@/lib/api-utils"
+import { idStringParamsSchema } from "@/lib/route-schemas"
 
 const querySchema = z.object({
   range: z.enum(["1h", "1d", "7d"]).default("1h"),

@@ -1,7 +1,14 @@
 "use client"
 
-import { endpointMonitorsInsertDTOSchema } from "@/db/zod-schema"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { IconPlus } from "@tabler/icons-react"
+import React from "react"
+import { useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { CONFLICT, CREATED, OK } from "stoker/http-status-codes"
+import type { z } from "zod"
 import type { endpointMonitorsSelectSchema } from "@/db/zod-schema"
+import { endpointMonitorsInsertDTOSchema } from "@/db/zod-schema"
 import { DEFAULT_TOAST_OPTIONS } from "@/lib/toasts"
 import { Button } from "@/registry/new-york-v4/ui/button"
 import {
@@ -32,13 +39,6 @@ import {
   SelectValue,
 } from "@/registry/new-york-v4/ui/select"
 import type { ConflictEndpointMonitorResponse } from "@/types/endpointMonitor"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { IconPlus } from "@tabler/icons-react"
-import React from "react"
-import { useForm } from "react-hook-form"
-import { toast } from "sonner"
-import { CONFLICT, CREATED, OK } from "stoker/http-status-codes"
-import type { z } from "zod"
 
 type WebsiteFormData = z.infer<typeof endpointMonitorsInsertDTOSchema>
 type WebsiteData = z.infer<typeof endpointMonitorsSelectSchema>

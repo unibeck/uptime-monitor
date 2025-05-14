@@ -1,12 +1,12 @@
-import { useDrizzle } from "@/db"
-import { takeUniqueOrThrow } from "@/db"
-import { EndpointMonitorsTable } from "@/db/schema"
-import { createRoute } from "@/lib/api-utils"
-import { idStringParamsSchema } from "@/lib/route-schemas"
 import { getCloudflareContext } from "@opennextjs/cloudflare"
+import type { InitPayload } from "@uptime-monitor/api/src"
 import { eq } from "drizzle-orm"
 import { NextResponse } from "next/server"
 import { OK } from "stoker/http-status-codes"
+import { takeUniqueOrThrow, useDrizzle } from "@/db"
+import { EndpointMonitorsTable } from "@/db/schema"
+import { createRoute } from "@/lib/api-utils"
+import { idStringParamsSchema } from "@/lib/route-schemas"
 
 /**
  * POST /api/endpoint-monitors/[id]/init-do
@@ -27,10 +27,11 @@ export const POST = createRoute
       .where(eq(EndpointMonitorsTable.id, context.params.id))
       .then(takeUniqueOrThrow)
 
-    await env.MONITOR_TRIGGER_RPC.init(
-      endpointMonitor.id,
-      endpointMonitor.checkInterval,
-    )
+    await env.MONITOR_TRIGGER_RPC.init({
+      monitorId: endpointMonitor.id,
+      monitorType: "endpoint",
+      checkInterval: endpointMonitor.checkInterval,
+    } as InitPayload)
 
     return NextResponse.json(
       { message: "Initialized Monitor DO" },

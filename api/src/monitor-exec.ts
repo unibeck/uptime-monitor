@@ -1,7 +1,12 @@
 import { WorkerEntrypoint } from "cloudflare:workers"
+import { eq } from "drizzle-orm"
+import type { DrizzleD1Database } from "drizzle-orm/d1"
+import { OK } from "stoker/http-status-codes"
+import { OK as OK_PHRASE } from "stoker/http-status-phrases"
+import type { z } from "zod"
 import { takeFirstOrNull, useDrizzle } from "@/db"
-import { EndpointMonitorsTable, UptimeChecksTable } from "@/db/schema"
 import type { schema } from "@/db/schema"
+import { EndpointMonitorsTable, UptimeChecksTable } from "@/db/schema"
 import type {
   endpointMonitorsPatchSchema,
   endpointMonitorsSelectSchema,
@@ -9,11 +14,6 @@ import type {
 import { endpointSignature } from "@/lib/formatters"
 import { PRE_ID } from "@/lib/ids"
 import { createEndpointMonitorDownAlert } from "@/lib/opsgenie"
-import { eq } from "drizzle-orm"
-import type { DrizzleD1Database } from "drizzle-orm/d1"
-import { OK } from "stoker/http-status-codes"
-import { OK as OK_PHRASE } from "stoker/http-status-phrases"
-import type { z } from "zod"
 
 export default class MonitorExec extends WorkerEntrypoint<CloudflareEnv> {
   async fetch(_request: Request) {

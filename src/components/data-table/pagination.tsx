@@ -1,5 +1,14 @@
 "use client"
 
+import {
+  IconChevronLeft,
+  IconChevronRight,
+  IconChevronsLeft,
+  IconChevronsRight,
+} from "@tabler/icons-react"
+import type { Table } from "@tanstack/react-table"
+import React from "react"
+import type { z } from "zod"
 import type { endpointMonitorsSelectSchema } from "@/db/zod-schema"
 import { Button } from "@/registry/new-york-v4/ui/button"
 import { Label } from "@/registry/new-york-v4/ui/label"
@@ -11,15 +20,6 @@ import {
   SelectValue,
 } from "@/registry/new-york-v4/ui/select"
 import { useDataTableStore } from "@/store/data-table-store"
-import {
-  IconChevronLeft,
-  IconChevronRight,
-  IconChevronsLeft,
-  IconChevronsRight,
-} from "@tabler/icons-react"
-import type { Table } from "@tanstack/react-table"
-import React from "react"
-import type { z } from "zod"
 
 interface PaginationProps {
   table: Table<z.infer<typeof endpointMonitorsSelectSchema>>
@@ -29,10 +29,6 @@ export function Pagination({ table }: PaginationProps) {
   "use no memo"
 
   const pagination = useDataTableStore((state) => state.pagination)
-  const setPagination = useDataTableStore((state) => state.setPagination)
-  const _fetchEndpointMonitors = useDataTableStore(
-    (state) => state.fetchEndpointMonitors,
-  )
   const totalEndpointMonitors = useDataTableStore(
     (state) => state.totalEndpointMonitors,
   )
@@ -43,19 +39,20 @@ export function Pagination({ table }: PaginationProps) {
     Math.ceil(totalEndpointMonitors / pagination.pageSize),
   )
 
-  // Function to handle page changes directly with the store
+  // Function to handle page changes - Simplified to rely on table handler
   const changePage = React.useCallback(
     (newPageIndex: number) => {
-      const newPagination = { ...pagination, pageIndex: newPageIndex }
-      setPagination(newPagination)
+      // const newPagination = { ...pagination, pageIndex: newPageIndex }
+      // setPagination(newPagination)
       // Trigger the table's pagination change which will fetch data
       table.setPageIndex(newPageIndex)
     },
-    [pagination, setPagination, table],
+    // [pagination, setPagination, table],
+    [table], // Dependency only on table
   )
 
   return (
-    <div className="flex items-center justify-between px-4">
+    <div className="flex items-center justify-between px-4 py-2 border-t">
       <div>
         <div className="text-muted-foreground hidden flex-1 text-sm lg:flex">
           Total query count: {totalEndpointMonitors}
@@ -74,7 +71,7 @@ export function Pagination({ table }: PaginationProps) {
             value={`${pagination.pageSize}`}
             onValueChange={(value) => {
               const size = Number(value)
-              setPagination({ ...pagination, pageSize: size })
+              // setPagination({ ...pagination, pageSize: size })
               table.setPageSize(size)
             }}
           >
@@ -98,7 +95,7 @@ export function Pagination({ table }: PaginationProps) {
             variant="outline"
             className="hidden h-8 w-8 p-0 lg:flex"
             onClick={() => changePage(0)}
-            disabled={pagination.pageIndex <= 0}
+            disabled={!table.getCanPreviousPage()}
           >
             <span className="sr-only">Go to first page</span>
             <IconChevronsLeft />
@@ -107,8 +104,8 @@ export function Pagination({ table }: PaginationProps) {
             variant="outline"
             className="size-8"
             size="icon"
-            onClick={() => changePage(Math.max(0, pagination.pageIndex - 1))}
-            disabled={pagination.pageIndex <= 0}
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
           >
             <span className="sr-only">Go to previous page</span>
             <IconChevronLeft />
@@ -117,20 +114,17 @@ export function Pagination({ table }: PaginationProps) {
             variant="outline"
             className="size-8"
             size="icon"
-            onClick={() =>
-              changePage(Math.min(pageCount - 1, pagination.pageIndex + 1))
-            }
-            disabled={pagination.pageIndex >= pageCount - 1}
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
           >
             <span className="sr-only">Go to next page</span>
             <IconChevronRight />
           </Button>
           <Button
             variant="outline"
-            className="hidden size-8 lg:flex"
-            size="icon"
+            className="hidden h-8 w-8 p-0 lg:flex"
             onClick={() => changePage(pageCount - 1)}
-            disabled={pagination.pageIndex >= pageCount - 1}
+            disabled={!table.getCanNextPage()}
           >
             <span className="sr-only">Go to last page</span>
             <IconChevronsRight />

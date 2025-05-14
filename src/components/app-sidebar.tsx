@@ -1,12 +1,20 @@
 "use client"
 
 import {
+  IconAppWindow,
+  IconBell,
   IconBrandGithub,
+  IconBulb,
   IconDashboard,
   IconDatabase,
   IconDna,
   IconFileWord,
+  IconHeartbeat,
+  IconMail,
+  IconPrismLight,
   IconReport,
+  IconSparkles,
+  IconTargetArrow,
   IconTimezone,
 } from "@tabler/icons-react"
 import type * as React from "react"
@@ -26,9 +34,65 @@ import {
 const data = {
   navMain: [
     {
-      title: "Dashboard",
-      url: "#",
+      title: "Monitors",
+      url: "/",
       icon: IconDashboard,
+      items: [
+        {
+          title: "Endpoint",
+          url: "/",
+          icon: IconTargetArrow,
+        },
+        {
+          title: "Synthetic (blocked)",
+          url: "https://github.com/unibeck/uptime-monitor/issues/19#issuecomment-2878393426",
+          external: true,
+          icon: IconAppWindow,
+        },
+        {
+          title: "Agentic (soon)",
+          url: "https://github.com/unibeck/uptime-monitor/issues/39",
+          external: true,
+          icon: IconSparkles,
+        },
+        {
+          title: "Heartbeat (soon)",
+          url: "https://github.com/unibeck/uptime-monitor/issues/43",
+          external: true,
+          icon: IconHeartbeat,
+        },
+        {
+          title: "TCP (soon)",
+          url: "https://github.com/unibeck/uptime-monitor/issues/44",
+          external: true,
+          icon: IconPrismLight,
+        },
+        {
+          title: "Other? Let me know!",
+          url: "https://github.com/unibeck/uptime-monitor/issues",
+          external: true,
+          icon: IconBulb,
+        },
+      ],
+    },
+
+    {
+      title: "Notifications",
+      url: "/",
+      icon: IconBell,
+      items: [
+        {
+          title: "Opsgenie",
+          url: "/",
+          icon: IconBell,
+        },
+        {
+          title: "Email (soon)",
+          url: "https://github.com/unibeck/uptime-monitor/issues/47",
+          external: true,
+          icon: IconMail,
+        },
+      ],
     },
   ],
   navSecondary: [

@@ -7,6 +7,7 @@ export const nanoid = customAlphabet(
 export enum PRE_ID {
   endpointMonitor = "endp",
   uptimeCheck = "uptc",
+  syntheticMonitor = "synm",
 }
 
 export const createId = (prefix: PRE_ID) => [prefix, nanoid(20)].join("_")

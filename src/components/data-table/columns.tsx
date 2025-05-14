@@ -1,11 +1,5 @@
 "use client"
 
-import { LatencyLimitChart } from "@/components/latency-limit-chart"
-import type { endpointMonitorsSelectSchema } from "@/db/zod-schema"
-import { secsToHumanReadable } from "@/lib/formatters"
-import { Badge } from "@/registry/new-york-v4/ui/badge"
-import { Button } from "@/registry/new-york-v4/ui/button"
-import { Checkbox } from "@/registry/new-york-v4/ui/checkbox"
 import {
   IconBellExclamation,
   IconLayoutSidebarRightExpand,
@@ -13,8 +7,29 @@ import {
 import type { ColumnDef } from "@tanstack/react-table"
 import Link from "next/link"
 import type { z } from "zod"
+import { LatencyLimitChart } from "@/components/latency-limit-chart"
+import type { endpointMonitorsSelectSchema } from "@/db/zod-schema"
+import { secsToHumanReadable } from "@/lib/formatters"
+import { Badge } from "@/registry/new-york-v4/ui/badge"
+import { Button } from "@/registry/new-york-v4/ui/button"
+import { Checkbox } from "@/registry/new-york-v4/ui/checkbox"
 import { DataTableColumnHeader } from "./column-header"
 import { EndpointMonitorDetailDrawer } from "./endpoint-monitor-detail-drawer"
+
+// Helper function for date formatting
+const formatDate = (
+  value: string | number | Date | null | undefined,
+): string => {
+  if (value) {
+    const date = new Date(value)
+    // Check if the date is valid after parsing
+    if (!Number.isNaN(date.getTime())) {
+      return date.toLocaleDateString()
+    }
+  }
+
+  return "N/A"
+}
 
 // Custom ColumnDef type with optional headerLabel
 export type AppColumnDef<TData> = ColumnDef<TData> & {
@@ -180,15 +195,7 @@ export const columns: AppColumnDef<
     headerLabel: "Created At",
     cell: ({ row }) => {
       const value = row.getValue("createdAt")
-      // Check if the value is a valid string or number before creating a Date
-      if (typeof value === "string" || typeof value === "number") {
-        const date = new Date(value)
-        // Check if the date is valid after parsing
-        if (!Number.isNaN(date.getTime())) {
-          return <span>{date.toLocaleDateString()}</span>
-        }
-      }
-      return <span>N/A</span> // Fallback for invalid or null dates
+      return formatDate(value as string | number | Date | null | undefined)
     },
     enableHiding: true,
   },
@@ -200,15 +207,7 @@ export const columns: AppColumnDef<
     headerLabel: "Updated At",
     cell: ({ row }) => {
       const value = row.getValue("updatedAt")
-      // Check if the value is a valid string or number before creating a Date
-      if (typeof value === "string" || typeof value === "number") {
-        const date = new Date(value)
-        // Check if the date is valid after parsing
-        if (!Number.isNaN(date.getTime())) {
-          return <span>{date.toLocaleDateString()}</span>
-        }
-      }
-      return <span>N/A</span> // Fallback for invalid or null dates
+      return formatDate(value as string | number | Date | null | undefined)
     },
     enableHiding: true,
   },

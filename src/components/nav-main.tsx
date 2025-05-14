@@ -8,6 +8,9 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
 } from "@/registry/new-york-v4/ui/sidebar"
 
 export function NavMain({
@@ -17,6 +20,13 @@ export function NavMain({
     title: string
     url: string
     icon?: Icon
+    items?: {
+      title: string
+      url: string
+      icon: Icon
+      isActive?: boolean
+      external?: boolean
+    }[]
   }[]
 }) {
   return (
@@ -25,12 +35,41 @@ export function NavMain({
         <SidebarMenu>
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
+              <SidebarMenuButton asChild>
+                <a href={item.url} className="font-medium">
+                  {item.title}
+                </a>
+              </SidebarMenuButton>
+              {item.items?.length ? (
+                <SidebarMenuSub className="flex flex-col mr-auto">
+                  {item.items.map((item) => (
+                    <SidebarMenuSubItem key={item.title}>
+                      <SidebarMenuSubButton asChild isActive={item.isActive}>
+                        <a
+                          href={item.url}
+                          {...(item.external
+                            ? { target: "_blank", rel: "noopener noreferrer" }
+                            : {})}
+                        >
+                          {/* <a href={item.url} target={item.external ? "_blank" : undefined}> */}
+                          {item.title} <item.icon className="ml-auto" />
+                        </a>
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                  ))}
+                </SidebarMenuSub>
+              ) : null}
+            </SidebarMenuItem>
+          ))}
+
+          {/* {items.map((item) => (
+            <SidebarMenuItem key={item.title}>
               <SidebarMenuButton tooltip={item.title}>
                 {item.icon && <item.icon />}
                 <span>{item.title}</span>
               </SidebarMenuButton>
             </SidebarMenuItem>
-          ))}
+          ))} */}
         </SidebarMenu>
       </SidebarGroupContent>
     </SidebarGroup>

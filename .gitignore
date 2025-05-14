@@ -38,6 +38,7 @@ next-env.d.ts
 
 # wrangler files
 .wrangler
+.wrangler_backup
 .env
 .env.production
 .dev.vars
