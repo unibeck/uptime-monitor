@@ -17,8 +17,8 @@
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "uptime-monitor-local",
-      "database_id": "uptime-monitor-local",
+      "database_name": "solstatus-local",
+      "database_id": "solstatus-local",
       "migrations_dir": "src/db/migrations"
     }
   ],
@@ -50,7 +50,7 @@
       "d1_databases": [
         {
           "binding": "DB",
-          "database_name": "uptime-monitor-prod",
+          "database_name": "solstatus-prod",
           "database_id": "UPDATE_ME_D1_ID",
           "migrations_dir": "src/db/migrations"
         }

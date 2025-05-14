@@ -249,7 +249,7 @@ importers:
       '@types/react-dom':
         specifier: ^19
         version: 19.1.2(@types/react@19.1.2)
-      '@uptime-monitor/api':
+      '@solstatus/api':
         specifier: workspace:api
         version: link:api
       concurrently:

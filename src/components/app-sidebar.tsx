@@ -45,31 +45,31 @@ const data = {
         },
         {
           title: "Synthetic (blocked)",
-          url: "https://github.com/unibeck/uptime-monitor/issues/19#issuecomment-2878393426",
+          url: "https://github.com/unibeck/solstatus/issues/19#issuecomment-2878393426",
           external: true,
           icon: IconAppWindow,
         },
         {
           title: "Agentic (soon)",
-          url: "https://github.com/unibeck/uptime-monitor/issues/39",
+          url: "https://github.com/unibeck/solstatus/issues/39",
           external: true,
           icon: IconSparkles,
         },
         {
           title: "Heartbeat (soon)",
-          url: "https://github.com/unibeck/uptime-monitor/issues/43",
+          url: "https://github.com/unibeck/solstatus/issues/43",
           external: true,
           icon: IconHeartbeat,
         },
         {
           title: "TCP (soon)",
-          url: "https://github.com/unibeck/uptime-monitor/issues/44",
+          url: "https://github.com/unibeck/solstatus/issues/44",
           external: true,
           icon: IconPrismLight,
         },
         {
           title: "Other? Let me know!",
-          url: "https://github.com/unibeck/uptime-monitor/issues",
+          url: "https://github.com/unibeck/solstatus/issues",
           external: true,
           icon: IconBulb,
         },
@@ -88,7 +88,7 @@ const data = {
         },
         {
           title: "Email (soon)",
-          url: "https://github.com/unibeck/uptime-monitor/issues/47",
+          url: "https://github.com/unibeck/solstatus/issues/47",
           external: true,
           icon: IconMail,
         },
@@ -99,7 +99,7 @@ const data = {
     {
       title: "GitHub",
       icon: IconBrandGithub,
-      url: "https://github.com/unibeck/uptime-monitor",
+      url: "https://github.com/unibeck/solstatus",
       external: true,
     },
     {
@@ -138,7 +138,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             >
               <a href="/">
                 <IconTimezone stroke={1} className="!size-5" />
-                <span className="text-base font-semibold">Uptime Monitor</span>
+                <span className="text-base font-semibold">SolStatus</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>

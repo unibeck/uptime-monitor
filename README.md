@@ -1,6 +1,6 @@
-# uptime-monitor
+# SolStatus
 
-A uptime monitoring service that is easy and cheap to run at scale. Create endpoint checks for uptime, latency, and status code. Supports OpsGenie, for alerts when there are two or more consecutive failures.
+An uptime monitoring service that is easy and cheap to run at scale. Create endpoint checks for uptime, latency, and status code. Supports OpsGenie, for alerts when there are two or more consecutive failures.
 
 ![Demo dashboard](./docs/dashboard-demo.gif)
 
@@ -16,7 +16,7 @@ TODO: expectations for cost
     - search for `UPDATE_ME_D1_ID` and replace with the id
     - run migrations with `pnpm db:migrate:prod`
 3) Update production fully qualified domain name
-    - search for `UPDATE_ME_PROD_FQDN` and replace with your production FQDN (e.g. `uptime-monitor.example.com`)
+    - search for `UPDATE_ME_PROD_FQDN` and replace with your production FQDN (e.g. `solstatus.example.com`)
 4) Deploy the app and api with `pnpm run deploy`
 
 Optional:
