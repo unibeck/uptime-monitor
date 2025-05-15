@@ -14,6 +14,7 @@ import { createRoute } from "@/lib/api-utils"
 import { createId, PRE_ID } from "@/lib/ids"
 import { paginationQuerySchema } from "@/lib/route-schemas"
 import type { ConflictEndpointMonitorResponse } from "@/types/endpointMonitor"
+import type { InitPayload } from "@solstatus/api"
 
 /**
  * GET /api/endpoint-monitors
@@ -177,7 +178,11 @@ export const POST = createRoute
       .then(takeUniqueOrThrow)
 
     // Create monitor DO
-    await env.MONITOR_TRIGGER_RPC.init(newWebsite.id, newWebsite.checkInterval)
+    await env.MONITOR_TRIGGER_RPC.init({
+      monitorId: newWebsite.id,
+      monitorType: "endpoint",
+      checkInterval: newWebsite.checkInterval,
+    } as InitPayload)
 
     return NextResponse.json(newWebsite, { status: 201 })
   })

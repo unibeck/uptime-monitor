@@ -10,6 +10,7 @@ import {
   MonitorTriggerNotInitializedError,
 } from "@/lib/errors"
 import { idStringParamsSchema } from "@/lib/route-schemas"
+import { InitPayload } from "@solstatus/api/src/monitor-trigger"
 
 /**
  * POST /api/endpoint-monitors/[id]/resume
@@ -44,10 +45,11 @@ export const POST = createRoute
         console.log(
           `DO [${endpointMonitor.id}] not initialized. Initializing automatically...`,
         )
-        await env.MONITOR_TRIGGER_RPC.init(
-          endpointMonitor.id,
-          endpointMonitor.checkInterval,
-        )
+        await env.MONITOR_TRIGGER_RPC.init({
+          monitorId: endpointMonitor.id,
+          monitorType: "endpoint",
+          checkInterval: endpointMonitor.checkInterval,
+        } as InitPayload)
       } else {
         throw error
       }
