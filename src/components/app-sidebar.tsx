@@ -15,9 +15,9 @@ import {
   IconReport,
   IconSparkles,
   IconTargetArrow,
-  IconTimezone,
 } from "@tabler/icons-react"
 import type * as React from "react"
+import SolStatusLogo from "@/assets/solstatus-logo"
 
 import { NavMain } from "@/components/nav-main"
 import { NavSecondary } from "@/components/nav-secondary"
@@ -132,13 +132,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton
-              asChild
-              className="data-[slot=sidebar-menu-button]:!p-1.5"
-            >
+            <SidebarMenuButton asChild variant="ghost" className="h-14">
               <a href="/">
-                <IconTimezone stroke={1} className="!size-5" />
-                <span className="text-base font-semibold">SolStatus</span>
+                <SolStatusLogo className="!size-8" />
+                <span className="text-lg font-semibold">SolStatus</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
