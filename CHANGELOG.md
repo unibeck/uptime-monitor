@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.6.0](https://github.com/unibeck/uptime-monitor/compare/solstatus@v1.5.1...solstatus@v1.6.0) (2025-05-15)
+
+
+### Features
+
+* display app version ([#35](https://github.com/unibeck/uptime-monitor/issues/35)) ([774efa9](https://github.com/unibeck/uptime-monitor/commit/774efa9bab2eac9bec64a51a2e42e3737c7d9456))
+* **front:** call zustand store fetch functions on endpoint creation ([27109d1](https://github.com/unibeck/uptime-monitor/commit/27109d17ea55a24bbfcad72c3e3456406023cb42))
+* implement release-please ([494d492](https://github.com/unibeck/uptime-monitor/commit/494d4923eced1f18e9923ceebfa4ee33d2c4dd7e))
+* make bootstrap script executable ([3409734](https://github.com/unibeck/uptime-monitor/commit/3409734b78c0bea060497b239055722c0fd4ed2b))
+* rebrand to SolStatus (from uptime-monitor) ([eda1211](https://github.com/unibeck/uptime-monitor/commit/eda121135a43fe8fffa5cd08e01083dfed1d7a6a))
+* refresh endpoint monitor data after state change ([544fe02](https://github.com/unibeck/uptime-monitor/commit/544fe02ea2fb3349ca16c7e9f37335a31a582054))
+
+
+### Bug Fixes
+
+* add @ tag separator to release names ([04d3d17](https://github.com/unibeck/uptime-monitor/commit/04d3d17d5f961d21c67b754bc5a6e1404456c4c3))
+* automate confirmation for database setup in bootstrap script ([af96378](https://github.com/unibeck/uptime-monitor/commit/af963782dc3b8675a770f46b95e1dab1a4443b91))
+* improved layout and updated dependencies ([55ad0fe](https://github.com/unibeck/uptime-monitor/commit/55ad0fe3842620bd45116aa91225224ceeb8d34c))
+* refine release-please ([2cb8694](https://github.com/unibeck/uptime-monitor/commit/2cb869470c2211ac5c7a6fc511d4ce5965fad129))
+
 ## [1.5.1](https://github.com/unibeck/solstatus/compare/solstatus@v1.5.0...solstatus@v1.5.1) (2025-05-14)
 
 
