@@ -1,6 +1,5 @@
 "use client"
 
-
 import {
   IconAppWindow,
   IconBell,
@@ -141,7 +140,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenuButton asChild variant="ghost" className="h-14">
               <a href="/">
                 <SolStatusLogo className="!size-8" />
-                <span className={`text-lg font-semibold ${unbounded.className}`}>
+                <span
+                  className={`text-lg font-semibold ${unbounded.className}`}
+                >
                   SolStatus
                 </span>
               </a>

@@ -1,4 +1,5 @@
 import { getCloudflareContext } from "@opennextjs/cloudflare"
+import type { InitPayload } from "@solstatus/api/src/monitor-trigger"
 import { eq } from "drizzle-orm"
 import { NextResponse } from "next/server"
 import { OK } from "stoker/http-status-codes"
@@ -10,7 +11,6 @@ import {
   MonitorTriggerNotInitializedError,
 } from "@/lib/errors"
 import { idStringParamsSchema } from "@/lib/route-schemas"
-import { InitPayload } from "@solstatus/api/src/monitor-trigger"
 
 /**
  * POST /api/endpoint-monitors/[id]/resume
