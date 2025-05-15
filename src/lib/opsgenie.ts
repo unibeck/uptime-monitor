@@ -99,15 +99,15 @@ export async function createEndpointMonitorDownAlert(
     description,
     alias: `endpointMonitor-down-${endpointMonitorUrl.replace(/[^a-zA-Z0-9]/g, "-")}`,
     priority: "P2",
-    tags: ["uptime-monitor", "downtime"],
+    tags: ["solstatus", "downtime"],
     entity: endpointMonitorUrl,
-    source: "Uptime Monitor",
+    source: "SolStatus",
     details: {
       endpointMonitor: endpointMonitorName,
       url: endpointMonitorUrl,
       status: status?.toString() || "N/A",
       error: error || "",
-      monitorRepo: "https://github.com/unibeck/uptime-monitor",
+      monitorRepo: "https://github.com/unibeck/solstatus",
       // cloudflareWorkerDashboard:
       //   "https://dash.cloudflare.com/UPDATE_ME_ABC",
       // cloudflareMonitorDODashboard:

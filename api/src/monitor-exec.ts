@@ -69,10 +69,11 @@ export default class MonitorExec extends WorkerEntrypoint<CloudflareEnv> {
         console.log(
           `Found updated EndpointMonitor ${endpointSignature(newEndpointMonitor)} for obsolete [${endpointMonitorId}]. Initializing new DO...`,
         )
-        await this.env.MONITOR_TRIGGER_RPC.init(
-          newEndpointMonitor.id,
-          newEndpointMonitor.checkInterval,
-        )
+        await this.env.MONITOR_TRIGGER_RPC.init({
+          monitorId: newEndpointMonitor.id,
+          monitorType: "endpoint",
+          checkInterval: newEndpointMonitor.checkInterval,
+        })
 
         console.log(
           `Successfully migrated [${endpointMonitorId}] to [${newEndpointMonitor.id}]`,

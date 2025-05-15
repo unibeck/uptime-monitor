@@ -1,9 +1,9 @@
 "use client"
 
-import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
-import { VariantProps, cva } from "class-variance-authority"
+import { cva, type VariantProps } from "class-variance-authority"
 import { PanelLeftIcon } from "lucide-react"
+import * as React from "react"
 
 import { useIsMobile } from "@/registry/new-york-v4/hooks/use-mobile"
 import { cn } from "@/registry/new-york-v4/lib/utils"
@@ -479,6 +479,7 @@ const sidebarMenuButtonVariants = cva(
     variants: {
       variant: {
         default: "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+        ghost: "hover:bg-transparent hover:text-sidebar-accent-foreground",
         outline:
           "bg-background shadow-[0_0_0_1px_hsl(var(--sidebar-border))] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:shadow-[0_0_0_1px_hsl(var(--sidebar-accent))]",
         primary: "bg-black/90 text-white/90 dark:bg-white/90 dark:text-black/90 hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black",

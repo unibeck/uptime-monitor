@@ -1,5 +1,5 @@
 {
-  "name": "@uptime-monitor/api",
+  "name": "@solstatus/api",
   "version": "1.0.0",
   "private": true,
   "main": "src/index.ts",

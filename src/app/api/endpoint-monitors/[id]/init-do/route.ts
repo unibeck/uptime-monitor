@@ -1,5 +1,5 @@
 import { getCloudflareContext } from "@opennextjs/cloudflare"
-import type { InitPayload } from "@uptime-monitor/api/src"
+import type { InitPayload } from "@solstatus/api/src"
 import { eq } from "drizzle-orm"
 import { NextResponse } from "next/server"
 import { OK } from "stoker/http-status-codes"

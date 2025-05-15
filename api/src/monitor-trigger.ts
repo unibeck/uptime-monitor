@@ -305,7 +305,7 @@ export default class MonitorTriggerRPC extends WorkerEntrypoint<CloudflareEnv> {
 
   // Updated init RPC method
   async init(payload: InitPayload) {
-    const id = this.env.MONITOR_TRIGGER.idFromName(payload.monitorId.toString())
+    const id = this.env.MONITOR_TRIGGER.idFromName(payload.monitorId)
     const stub: DurableObjectStub<MonitorTrigger> =
       this.env.MONITOR_TRIGGER.get(id)
     await stub.init(payload)
@@ -313,7 +313,7 @@ export default class MonitorTriggerRPC extends WorkerEntrypoint<CloudflareEnv> {
 
   // Updated updateCheckInterval RPC method
   async updateCheckInterval(monitorId: string, checkInterval: number) {
-    const id = this.env.MONITOR_TRIGGER.idFromName(monitorId.toString())
+    const id = this.env.MONITOR_TRIGGER.idFromName(monitorId)
     const stub: DurableObjectStub<MonitorTrigger> =
       this.env.MONITOR_TRIGGER.get(id)
     // TODO: If updating more config for synthetics, this needs a new payload
@@ -322,7 +322,7 @@ export default class MonitorTriggerRPC extends WorkerEntrypoint<CloudflareEnv> {
 
   // Updated pauseDo RPC method
   async pauseDo(monitorId: string) {
-    const id = this.env.MONITOR_TRIGGER.idFromName(monitorId.toString())
+    const id = this.env.MONITOR_TRIGGER.idFromName(monitorId)
     const stub: DurableObjectStub<MonitorTrigger> =
       this.env.MONITOR_TRIGGER.get(id)
     await stub.pause()
@@ -330,7 +330,7 @@ export default class MonitorTriggerRPC extends WorkerEntrypoint<CloudflareEnv> {
 
   // Updated resumeDo RPC method
   async resumeDo(monitorId: string) {
-    const id = this.env.MONITOR_TRIGGER.idFromName(monitorId.toString())
+    const id = this.env.MONITOR_TRIGGER.idFromName(monitorId)
     const stub: DurableObjectStub<MonitorTrigger> =
       this.env.MONITOR_TRIGGER.get(id)
     await stub.resume()
@@ -338,7 +338,7 @@ export default class MonitorTriggerRPC extends WorkerEntrypoint<CloudflareEnv> {
 
   // Updated deleteDo RPC method
   async deleteDo(monitorId: string) {
-    const id = this.env.MONITOR_TRIGGER.idFromName(monitorId.toString())
+    const id = this.env.MONITOR_TRIGGER.idFromName(monitorId)
     const stub: DurableObjectStub<MonitorTrigger> =
       this.env.MONITOR_TRIGGER.get(id)
     await stub.delete()

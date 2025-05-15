@@ -15,9 +15,10 @@ import {
   IconReport,
   IconSparkles,
   IconTargetArrow,
-  IconTimezone,
 } from "@tabler/icons-react"
+import { Unbounded } from "next/font/google"
 import type * as React from "react"
+import SolStatusLogo from "@/components/icons/solstatus-logo"
 
 import { NavMain } from "@/components/nav-main"
 import { NavSecondary } from "@/components/nav-secondary"
@@ -30,6 +31,10 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/registry/new-york-v4/ui/sidebar"
+
+const unbounded = Unbounded({
+  subsets: ["latin"],
+})
 
 const data = {
   navMain: [
@@ -45,31 +50,31 @@ const data = {
         },
         {
           title: "Synthetic (blocked)",
-          url: "https://github.com/unibeck/uptime-monitor/issues/19#issuecomment-2878393426",
+          url: "https://github.com/unibeck/solstatus/issues/19#issuecomment-2878393426",
           external: true,
           icon: IconAppWindow,
         },
         {
           title: "Agentic (soon)",
-          url: "https://github.com/unibeck/uptime-monitor/issues/39",
+          url: "https://github.com/unibeck/solstatus/issues/39",
           external: true,
           icon: IconSparkles,
         },
         {
           title: "Heartbeat (soon)",
-          url: "https://github.com/unibeck/uptime-monitor/issues/43",
+          url: "https://github.com/unibeck/solstatus/issues/43",
           external: true,
           icon: IconHeartbeat,
         },
         {
           title: "TCP (soon)",
-          url: "https://github.com/unibeck/uptime-monitor/issues/44",
+          url: "https://github.com/unibeck/solstatus/issues/44",
           external: true,
           icon: IconPrismLight,
         },
         {
           title: "Other? Let me know!",
-          url: "https://github.com/unibeck/uptime-monitor/issues",
+          url: "https://github.com/unibeck/solstatus/issues",
           external: true,
           icon: IconBulb,
         },
@@ -88,7 +93,7 @@ const data = {
         },
         {
           title: "Email (soon)",
-          url: "https://github.com/unibeck/uptime-monitor/issues/47",
+          url: "https://github.com/unibeck/solstatus/issues/47",
           external: true,
           icon: IconMail,
         },
@@ -99,7 +104,7 @@ const data = {
     {
       title: "GitHub",
       icon: IconBrandGithub,
-      url: "https://github.com/unibeck/uptime-monitor",
+      url: "https://github.com/unibeck/solstatus",
       external: true,
     },
     {
@@ -132,13 +137,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton
-              asChild
-              className="data-[slot=sidebar-menu-button]:!p-1.5"
-            >
+            <SidebarMenuButton asChild variant="ghost" className="h-14">
               <a href="/">
-                <IconTimezone stroke={1} className="!size-5" />
-                <span className="text-base font-semibold">Uptime Monitor</span>
+                <SolStatusLogo className="!size-8" />
+                <span
+                  className={`text-lg font-semibold ${unbounded.className}`}
+                >
+                  SolStatus
+                </span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>

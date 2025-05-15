@@ -1,4 +1,5 @@
 import { getCloudflareContext } from "@opennextjs/cloudflare"
+import type { InitPayload } from "@solstatus/api"
 import { and, asc, count, desc, eq, like, sql } from "drizzle-orm"
 import type { SQLiteColumn } from "drizzle-orm/sqlite-core"
 import { NextResponse } from "next/server"
@@ -177,7 +178,11 @@ export const POST = createRoute
       .then(takeUniqueOrThrow)
 
     // Create monitor DO
-    await env.MONITOR_TRIGGER_RPC.init(newWebsite.id, newWebsite.checkInterval)
+    await env.MONITOR_TRIGGER_RPC.init({
+      monitorId: newWebsite.id,
+      monitorType: "endpoint",
+      checkInterval: newWebsite.checkInterval,
+    } as InitPayload)
 
     return NextResponse.json(newWebsite, { status: 201 })
   })

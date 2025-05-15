@@ -1,4 +1,5 @@
 import { getCloudflareContext } from "@opennextjs/cloudflare"
+import type { InitPayload } from "@solstatus/api/src/monitor-trigger"
 import { eq } from "drizzle-orm"
 import { NextResponse } from "next/server"
 import { OK } from "stoker/http-status-codes"
@@ -44,10 +45,11 @@ export const POST = createRoute
         console.log(
           `DO [${endpointMonitor.id}] not initialized. Initializing automatically...`,
         )
-        await env.MONITOR_TRIGGER_RPC.init(
-          endpointMonitor.id,
-          endpointMonitor.checkInterval,
-        )
+        await env.MONITOR_TRIGGER_RPC.init({
+          monitorId: endpointMonitor.id,
+          monitorType: "endpoint",
+          checkInterval: endpointMonitor.checkInterval,
+        } as InitPayload)
       } else {
         throw error
       }
