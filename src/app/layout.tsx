@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     siteName: siteConfig.name,
     images: [
       {
-        url: `https://${PROD_FQDN}/opengraph-image.png`,
+        url: `https://${PROD_FQDN}/og_image.png`,
         width: 1200,
         height: 630,
         alt: siteConfig.name,
@@ -59,15 +59,14 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: siteConfig.name,
     description: siteConfig.description,
-    images: [`${PROD_FQDN}/opengraph-image.png`],
+    images: [`${PROD_FQDN}/og_image.png`],
     creator: "@SolBeckman_",
   },
   icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon-16x16.png",
-    apple: "/apple-touch-icon.png",
+    icon: "/favicon.ico?v=2",
+    shortcut: "/icon-192.png?v=2",
+    apple: "/apple-touch-icon.png?v=2",
   },
-  manifest: `${PROD_FQDN}/site.webmanifest`,
 }
 
 export const viewport: Viewport = {
