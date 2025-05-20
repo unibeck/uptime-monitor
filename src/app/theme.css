@@ -3,7 +3,7 @@ body {
 }
 
 :root {
-  --font-sans: var(--font-inter);
+  --font-sans: var(--font-mono);
   --header-height: calc(var(--spacing) * 12 + 1px);
 }
 
