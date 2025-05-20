@@ -28,17 +28,35 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/*": ["./registry/**/*"],
   },
+  // Minimize output size using webpack configuration
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      // Optimize server-side bundle size specifically for Cloudflare
+      config.optimization = {
+        ...config.optimization,
+        minimize: true, // Minimize the server-side code
+        sideEffects: true, // Enable sideEffects for better tree-shaking
+      }
+    }
+    return config
+  },
   experimental: {
     // Keep essential features, disable others that might increase bundle size
-    webpackBuildWorker: false,
+    webpackBuildWorker: true,
     parallelServerBuildTraces: true,
     parallelServerCompiles: true,
     serverSourceMaps: false,
     typedRoutes: true,
     reactCompiler: true,
+    // Minimize output
+    optimizeCss: true,
+    optimizePackageImports: [
+      '@radix-ui/react-icons',
+      '@tabler/icons-react',
+      'lucide-react',
+      'date-fns',
+    ],
   },
-  // Optimize serverComponents to reduce the bundle size
-  // This helps reduce the size of Cloudflare Functions
   poweredByHeader: false,
 }
 
