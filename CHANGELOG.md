@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.1](https://github.com/unibeck/solstatus/compare/solstatus@v1.6.0...solstatus@v1.6.1) (2025-05-20)
+
+
+### Bug Fixes
+
+* Support Cloudflare Free tier with reduced bundle size (below 3 MBs) ([1b08b81](https://github.com/unibeck/solstatus/commit/1b08b8191f84e0c6491204b544af8c610c13c325))
+
 ## [1.6.0](https://github.com/unibeck/uptime-monitor/compare/solstatus@v1.5.1...solstatus@v1.6.0) (2025-05-15)
 
 
