@@ -16,7 +16,7 @@ import {
   IconSparkles,
   IconTargetArrow,
 } from "@tabler/icons-react"
-import { Unbounded } from "next/font/google"
+// import { Unbounded } from "next/font/google"
 import type * as React from "react"
 import SolStatusLogo from "@/components/icons/solstatus-logo"
 
@@ -32,9 +32,9 @@ import {
   SidebarMenuItem,
 } from "@/registry/new-york-v4/ui/sidebar"
 
-const unbounded = Unbounded({
-  subsets: ["latin"],
-})
+// const unbounded = Unbounded({
+//   subsets: ["latin"],
+// })
 
 const data = {
   navMain: [
@@ -141,7 +141,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <a href="/">
                 <SolStatusLogo className="!size-8" />
                 <span
-                  className={`text-lg font-semibold ${unbounded.className}`}
+                  className={`text-lg font-semibold`}
                 >
                   SolStatus
                 </span>
