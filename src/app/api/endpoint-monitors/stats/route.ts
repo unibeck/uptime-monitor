@@ -6,8 +6,9 @@ import { takeFirstOrNull, takeUniqueOrThrow, useDrizzle } from "@/db"
 import { EndpointMonitorsTable, UptimeChecksTable } from "@/db/schema"
 import { createRoute } from "@/lib/api-utils"
 
+// TODO: re-enable this, but since we use createZodRoute this endpoint can't be rendered statically
 // Cache duration in seconds
-export const revalidate = 120
+// export const revalidate = 120
 
 /**
  * GET /api/endpoint-monitors/stats
