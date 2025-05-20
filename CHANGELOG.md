@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.2](https://github.com/unibeck/solstatus/compare/solstatus@v1.6.1...solstatus@v1.6.2) (2025-05-20)
+
+
+### Bug Fixes
+
+* Fix logo font and make it theme aware ([917ed78](https://github.com/unibeck/solstatus/commit/917ed789ba69c253503c2030f5b0b211aa7dc7aa))
+
 ## [1.6.1](https://github.com/unibeck/solstatus/compare/solstatus@v1.6.0...solstatus@v1.6.1) (2025-05-20)
 
 
