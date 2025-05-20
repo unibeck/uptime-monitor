@@ -21,6 +21,7 @@ import SolStatusLogo from "@/components/icons/solstatus-logo"
 
 import { NavMain } from "@/components/nav-main"
 import { NavSecondary } from "@/components/nav-secondary"
+import { fontUnboundedCN } from "@/lib/fonts"
 import {
   Sidebar,
   SidebarContent,
@@ -134,8 +135,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton asChild variant="ghost" className="h-14">
               <a href="/">
-                <SolStatusLogo className="!size-8" />
-                <span className="text-lg font-semibold font-unbounded">
+                <SolStatusLogo className="!size-8 fill-black dark:fill-white" />
+                <span className={`text-lg font-semibold ${fontUnboundedCN}`}>
                   SolStatus
                 </span>
               </a>

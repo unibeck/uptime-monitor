@@ -1,4 +1,4 @@
-import { Geist, Geist_Mono, Inter, Unbounded } from "next/font/google"
+import { Geist, Geist_Mono, Unbounded } from "next/font/google"
 
 import { cn } from "@/lib/utils"
 
@@ -12,19 +12,14 @@ const fontMono = Geist_Mono({
   variable: "--font-mono",
 })
 
-const fontInter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-})
-
-const unbounded = Unbounded({
+const fontUnbounded = Unbounded({
   subsets: ["latin"],
   variable: "--font-unbounded",
 })
+export const fontUnboundedCN = fontUnbounded.className
 
 export const fontVariables = cn(
   fontSans.variable,
   fontMono.variable,
-  fontInter.variable,
-  unbounded.variable,
+  fontUnbounded.variable,
 )
