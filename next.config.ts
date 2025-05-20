@@ -29,13 +29,17 @@ const nextConfig: NextConfig = {
     "/*": ["./registry/**/*"],
   },
   experimental: {
-    webpackBuildWorker: true,
+    // Keep essential features, disable others that might increase bundle size
+    webpackBuildWorker: false,
     parallelServerBuildTraces: true,
     parallelServerCompiles: true,
-    serverSourceMaps: true,
+    serverSourceMaps: false,
     typedRoutes: true,
     reactCompiler: true,
   },
+  // Optimize serverComponents to reduce the bundle size
+  // This helps reduce the size of Cloudflare Functions
+  poweredByHeader: false,
 }
 
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
