@@ -1,9 +1,4 @@
-import {
-  Geist,
-  Geist_Mono,
-  Inter,
-  Unbounded,
-} from "next/font/google"
+import { Geist, Geist_Mono, Inter, Unbounded } from "next/font/google"
 
 import { cn } from "@/lib/utils"
 
