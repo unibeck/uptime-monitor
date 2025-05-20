@@ -49,7 +49,6 @@ const nextConfig: NextConfig = {
     typedRoutes: true,
     reactCompiler: true,
     // Minimize output
-    optimizeCss: true,
     optimizePackageImports: [
       '@radix-ui/react-icons',
       '@tabler/icons-react',
