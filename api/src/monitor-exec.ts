@@ -192,7 +192,7 @@ async function handleFailureTracking(
     }
 
     // Send alert if this is the second consecutive failure and no alert has been sent yet
-    if (consecutiveFailures >= 2 && !endpointMonitor.activeAlert) {
+    if (consecutiveFailures >= endpointMonitor.alertThreshold && !endpointMonitor.activeAlert) {
       await sendAlert(status, errorMessage, endpointMonitor, opsgenieApiKey)
       endpointMonitorPatch.activeAlert = true
     }
@@ -216,7 +216,7 @@ async function sendAlert(
   }
 
   console.log(
-    `${endpointSignature(endpointMonitor)}: consecutive failures threshold reached, sending alert...`,
+    `${endpointSignature(endpointMonitor)}: consecutive failures threshold (${endpointMonitor.alertThreshold}) reached, sending alert...`,
   )
 
   try {

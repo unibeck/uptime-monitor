@@ -84,6 +84,7 @@ export function AddEndpointMonitorDialog({
           checkInterval: endpointMonitor.checkInterval ?? 60,
           isRunning: endpointMonitor.isRunning ?? true,
           expectedStatusCode: endpointMonitor.expectedStatusCode ?? undefined,
+          alertThreshold: endpointMonitor.alertThreshold ?? 2,
         }
       : {
           name: "",
@@ -91,6 +92,7 @@ export function AddEndpointMonitorDialog({
           checkInterval: 60,
           isRunning: true,
           expectedStatusCode: 200,
+          alertThreshold: 2,
         },
   })
 
@@ -105,6 +107,7 @@ export function AddEndpointMonitorDialog({
               isRunning: endpointMonitor.isRunning ?? true,
               expectedStatusCode:
                 endpointMonitor.expectedStatusCode ?? undefined,
+              alertThreshold: endpointMonitor.alertThreshold ?? 2,
             }
           : {
               name: "",
@@ -112,6 +115,7 @@ export function AddEndpointMonitorDialog({
               checkInterval: 60,
               isRunning: true,
               expectedStatusCode: 200,
+              alertThreshold: 2,
             },
       )
     }
@@ -314,6 +318,36 @@ export function AddEndpointMonitorDialog({
                     <FormDescription>
                       The specific HTTP status code expected (e.g., 200). Leave
                       empty to accept any 2xx/3xx code.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="alertThreshold"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Alert Threshold</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="2"
+                        min="1"
+                        {...field}
+                        onChange={(event) =>
+                          field.onChange(
+                            event.target.value === ""
+                              ? 2
+                              : Number(event.target.value),
+                          )
+                        }
+                        value={field.value ?? 2}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Number of consecutive failures before sending an alert
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
