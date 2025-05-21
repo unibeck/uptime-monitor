@@ -1,3 +1,8 @@
+![GitHub](https://img.shields.io/github/license/unibeck/solstatus)
+![GitHub release (with filter)](https://img.shields.io/github/v/release/unibeck/solstatus)
+![GitHub contributors](https://img.shields.io/github/contributors/unibeck/solstatus)
+![GitHub commits since latest release (by SemVer including pre-releases)](https://img.shields.io/github/commits-since/unibeck/solstatus/latest)
+
 # SolStatus
 
 An uptime monitoring service that is easy and cheap to run at scale. Create endpoint checks for uptime, latency, and status code. Supports OpsGenie, for alerts when there are two or more consecutive failures.
