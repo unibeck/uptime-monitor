@@ -281,14 +281,6 @@ export default function EndpointMonitorDetailPage() {
   if (isLoading) {
     return (
       <div className="container mx-auto py-8 px-4">
-        <div className="flex items-center mb-6">
-          <Button variant="ghost" size="sm" asChild className="mr-4">
-            <Link href="/">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Dashboard
-            </Link>
-          </Button>
-        </div>
         <div className="h-[400px] flex items-center justify-center">
           <p className="text-muted-foreground">
             Loading endpoint Monitor details...
@@ -318,15 +310,6 @@ export default function EndpointMonitorDetailPage() {
 
   return (
     <div className="container mx-auto py-8 px-4">
-      <div className="flex items-center mb-6">
-        <Button variant="ghost" size="sm" asChild className="mr-4">
-          <Link href="/">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Dashboard
-          </Link>
-        </Button>
-      </div>
-
       <div className="@container/main flex flex-1 flex-col gap-2">
         <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6 px-4 lg:px-6">
           <EndpointMonitorDetailHeader

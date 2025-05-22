@@ -21,6 +21,7 @@ export const endpointMonitorsInsertSchema = createInsertSchema(
   {
     url: (schema) => schema.url(),
     expectedStatusCode: z.number().positive().int().optional(),
+    alertThreshold: z.number().positive().int(),
   },
 ).omit({
   createdAt: true,

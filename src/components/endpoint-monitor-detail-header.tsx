@@ -4,7 +4,6 @@ import {
   IconLogs,
   IconMetronome,
   IconPencil,
-  IconShieldCheckFilled,
 } from "@tabler/icons-react"
 import {
   ExternalLink,
@@ -130,124 +129,111 @@ export function EndpointMonitorDetailHeader({
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-3">
-            <h1 className="text-3xl font-bold">{endpointMonitor.name}</h1>
-          </div>
-          <a
-            href={endpointMonitor.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center mt-2 text-muted-foreground hover:text-primary"
-          >
-            {endpointMonitor.url}
-            <ExternalLink className="h-3.5 w-3.5 ml-1" />
-          </a>
-          <div className="mt-2 text-sm text-muted-foreground flex items-center gap-1.5">
-            <IconShieldCheckFilled className="h-4 w-4" />
-            <span>
-              Expected Status:
-              {endpointMonitor.expectedStatusCode ? (
-                <Badge variant="secondary" className="ml-1">
-                  {endpointMonitor.expectedStatusCode}
-                </Badge>
-              ) : (
-                <span className="text-xs ml-1">2xx/3xx</span>
-              )}
-            </span>
-          </div>
+    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <a
+          href={endpointMonitor.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center mt-2 hover:text-muted-foreground text-3xl font-bold"
+        >
+          {endpointMonitor.url}
+          <ExternalLink className="h-3.5 w-3.5 ml-1" />
+        </a>
+
+        <div className="mt-2 text-sm text-muted-foreground flex items-center gap-1.5">
+          <Badge variant="secondary">
+            Expected Status:{" "}
+            {endpointMonitor.expectedStatusCode ? (
+              <span>{endpointMonitor.expectedStatusCode}</span>
+            ) : (
+              <span>2xx/3xx</span>
+            )}
+          </Badge>
+          <Badge variant="secondary">
+            Alert Threshold: {endpointMonitor.alertThreshold}
+          </Badge>
         </div>
-        <div className="flex flex-col sm:flex-row gap-4">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="default" disabled={isLoading}>
-                Logs
-                <IconLogs className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem asChild>
-                <a
-                  href="https://dash.cloudflare.com/UPDATE_ME_ABC"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <IconActivity className="mr-2 h-4 w-4" />
-                  View Execution
-                </a>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <a
-                  href="https://dash.cloudflare.com/UPDATE_ME_ABC"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <IconMetronome className="mr-2 h-4 w-4" />
-                  View Trigger
-                </a>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+      </div>
+      <div className="flex flex-col sm:flex-row gap-4">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="default" disabled={isLoading}>
+              Logs
+              <IconLogs className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem asChild>
+              <a
+                href="https://dash.cloudflare.com/UPDATE_ME_ABC"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <IconActivity className="mr-2 h-4 w-4" />
+                View Execution
+              </a>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <a
+                href="https://dash.cloudflare.com/UPDATE_ME_ABC"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <IconMetronome className="mr-2 h-4 w-4" />
+                View Trigger
+              </a>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="primary" disabled={isLoading}>
-                Actions
-                <MoreVertical className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <AddEndpointMonitorDialog
-                endpointMonitor={endpointMonitor}
-                onSuccess={refreshWebsiteData}
-                trigger={
-                  <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                    <IconPencil className="mr-2 h-4 w-4" />
-                    Edit Endpoint Monitor
-                  </DropdownMenuItem>
-                }
-              />
-              <DropdownMenuItem onClick={executeCheck} disabled={isLoading}>
-                <RefreshCw className="mr-2 h-4 w-4" />
-                Execute Check
-              </DropdownMenuItem>
-
-              <DropdownMenuSeparator />
-
-              {endpointMonitor.isRunning && (
-                <DropdownMenuItem
-                  onClick={pauseMonitoring}
-                  disabled={isLoading}
-                >
-                  <Pause className="mr-2 h-4 w-4" />
-                  Pause Monitoring
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="primary" disabled={isLoading}>
+              Actions
+              <MoreVertical className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <AddEndpointMonitorDialog
+              endpointMonitor={endpointMonitor}
+              onSuccess={refreshWebsiteData}
+              trigger={
+                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                  <IconPencil className="mr-2 h-4 w-4" />
+                  Edit Endpoint Monitor
                 </DropdownMenuItem>
-              )}
+              }
+            />
+            <DropdownMenuItem onClick={executeCheck} disabled={isLoading}>
+              <RefreshCw className="mr-2 h-4 w-4" />
+              Execute Check
+            </DropdownMenuItem>
 
-              {!endpointMonitor.isRunning && (
-                <DropdownMenuItem
-                  onClick={resumeMonitoring}
-                  disabled={isLoading}
-                >
-                  <Play className="mr-2 h-4 w-4" />
-                  Resume Monitoring
-                </DropdownMenuItem>
-              )}
+            <DropdownMenuSeparator />
 
-              {endpointMonitor.isRunning && (
-                <DropdownMenuItem
-                  onClick={resumeMonitoring}
-                  disabled={isLoading}
-                >
-                  <Play className="mr-2 h-4 w-4" />
-                  Force Resume Monitoring
-                </DropdownMenuItem>
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+            {endpointMonitor.isRunning && (
+              <DropdownMenuItem onClick={pauseMonitoring} disabled={isLoading}>
+                <Pause className="mr-2 h-4 w-4" />
+                Pause Monitoring
+              </DropdownMenuItem>
+            )}
+
+            {!endpointMonitor.isRunning && (
+              <DropdownMenuItem onClick={resumeMonitoring} disabled={isLoading}>
+                <Play className="mr-2 h-4 w-4" />
+                Resume Monitoring
+              </DropdownMenuItem>
+            )}
+
+            {endpointMonitor.isRunning && (
+              <DropdownMenuItem onClick={resumeMonitoring} disabled={isLoading}>
+                <Play className="mr-2 h-4 w-4" />
+                Force Resume Monitoring
+              </DropdownMenuItem>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   )

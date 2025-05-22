@@ -9,6 +9,7 @@ export const EndpointMonitorsTable = sqliteTable("endpointMonitors", {
   isRunning: integer("isRunning", { mode: "boolean" }).notNull().default(true),
   expectedStatusCode: integer("expectedStatusCode"),
   consecutiveFailures: integer("consecutiveFailures").notNull().default(0),
+  alertThreshold: integer("alertThreshold").notNull().default(2),
   activeAlert: integer("activeAlert", { mode: "boolean" })
     .notNull()
     .default(false),

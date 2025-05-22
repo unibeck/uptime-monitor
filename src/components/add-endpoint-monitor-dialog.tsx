@@ -84,6 +84,7 @@ export function AddEndpointMonitorDialog({
           checkInterval: endpointMonitor.checkInterval ?? 60,
           isRunning: endpointMonitor.isRunning ?? true,
           expectedStatusCode: endpointMonitor.expectedStatusCode ?? undefined,
+          alertThreshold: endpointMonitor.alertThreshold ?? 2,
         }
       : {
           name: "",
@@ -91,6 +92,7 @@ export function AddEndpointMonitorDialog({
           checkInterval: 60,
           isRunning: true,
           expectedStatusCode: 200,
+          alertThreshold: 2,
         },
   })
 
@@ -105,6 +107,7 @@ export function AddEndpointMonitorDialog({
               isRunning: endpointMonitor.isRunning ?? true,
               expectedStatusCode:
                 endpointMonitor.expectedStatusCode ?? undefined,
+              alertThreshold: endpointMonitor.alertThreshold ?? 2,
             }
           : {
               name: "",
@@ -112,6 +115,7 @@ export function AddEndpointMonitorDialog({
               checkInterval: 60,
               isRunning: true,
               expectedStatusCode: 200,
+              alertThreshold: 2,
             },
       )
     }
@@ -199,8 +203,8 @@ export function AddEndpointMonitorDialog({
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
+      <DialogContent className="sm:max-w-[425px] max-h-[90vh] overflow-y-auto p-0">
+        <DialogHeader className="p-6 pb-0">
           <DialogTitle>
             {isEditing ? "Edit Endpoint Monitor" : "Add Endpoint Monitor"}
           </DialogTitle>
@@ -210,7 +214,7 @@ export function AddEndpointMonitorDialog({
               : "Add a new endpoint to monitor uptime and performance"}
           </DialogDescription>
         </DialogHeader>
-        <div className="px-4">
+        <div className="p-6">
           <Form {...form}>
             <form
               id={formId}
@@ -319,10 +323,39 @@ export function AddEndpointMonitorDialog({
                   </FormItem>
                 )}
               />
+
+              <FormField
+                control={form.control}
+                name="alertThreshold"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Alert Threshold</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="2"
+                        {...field}
+                        onChange={(event) =>
+                          field.onChange(
+                            event.target.value === ""
+                              ? null
+                              : Number(event.target.value),
+                          )
+                        }
+                        value={field.value ?? ""}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Number of consecutive failures before sending an alert
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </form>
           </Form>
         </div>
-        <DialogFooter>
+        <DialogFooter className="p-6 pt-0">
           <DialogClose asChild>
             <Button variant="ghost">Cancel</Button>
           </DialogClose>
