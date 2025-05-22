@@ -109,6 +109,8 @@ pnpm deploy:api-trigger
 
 ### Maintenance
 Update dependencies
+
+Dependabot automatically creates pull requests for dependency updates weekly. For manual updates:
 ```sh
 pnpm exec ncu -t minor -u
 pnpm i
@@ -141,4 +143,9 @@ pnpm run db:studio:prod
 ```
 
 ## CI/CD
-TODO
+
+### Dependency Management
+This repository uses Dependabot to keep dependencies up to date:
+- npm dependencies are checked weekly (grouped as minor and patch updates)
+- GitHub Actions are checked monthly
+- PR limits are set to avoid overwhelming with dependency updates
