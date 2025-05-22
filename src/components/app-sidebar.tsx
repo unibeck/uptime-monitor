@@ -13,6 +13,7 @@ import {
   IconMail,
   IconPrismLight,
   IconReport,
+  IconSettings, // Added IconSettings
   IconSparkles,
   IconTargetArrow,
 } from "@tabler/icons-react"
@@ -94,6 +95,11 @@ const data = {
           icon: IconMail,
         },
       ],
+    },
+    {
+      title: "Settings",
+      url: "/settings/email-notifications", // Link to the new page
+      icon: IconSettings,
     },
   ],
   navSecondary: [

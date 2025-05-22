@@ -38,10 +38,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/registry/new-york-v4/ui/select"
-import type { ConflictEndpointMonitorResponse } from "@/types/endpointMonitor"
+import { BasicMultiSelect } from "@/components/basic-multi-select"; // Import BasicMultiSelect
+import type { EmailChannelData } from "@/components/email-channels-data-table/columns";
+import type { ConflictEndpointMonitorResponse } from "@/types/endpointMonitor";
 
-type WebsiteFormData = z.infer<typeof endpointMonitorsInsertDTOSchema>
-type WebsiteData = z.infer<typeof endpointMonitorsSelectSchema>
+// Extend form data type to include emailChannelIds
+type WebsiteFormData = z.infer<typeof endpointMonitorsInsertDTOSchema> & {
+  emailChannelIds?: string[];
+};
+type WebsiteData = z.infer<typeof endpointMonitorsSelectSchema> & {
+  // Assuming the API will eventually return associated email channel IDs
+  emailChannelIds?: string[];
+};
 
 interface AddWebsiteDialogProps {
   trigger?: React.ReactNode
@@ -58,6 +66,11 @@ export function AddEndpointMonitorDialog({
   const [open, setOpen] = React.useState(false)
   const formId = "add-endpoint-monitor-form"
   const isEditing = !!endpointMonitor
+
+  // State for email channels
+  const [availableEmailChannels, setAvailableEmailChannels] = React.useState<EmailChannelData[]>([]);
+  const [isLoadingEmailChannels, setIsLoadingEmailChannels] = React.useState(false);
+  // const [errorEmailChannels, setErrorEmailChannels] = React.useState<string | null>(null); // For error display if needed
 
   const checkIntervalOptions = [
     { label: "10 seconds", value: 10 },
@@ -93,11 +106,13 @@ export function AddEndpointMonitorDialog({
           isRunning: true,
           expectedStatusCode: 200,
           alertThreshold: 2,
+          emailChannelIds: [], // Default to empty array
         },
   })
 
   React.useEffect(() => {
     if (open) {
+      // Reset form fields
       form.reset(
         isEditing
           ? {
@@ -108,6 +123,7 @@ export function AddEndpointMonitorDialog({
               expectedStatusCode:
                 endpointMonitor.expectedStatusCode ?? undefined,
               alertThreshold: endpointMonitor.alertThreshold ?? 2,
+              emailChannelIds: endpointMonitor.emailChannelIds ?? [], // Pre-populate selected channels
             }
           : {
               name: "",
@@ -116,26 +132,55 @@ export function AddEndpointMonitorDialog({
               isRunning: true,
               expectedStatusCode: 200,
               alertThreshold: 2,
-            },
-      )
-    }
-  }, [open, endpointMonitor, isEditing, form])
+              emailChannelIds: [],
+            }
+      );
 
-  const onSubmit = async (data: WebsiteFormData) => {
-    setIsSubmitting(true)
-    const url = isEditing
+      // Fetch available email channels
+      const fetchChannels = async () => {
+        setIsLoadingEmailChannels(true);
+        // setErrorEmailChannels(null);
+        try {
+          // Assuming the API returns all channels with a large page size or a specific "all" endpoint
+          const response = await fetch("/api/email-notification-channels?pageSize=1000"); // Adjust as needed
+          if (!response.ok) {
+            throw new Error("Failed to fetch email channels");
+          }
+          const result: { data: EmailChannelData[] } = await response.json();
+          setAvailableEmailChannels(result.data);
+        } catch (error) {
+          console.error("Error fetching email channels:", error);
+          // setErrorEmailChannels(error instanceof Error ? error.message : "An unknown error occurred");
+          toast.error("Failed to load email channels for selection.", { ...DEFAULT_TOAST_OPTIONS });
+        } finally {
+          setIsLoadingEmailChannels(false);
+        }
+      };
+      fetchChannels();
+    }
+  }, [open, endpointMonitor, isEditing, form]);
+
+  const onSubmit = async (formData: WebsiteFormData) => { // formData now includes emailChannelIds
+    setIsSubmitting(true);
+    const apiUrl = isEditing
       ? `/api/endpoint-monitors/${endpointMonitor.id}`
-      : "/api/endpoint-monitors"
-    const method = isEditing ? "PATCH" : "POST"
+      : "/api/endpoint-monitors";
+    const method = isEditing ? "PATCH" : "POST";
+
+    // Ensure emailChannelIds is part of the payload
+    const payload = {
+      ...formData,
+      // emailChannelIds will be taken directly from formData if the Zod schema is updated
+    };
 
     try {
-      const response = await fetch(url, {
+      const response = await fetch(apiUrl, {
         method: method,
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
-      })
+        body: JSON.stringify(payload), // Send payload
+      });
 
       const successStatus = isEditing ? OK : CREATED
       const successMessage = isEditing
@@ -347,6 +392,64 @@ export function AddEndpointMonitorDialog({
                     </FormControl>
                     <FormDescription>
                       Number of consecutive failures before sending an alert
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Placeholder for Email Channel Multi-Select */}
+              <FormField
+                control={form.control}
+                name="emailChannelIds"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email Notification Channels</FormLabel>
+                    <FormControl>
+                      {/* 
+                        Replace this with a proper multi-select component.
+                        Example using shadcn/ui Combobox (multiple):
+                        https://ui.shadcn.com/docs/components/combobox#multiple-selector
+                        
+                        <MultiSelect
+                          options={availableEmailChannels.map(channel => ({
+                            value: channel.id,
+                            label: channel.name,
+                          }))}
+                          selected={field.value}
+                          onChange={field.onChange}
+                          isLoading={isLoadingEmailChannels}
+                        />
+                      */}
+                      <BasicMultiSelect
+                        {...field} // Spread field props (onChange, onBlur, value, name, ref)
+                        options={availableEmailChannels.map((channel) => ({
+                          value: channel.id,
+                          label: `${channel.name} (${channel.emailAddress})`,
+                        }))}
+                        disabled={isLoadingEmailChannels || availableEmailChannels.length === 0}
+                        placeholder={
+                          isLoadingEmailChannels
+                            ? "Loading channels..."
+                            : availableEmailChannels.length === 0
+                              ? "No email channels available"
+                              : "Select email channels..."
+                        }
+                        // The `value` from `field.value` (string[]) is compatible
+                        // The `onChange` from `field.onChange` expects the new value (string[])
+                        // Our BasicMultiSelect's onChange passes an event-like object,
+                        // but react-hook-form's Controller/FormField handles it.
+                        // If direct field spread doesn't work as expected with `onChange`
+                        // we might need to explicitly call field.onChange(selectedValuesArray)
+                        // in BasicMultiSelect or use Controller for more control.
+                        // For now, assume direct spread is fine.
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Select email channels to receive alerts for this monitor.
+                      {availableEmailChannels.length === 0 &&
+                        !isLoadingEmailChannels &&
+                        " No email channels available to select."}
                     </FormDescription>
                     <FormMessage />
                   </FormItem>

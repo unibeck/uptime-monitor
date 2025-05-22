@@ -85,6 +85,13 @@
       "when": 1747874524852,
       "tag": "0011_smiling_cassandra_nova",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "6",
+      "when": 1747947416548,
+      "tag": "0012_chemical_ghost_rider",
+      "breakpoints": true
     }
   ]
 }
