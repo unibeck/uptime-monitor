@@ -31,6 +31,13 @@ const formatDate = (
   return "N/A"
 }
 
+const displayName = (name: string | null | undefined, url: string) => {
+  const textToDisplay = name || url
+  return textToDisplay.length > 32
+    ? `${textToDisplay.substring(0, 32)}...`
+    : textToDisplay
+}
+
 // Custom ColumnDef type with optional headerLabel
 export type AppColumnDef<TData> = ColumnDef<TData> & {
   headerLabel?: string
@@ -71,16 +78,16 @@ export const columns: AppColumnDef<
       <DataTableColumnHeader column={column} title="Name" />
     ),
     headerLabel: "Name",
-    cell: ({ row }) => (
-      <Link
-        href={`/endpoint-monitors/${row.original.id}`}
-        className="hover:underline"
-      >
-        {row.original.name.length > 32
-          ? `${row.original.name.substring(0, 32)}...`
-          : row.original.name}
-      </Link>
-    ),
+    cell: ({ row }) => {
+      return (
+        <Link
+          href={`/endpoint-monitors/${row.original.id}`}
+          className="hover:underline"
+        >
+          {displayName(row.original.name, row.original.url)}
+        </Link>
+      )
+    },
     enableHiding: false,
   },
   {

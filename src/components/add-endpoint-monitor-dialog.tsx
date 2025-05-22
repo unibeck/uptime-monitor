@@ -334,16 +334,15 @@ export function AddEndpointMonitorDialog({
                       <Input
                         type="number"
                         placeholder="2"
-                        min="1"
                         {...field}
                         onChange={(event) =>
                           field.onChange(
                             event.target.value === ""
-                              ? 2
+                              ? null
                               : Number(event.target.value),
                           )
                         }
-                        value={field.value ?? 2}
+                        value={field.value ?? ""}
                       />
                     </FormControl>
                     <FormDescription>
