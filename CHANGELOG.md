@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0](https://github.com/unibeck/solstatus/compare/solstatus@v1.6.2...solstatus@v1.7.0) (2025-05-22)
+
+
+### Features
+
+* alert threshold per endpoint monitor ([f16284a](https://github.com/unibeck/solstatus/commit/f16284a7bbd3e803f21fbf6e0ea4d9e01e9422fc))
+
 ## [1.6.2](https://github.com/unibeck/solstatus/compare/solstatus@v1.6.1...solstatus@v1.6.2) (2025-05-20)
 
 
