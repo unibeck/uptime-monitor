@@ -1,3 +1,5 @@
+/** biome-ignore-all lint/suspicious/noDuplicateCustomProperties: this is intention with @variant */
+
 body {
   @apply overscroll-none bg-transparent;
 }

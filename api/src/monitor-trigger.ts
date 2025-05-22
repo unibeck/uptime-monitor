@@ -61,8 +61,8 @@ export class MonitorTrigger extends DurableObject<CloudflareEnv> {
     this.#state.monitorId = payload.monitorId
     this.#state.monitorType = payload.monitorType
     this.#state.checkInterval = payload.checkInterval
-    let timeoutSeconds: number | undefined = undefined
-    let runtime: Runtime | undefined = undefined
+    let timeoutSeconds: number | undefined
+    let runtime: Runtime | undefined
     if (payload.monitorType === "synthetic") {
       this.#state.timeoutSeconds = payload.timeoutSeconds
       this.#state.runtime = payload.runtime
@@ -172,7 +172,7 @@ export class MonitorTrigger extends DurableObject<CloudflareEnv> {
     try {
       if (monitorType === "synthetic") {
         console.error(
-          "Synthetic monitors are not supported yet. Skipping check.",
+          `Synthetic monitors are not supported yet (timeoutSeconds: ${timeoutSeconds}, runtime: ${runtime}) Skipping check.`,
         )
       } else {
         // Delegate endpoint check
