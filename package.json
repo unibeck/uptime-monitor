@@ -99,7 +99,7 @@
     "stoker": "^1.4.2",
     "tailwind-merge": "^3.3.0",
     "tailwindcss": "^4.1.6",
-    "ts-morph": "^25.0.1",
+    "ts-morph": "^26.0.0",
     "tw-animate-css": "^1.2.9",
     "use-debounce": "^10.0.4",
     "vaul": "^1.1.2",
