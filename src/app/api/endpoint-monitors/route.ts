@@ -6,7 +6,7 @@ import { NextResponse } from "next/server"
 import { CONFLICT } from "stoker/http-status-codes"
 import { z } from "zod"
 import { takeUniqueOrThrow, useDrizzle } from "@/db"
-import { EndpointMonitorsTable } from "@/db/schema"
+import { EndpointMonitorsTable, EndpointMonitorEmailChannelsTable } from "@/db/schema" // Added EndpointMonitorEmailChannelsTable
 import {
   endpointMonitorsInsertDTOSchema,
   type endpointMonitorsSelectSchema,
@@ -168,24 +168,46 @@ export const POST = createRoute
     }
 
     // TODO: Use a transaction to ensure atomicity between inserting and scheduling
-    const newWebsite = await db
-      .insert(EndpointMonitorsTable)
-      .values({
-        ...endpointMonitor,
-        id: createId(PRE_ID.endpointMonitor),
-      })
-      .returning()
-      .then(takeUniqueOrThrow)
+    // The Zod schema (endpointMonitorsInsertDTOSchema) now includes emailChannelIds (optional array of strings)
+    const { emailChannelIds, ...monitorData } = endpointMonitor;
+
+    const newWebsite = await db.transaction(async (tx) => {
+      const createdMonitor = await tx
+        .insert(EndpointMonitorsTable)
+        .values({
+          ...monitorData,
+          id: createId(PRE_ID.endpointMonitor),
+        })
+        .returning()
+        .then(takeUniqueOrThrow);
+
+      if (emailChannelIds && emailChannelIds.length > 0) {
+        // Assuming EndpointMonitorEmailChannelsTable is imported
+        // and its schema matches { endpointMonitorId: string, emailChannelId: string, ...timestamps }
+        const channelLinks = emailChannelIds.map((channelId) => ({
+          endpointMonitorId: createdMonitor.id,
+          emailChannelId: channelId,
+          // Timestamps will be handled by Drizzle default functions if defined in schema
+        }));
+        // Import EndpointMonitorEmailChannelsTable if not already
+        // import { EndpointMonitorEmailChannelsTable } from "@/db/schema";
+        await tx.insert(EndpointMonitorEmailChannelsTable).values(channelLinks);
+      }
+
+      return createdMonitor;
+    });
 
     // Create monitor DO
     await env.MONITOR_TRIGGER_RPC.init({
       monitorId: newWebsite.id,
       monitorType: "endpoint",
       checkInterval: newWebsite.checkInterval,
-    } as InitPayload)
+    } as InitPayload);
 
-    return NextResponse.json(newWebsite, { status: 201 })
-  })
+    // TODO: The response should ideally include the created email channel associations if the client needs them immediately.
+    // For now, just returning the monitor details.
+    return NextResponse.json(newWebsite, { status: 201 });
+  });
 
 function getOrderDirection(direction: "asc" | "desc") {
   return direction === "desc" ? desc : asc

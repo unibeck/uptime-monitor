@@ -1,15 +1,25 @@
 import { WorkerEntrypoint } from "cloudflare:workers"
-import { eq } from "drizzle-orm"
-import type { DrizzleD1Database } from "drizzle-orm/d1"
-import { OK } from "stoker/http-status-codes"
-import { OK as OK_PHRASE } from "stoker/http-status-phrases"
-import type { z } from "zod"
-import { takeFirstOrNull, useDrizzle } from "@/db"
-import type { schema } from "@/db/schema"
-import { EndpointMonitorsTable, UptimeChecksTable } from "@/db/schema"
+import { and, eq } from "drizzle-orm"; // Ensure 'and' is imported if used, 'eq' is definitely used.
+import type { DrizzleD1Database } from "drizzle-orm/d1";
+import { OK } from "stoker/http-status-codes";
+import { OK as OK_PHRASE } from "stoker/http-status-phrases";
+import type { z } from "zod";
+import { takeFirstOrNull, useDrizzle } from "@/db";
+import type { schema } from "@/db/schema";
+import {
+  EmailNotificationChannelsTable, // Added
+  EndpointMonitorEmailChannelsTable, // Added
+  EndpointMonitorsTable,
+  UptimeChecksTable,
+} from "@/db/schema";
 import type {
   endpointMonitorsPatchSchema,
   endpointMonitorsSelectSchema,
+} from "@/db/zod-schema";
+import { endpointSignature } from "@/lib/formatters";
+import { PRE_ID } from "@/lib/ids";
+import { createEndpointMonitorDownAlert } from "@/lib/opsgenie";
+import { sendNotificationEmail } from "./email-sender"; // Added
 } from "@/db/zod-schema"
 import { endpointSignature } from "@/lib/formatters"
 import { PRE_ID } from "@/lib/ids"
@@ -135,8 +145,8 @@ export default class MonitorExec extends WorkerEntrypoint<CloudflareEnv> {
       errorMessage,
       endpointMonitor,
       db,
-      this.env.OPSGENIE_API_KEY,
-    )
+      this.env, // Pass the full env object
+    );
   }
 
   async testSendAlert(
@@ -160,8 +170,8 @@ export default class MonitorExec extends WorkerEntrypoint<CloudflareEnv> {
       status,
       errorMessage,
       endpointMonitor,
-      this.env.OPSGENIE_API_KEY,
-    )
+      this.env, // Pass the full env object
+    );
   }
 }
 
@@ -171,7 +181,7 @@ async function handleFailureTracking(
   errorMessage: string,
   endpointMonitor: z.infer<typeof endpointMonitorsSelectSchema>,
   db: DrizzleD1Database<typeof schema>,
-  opsgenieApiKey: string,
+  env: CloudflareEnv, // Changed opsgenieApiKey to full env
 ) {
   if (isExpectedStatus) {
     // Reset consecutive failures if the check passes
@@ -196,8 +206,8 @@ async function handleFailureTracking(
       consecutiveFailures >= endpointMonitor.alertThreshold &&
       !endpointMonitor.activeAlert
     ) {
-      await sendAlert(status, errorMessage, endpointMonitor, opsgenieApiKey)
-      endpointMonitorPatch.activeAlert = true
+      await sendAlert(status, errorMessage, endpointMonitor, env); // Pass full env
+      endpointMonitorPatch.activeAlert = true;
     }
 
     await db
@@ -211,39 +221,126 @@ async function sendAlert(
   status: number,
   errorMessage: string,
   endpointMonitor: z.infer<typeof endpointMonitorsSelectSchema>,
-  opsgenieApiKey: string,
+  env: CloudflareEnv, // Use the full env for OpsGenie key and Email binding
 ) {
-  if (!opsgenieApiKey) {
-    console.error("OPSGENIE_API_KEY is not set, cannot send alert")
-    return
-  }
+  const opsgenieApiKey = env.OPSGENIE_API_KEY;
+  const db = useDrizzle(env.DB); // Get DB instance from env
 
   console.log(
-    `${endpointSignature(endpointMonitor)}: consecutive failures threshold (${endpointMonitor.alertThreshold}) reached, sending alert...`,
-  )
+    `${endpointSignature(endpointMonitor)}: consecutive failures threshold (${
+      endpointMonitor.alertThreshold
+    }) reached, sending alert(s)...`
+  );
 
-  try {
-    const result = await createEndpointMonitorDownAlert(
-      opsgenieApiKey,
-      endpointMonitor.name,
-      endpointMonitor.url,
-      status,
-      errorMessage,
-    )
-
-    if (result) {
-      console.log(
-        `${endpointSignature(endpointMonitor)}: alert sent successfully. RequestId: ${result.requestId}`,
-      )
-    } else {
+  // 1. OpsGenie Alert (existing logic)
+  if (opsgenieApiKey) {
+    try {
+      const result = await createEndpointMonitorDownAlert(
+        opsgenieApiKey,
+        endpointMonitor.name,
+        endpointMonitor.url,
+        status,
+        errorMessage
+      );
+      if (result) {
+        console.log(
+          `${endpointSignature(
+            endpointMonitor
+          )}: OpsGenie alert sent successfully. RequestId: ${result.requestId}`
+        );
+      } else {
+        console.error(
+          `${endpointSignature(endpointMonitor)}: Failed to send OpsGenie alert.`
+        );
+      }
+    } catch (error) {
       console.error(
-        `${endpointSignature(endpointMonitor)}: failed to send alert`,
+        `${endpointSignature(endpointMonitor)}: Error sending OpsGenie alert.`,
+        error
+      );
+    }
+  } else {
+    console.warn("OPSGENIE_API_KEY is not set. Skipping OpsGenie alert.");
+  }
+
+  // 2. Email Notifications
+  try {
+    const channelsToNotify = await db
+      .select({
+        emailAddress: EmailNotificationChannelsTable.emailAddress,
+        channelName: EmailNotificationChannelsTable.name,
+      })
+      .from(EndpointMonitorEmailChannelsTable)
+      .innerJoin(
+        EmailNotificationChannelsTable,
+        eq(
+          EndpointMonitorEmailChannelsTable.emailChannelId,
+          EmailNotificationChannelsTable.id
+        )
       )
+      .where(
+        eq(
+          EndpointMonitorEmailChannelsTable.endpointMonitorId,
+          endpointMonitor.id
+        )
+      );
+
+    if (channelsToNotify.length === 0) {
+      console.log(
+        `${endpointSignature(
+          endpointMonitor
+        )}: No email channels configured for this monitor.`
+      );
+      return; // Return early if no email channels
+    }
+
+    const subject = `SolStatus Alert: ${endpointMonitor.name} is DOWN`;
+    const commonDetails = `
+Monitor Name: ${endpointMonitor.name}
+URL: ${endpointMonitor.url}
+Time of Failure: ${new Date().toISOString()}
+Status Code: ${status || "N/A"}
+Error: ${errorMessage || "No specific error message"}`;
+
+    const htmlBody = `
+<h1>SolStatus Alert: ${endpointMonitor.name} is DOWN</h1>
+<p><strong>Monitor Name:</strong> ${endpointMonitor.name}</p>
+<p><strong>URL:</strong> <a href="${endpointMonitor.url}">${
+      endpointMonitor.url
+    }</a></p>
+<p><strong>Time of Failure:</strong> ${new Date().toISOString()}</p>
+<p><strong>Status Code:</strong> ${status || "N/A"}</p>
+<p><strong>Error:</strong> ${errorMessage || "No specific error message"}</p>
+<p>Please check your SolStatus dashboard for more details.</p>
+    `;
+    const textBody = `
+SolStatus Alert: ${endpointMonitor.name} is DOWN
+${commonDetails}
+Please check your SolStatus dashboard for more details.
+    `;
+
+    for (const channel of channelsToNotify) {
+      console.log(
+        `${endpointSignature(endpointMonitor)}: Sending email notification to ${
+          channel.emailAddress
+        } (Channel: ${channel.channelName})`
+      );
+      // Ensure env object passed to sendNotificationEmail has the EMAIL_SEND_BINDING
+      // The CloudflareEnv type should include this if wrangler.jsonc is set up correctly.
+      await sendNotificationEmail({
+        to: channel.emailAddress,
+        subject,
+        htmlBody,
+        textBody,
+        env: env as any, // Cast if EmailEnv in email-sender.ts is more specific than full CloudflareEnv
+      });
     }
   } catch (error) {
     console.error(
-      `${endpointSignature(endpointMonitor)}: error sending alert.`,
-      error,
-    )
+      `${endpointSignature(
+        endpointMonitor
+      )}: Error fetching or sending email notifications.`,
+      error
+    );
   }
 }

@@ -22,6 +22,13 @@
       "migrations_dir": "src/db/migrations"
     }
   ],
+  "send_email": [
+    {
+      "name": "EMAIL_SEND_BINDING"
+      // No destination_address specified to allow sending to any recipient
+      // Ensure the sender domain is verified in Cloudflare Email Routing.
+    }
+  ],
   "env": {
     "production": {
       "vars": {
@@ -34,7 +41,13 @@
           "database_id": "UPDATE_ME_D1_ID",
           "migrations_dir": "src/db/migrations"
         }
-      ]
+      ],
+      // Potentially add send_email binding for production environment as well if needed
+      // "send_email": [
+      //   {
+      //     "name": "EMAIL_SEND_BINDING"
+      //   }
+      // ]
     }
   }
 }
