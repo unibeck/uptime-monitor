@@ -1,6 +1,6 @@
 {
   "name": "solstatus",
-  "version": "1.6.2",
+  "version": "1.7.0",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@10.8.1",
