@@ -203,8 +203,8 @@ export function AddEndpointMonitorDialog({
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
+      <DialogContent className="sm:max-w-[425px] max-h-[90vh] overflow-y-auto p-0">
+        <DialogHeader className="p-6 pb-0">
           <DialogTitle>
             {isEditing ? "Edit Endpoint Monitor" : "Add Endpoint Monitor"}
           </DialogTitle>
@@ -214,7 +214,7 @@ export function AddEndpointMonitorDialog({
               : "Add a new endpoint to monitor uptime and performance"}
           </DialogDescription>
         </DialogHeader>
-        <div className="px-4">
+        <div className="p-6">
           <Form {...form}>
             <form
               id={formId}
@@ -356,7 +356,7 @@ export function AddEndpointMonitorDialog({
             </form>
           </Form>
         </div>
-        <DialogFooter>
+        <DialogFooter className="p-6 pt-0">
           <DialogClose asChild>
             <Button variant="ghost">Cancel</Button>
           </DialogClose>
