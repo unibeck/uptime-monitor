@@ -51,3 +51,5 @@ export const uptimeChecksSelectSchema = createSelectSchema(UptimeChecksTable)
 
 export const uptimeChecksPatchSchema =
   createInsertSchema(UptimeChecksTable).partial()
+
+export * from "./zod-schema/emailNotificationChannel"
