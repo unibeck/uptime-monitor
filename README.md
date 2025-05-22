@@ -1,3 +1,4 @@
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/unibeck/solstatus)
 ![GitHub](https://img.shields.io/github/license/unibeck/solstatus)
 ![GitHub release (with filter)](https://img.shields.io/github/v/release/unibeck/solstatus)
 ![GitHub contributors](https://img.shields.io/github/contributors/unibeck/solstatus)
